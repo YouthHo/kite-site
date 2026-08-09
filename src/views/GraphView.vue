@@ -21,6 +21,7 @@ let resizeObs = null
 let resizeTimer = null
 let resizeTimer2 = null
 let winResizeCleanup = null
+let roamCleanup = null
 
 function onWinResize() {
   chart?.resize()
@@ -158,8 +159,8 @@ function buildOption({ center = false, pulse = 1 } = {}) {
       {
         type: 'graph',
         layout: 'none',
-        // 原生 roam：滚轮/双指 = 以光标为中心局部缩放，拖拽 = 平移，全部元素等比缩放（顶级关系图工具标准手感）
-        roam: true,
+        // roam 关闭：改为容器级手动平移/缩放（任意空白处可拖拽，双指捏合缩放）
+        roam: false,
         data: nodes,
         links,
         animationDurationUpdate: 300,
@@ -210,6 +211,73 @@ onMounted(async () => {
   // 加载屏消失、布局稳定后各补一次 resize（兜底非等比拉伸）
   resizeTimer = setTimeout(() => chart?.resize(), 3500)
   resizeTimer2 = setTimeout(() => chart?.resize(), 6000)
+
+  // ---- 容器级手动 roam：任意位置拖拽平移、滚轮以光标为中心缩放、双指捏合 ----
+  const el = chartEl.value
+  const pointers = new Map()
+  let lastX = 0
+  let lastY = 0
+  let pinchDist = 0
+
+  const onPointerDown = (e) => {
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+    el.setPointerCapture?.(e.pointerId)
+    if (pointers.size === 1) {
+      lastX = e.clientX
+      lastY = e.clientY
+    }
+  }
+  const onPointerMove = (e) => {
+    if (!pointers.has(e.pointerId)) return
+    if (pointers.size === 1) {
+      const dx = e.clientX - lastX
+      const dy = e.clientY - lastY
+      lastX = e.clientX
+      lastY = e.clientY
+      if (chart) chart.dispatchAction({ type: 'graphRoam', seriesIndex: 0, dx, dy })
+    } else if (pointers.size === 2) {
+      // 双指捏合缩放
+      const pts = [...pointers.values()]
+      const d = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y)
+      if (pinchDist > 0 && d > 0 && chart) {
+        const midX = (pts[0].x + pts[1].x) / 2 - el.getBoundingClientRect().left
+        const midY = (pts[0].y + pts[1].y) / 2 - el.getBoundingClientRect().top
+        chart.dispatchAction({ type: 'graphRoam', seriesIndex: 0, zoom: d / pinchDist, originX: midX, originY: midY })
+      }
+      pinchDist = d
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+    }
+  }
+  const onPointerUp = (e) => {
+    pointers.delete(e.pointerId)
+    pinchDist = 0
+  }
+  const onWheel = (e) => {
+    e.preventDefault()
+    if (!chart) return
+    const factor = e.deltaY < 0 ? 1.12 : 1 / 1.12
+    const rect = el.getBoundingClientRect()
+    chart.dispatchAction({
+      type: 'graphRoam',
+      seriesIndex: 0,
+      zoom: factor,
+      originX: e.clientX - rect.left,
+      originY: e.clientY - rect.top,
+    })
+  }
+
+  el.addEventListener('pointerdown', onPointerDown)
+  el.addEventListener('pointermove', onPointerMove)
+  el.addEventListener('pointerup', onPointerUp)
+  el.addEventListener('pointercancel', onPointerUp)
+  el.addEventListener('wheel', onWheel, { passive: false })
+  roamCleanup = () => {
+    el.removeEventListener('pointerdown', onPointerDown)
+    el.removeEventListener('pointermove', onPointerMove)
+    el.removeEventListener('pointerup', onPointerUp)
+    el.removeEventListener('pointercancel', onPointerUp)
+    el.removeEventListener('wheel', onWheel)
+  }
 })
 
 // 主题切换时重绘
@@ -245,6 +313,7 @@ onBeforeUnmount(() => {
   clearTimeout(resizeTimer)
   clearTimeout(resizeTimer2)
   window.removeEventListener('resize', onWinResize)
+  roamCleanup?.()
   resizeObs?.disconnect()
   panelTween?.kill()
   chart?.dispose()
@@ -262,7 +331,7 @@ onBeforeUnmount(() => {
       <!-- 图谱区域：谍战网格背景 -->
       <div class="flex-1 relative min-h-[420px] border border-[#2a2520] bg-[#0b0b0b]"
         style="background-image: linear-gradient(rgba(138,130,117,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(138,130,117,0.05) 1px, transparent 1px); background-size: 42px 42px;">
-        <div ref="chartEl" class="absolute inset-0"></div>
+        <div ref="chartEl" class="absolute inset-0" style="touch-action: none;"></div>
         <div class="absolute top-3 left-3 font-mono text-[10px] tracking-[0.25em] text-[#555048] pointer-events-none">KITE-MAP · 滚轮/双指局部缩放 · 拖拽平移 · 点击节点查看档案</div>
         <!-- 视图重置 -->
         <div class="absolute top-3 right-3 z-10">
