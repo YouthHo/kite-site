@@ -107,7 +107,8 @@ function buildOption({ center = false, pulse = 1 } = {}) {
     .map((n) => {
       const c = charMap.value[n.id] || {}
       const span = c.episodes ? c.episodes[1] - c.episodes[0] : 5
-      const size = Math.round((span > 30 ? 96 : span > 10 ? 84 : 72) * Math.min(z, 1.4))
+      const base = span > 30 ? 96 : span > 10 ? 84 : 72
+      const size = Math.round(base * z)
       return {
         id: n.id,
         name: n.name,
@@ -119,8 +120,8 @@ function buildOption({ center = false, pulse = 1 } = {}) {
         itemStyle: {
           color: FACTION[n.faction]?.color || '#555048',
           borderColor: light ? 'rgba(47,43,35,0.25)' : 'rgba(232,220,200,0.4)',
-          borderWidth: 1.5,
-          shadowBlur: 26,
+          borderWidth: Math.max(1, Math.min(2.5, 1.5 * z)),
+          shadowBlur: Math.min(40, 26 * z),
           shadowColor: (FACTION[n.faction]?.color || '#555048') + (light ? '66' : 'aa'),
         },
         label: {
@@ -128,7 +129,7 @@ function buildOption({ center = false, pulse = 1 } = {}) {
           position: 'inside',
           formatter: n.name,
           color: '#f5f2e9',
-          fontSize: n.name.length > 2 ? 13 : 15,
+          fontSize: Math.max(11, Math.min(26, (n.name.length > 2 ? 13 : 15) * z)),
           fontFamily: '"Noto Serif SC", serif',
           letterSpacing: 2,
           textShadowColor: 'rgba(0,0,0,0.5)',
@@ -142,7 +143,11 @@ function buildOption({ center = false, pulse = 1 } = {}) {
       source: l.source,
       target: l.target,
       label: l.label,
-      lineStyle: { color: light ? 'rgba(110,103,90,0.45)' : 'rgba(138,130,117,0.42)', width: 1.2, curveness: 0.08 },
+      lineStyle: {
+        color: light ? 'rgba(110,103,90,0.45)' : 'rgba(138,130,117,0.42)',
+        width: Math.max(0.8, Math.min(4, 1.2 * z)),
+        curveness: 0.08,
+      },
     }))
   return {
     backgroundColor: 'transparent',
@@ -160,22 +165,22 @@ function buildOption({ center = false, pulse = 1 } = {}) {
         animationDurationUpdate: pulse === 1 ? 750 : 500,
         animationEasingUpdate: 'cubicOut',
         edgeSymbol: ['none', 'circle'],
-        edgeSymbolSize: [0, 4],
+        edgeSymbolSize: [0, Math.max(3, Math.min(10, 4 * z))],
         edgeLabel: {
           show: true,
           formatter: (p) => p.data.label || '',
           color: light ? 'rgba(70,63,52,0.7)' : 'rgba(232,220,200,0.6)',
-          fontSize: 9.5,
+          fontSize: Math.max(8, Math.min(18, 9.5 * z)),
           fontFamily: '"JetBrains Mono","Noto Sans SC",monospace',
-          distance: 10,
+          distance: Math.max(6, Math.min(22, 10 * z)),
         },
         emphasis: {
           focus: 'adjacency',
           blurScope: 'coordinateSystem',
           itemStyle: { shadowBlur: 42, shadowColor: '#9d2235' },
-          lineStyle: { width: 3, color: '#b8860b', opacity: 0.95 },
-          edgeLabel: { show: true, color: '#8f6d0e', fontSize: 11 },
-          label: { color: '#ffffff', fontSize: 16 },
+          lineStyle: { width: Math.max(2, Math.min(6, 3 * z)), color: '#b8860b', opacity: 0.95 },
+          edgeLabel: { show: true, color: '#8f6d0e', fontSize: Math.max(9, Math.min(20, 11 * z)) },
+          label: { color: '#ffffff', fontSize: Math.max(13, Math.min(30, 16 * z)) },
         },
         lineStyle: { color: light ? 'rgba(110,103,90,0.4)' : 'rgba(138,130,117,0.38)', width: 1.2 },
         label: { show: true },

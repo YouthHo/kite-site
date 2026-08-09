@@ -102,10 +102,10 @@ onBeforeUnmount(() => panelTween?.kill())
                   角色注：{{ roleInfo(detail).brief }}
                 </p>
 
-                <!-- 角色照（演员照片已在左侧展示，这里只保留角色照位） -->
+                <!-- 角色照（竖版：演员照片已在左侧展示） -->
                 <div class="mt-6">
                   <div class="file-label mb-3">角色照</div>
-                  <div class="relative h-52 overflow-hidden border border-[#2a2520]">
+                  <div class="w-52 md:w-60 aspect-[3/4] overflow-hidden border border-[#2a2520] relative">
                     <img :src="roleInfo(detail)?.image || detail.image" alt="角色照（占位）" class="absolute inset-0 w-full h-full object-cover k-img" />
                     <span class="absolute top-2 left-2 font-mono text-[9px] tracking-[0.2em] text-white/80 bg-black/50 px-2 py-0.5">角色照（占位）</span>
                   </div>

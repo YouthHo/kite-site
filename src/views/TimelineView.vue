@@ -132,7 +132,8 @@ onMounted(async () => {
         {
           scaleX: 1,
           ease: 'none',
-          scrollTrigger: { trigger: pinRef.value, start: 'top 88px', end: () => '+=' + getDist(), scrub: 1 },
+          // 前 40% 滚动距离内完成绘制：线快速延伸穿过屏幕、右端渐隐，之后保持完整
+          scrollTrigger: { trigger: pinRef.value, start: 'top 88px', end: () => '+=' + getDist() * 0.4, scrub: 1 },
         }
       )
     } else {
@@ -201,7 +202,7 @@ onBeforeUnmount(() => {
         ></div>
 
         <!-- 主线：垂直居中 -->
-        <div ref="lineRef" class="absolute left-0 right-0 top-1/2 h-[2px] origin-left -translate-y-1/2 z-10" style="background: linear-gradient(90deg, transparent, #9d2235 15%, #b8860b 50%, #9d2235 85%, transparent); box-shadow: 0 0 16px rgba(157,34,53,0.45);"></div>
+        <div ref="lineRef" class="absolute left-0 right-0 top-1/2 h-[2px] origin-left -translate-y-1/2 z-10" style="background: linear-gradient(90deg, rgba(157,34,53,0) 0%, #9d2235 4%, #b8860b 50%, #9d2235 96%, rgba(157,34,53,0) 100%); box-shadow: 0 0 16px rgba(157,34,53,0.45);"></div>
 
         <!-- 序章 -->
         <div class="relative z-10 h-full flex flex-col items-center justify-center text-center shrink-0" :style="{ width: INTRO_W + 'px' }">
