@@ -22,7 +22,9 @@ onMounted(() => {
 })
 
 function toTop() {
-  gsap.to(window, { scrollTo: 0, duration: 0.5, ease: 'power2.out' })
+  // 点击后立即回到顶部，不做动画（behavior: instant 无视全局平滑设置）
+  window.scrollTo({ top: 0, behavior: 'instant' })
+  window.scrollTo(0, 0) // 兼容兜底
 }
 
 onBeforeUnmount(() => tween?.kill())

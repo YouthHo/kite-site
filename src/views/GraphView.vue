@@ -42,7 +42,18 @@ const charMap = computed(() => {
 })
 
 const sortedList = computed(() => {
-  const ids = new Set(visibleNodeIds().map((n) => n.id))
+  // 列表只按阵营筛选 + 搜索过滤：人物勾选状态不影响名字显示（随时可反悔重新勾选）
+  const ids = new Set(
+    graph.nodes
+      .filter((n) => activeFactions.value.has(n.faction))
+      .filter((n) => {
+        const kw = keyword.value.trim().toLowerCase()
+        if (!kw) return true
+        const c = charMap.value[n.id]
+        return (n.name + (n.code || '') + (c?.identity || '')).toLowerCase().includes(kw)
+      })
+      .map((n) => n.id)
+  )
   const list = graph.nodes.filter((n) => ids.has(n.id))
   const copy = [...list]
   const byName = (a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN-u-co-pinyin')
@@ -299,12 +310,13 @@ onBeforeUnmount(() => {
           </button>
         </div>
         <div class="mb-2 flex items-center justify-between">
-          <span class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">人物索引（{{ visibleNodeIds().length }}）</span>
+          <span class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">人物索引（{{ sortedList.length }}）</span>
           <div class="flex gap-3">
             <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectAllPeople">全选</button>
             <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectNonePeople">全不选</button>
           </div>
         </div>
+        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#555048]">勾选 = 在图谱中显示；不勾选仅隐藏图谱中的节点，名字保留在列表，可随时反悔</div>
         <div class="space-y-0.5">
           <button
             v-for="n in sortedList"
