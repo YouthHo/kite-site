@@ -71,7 +71,7 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
     <ScanLine />
 
     <!-- 电报码装饰 -->
-    <div class="telegraph absolute top-24 left-6 text-[10px] leading-6">01001010 01101011<br />01010100 01101011<br />01101011 01101010</div>
+    <div class="telegraph absolute top-32 left-6 text-[10px] leading-6">01001010 01101011<br />01010100 01101011<br />01101011 01101010</div>
     <div class="telegraph absolute bottom-32 right-6 text-[10px] leading-6 text-right">11010110 01011010<br />00110110 11010110<br />10110101 00110101</div>
 
     <!-- 居中标题 -->
@@ -101,8 +101,8 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
       </div>
     </div>
 
-    <!-- 分享：右上角齿轮下方小圆按钮（菜单向下展开，不与卡片区重叠） -->
-    <div class="absolute top-24 right-6 z-20">
+    <!-- 分享：左上角，与右上角设置齿轮左右对称 -->
+    <div class="absolute top-16 md:top-20 left-5 md:left-8 z-20">
       <ShareButton title="风筝 The Kite · 信仰至上 半生潜伏" />
     </div>
   </div>
