@@ -316,12 +316,12 @@ body {
 /* ---------- 牛皮纸档案卡（历史背景页，两主题通用） ---------- */
 .kraft-card {
   position: relative;
-  background-color: #dcc9a6;
+  background-color: #d2bc93;
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23f)' opacity='0.05'/%3E%3C/svg%3E"),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.3), rgba(130, 95, 55, 0.14));
+    linear-gradient(160deg, rgba(255, 255, 255, 0.3), rgba(130, 95, 55, 0.16));
   border: 1px solid rgba(120, 90, 50, 0.55);
-  box-shadow: inset 0 0 26px rgba(120, 90, 50, 0.2), 0 8px 22px rgba(70, 50, 25, 0.22);
+  box-shadow: inset 0 0 26px rgba(120, 90, 50, 0.22), 0 8px 22px rgba(70, 50, 25, 0.22);
 }
 .kraft-card:hover {
   border-color: rgba(157, 34, 53, 0.6);
@@ -381,59 +381,49 @@ body {
    颜色类映射见 theme-light.css（scripts/gen_theme_css.py 生成）
    ============================================================ */
 [data-theme='light'] {
-  --bg: #f5f2e9;
-  --card: #ffffff;
-  --card2: #fbf8f1;
-  --hoverc: #f3efe7;
-  --paper: #2f2b23;
-  --ink: #6e675a;
-  --dim: #8c8577;
-  --line: #d6cfc1;
-  --gold: #8f6d0e;
-  --node-bg: #f6efe0;
+  --bg: #efe6d3;
+  --card: #f9f2e3;
+  --card2: #f6eeda;
+  --hoverc: #f1e8d4;
+  --paper: #3d362b;
+  --ink: #6f6350;
+  --dim: #8b7f6a;
+  --line: #d9c9ab;
+  --gold: #8a6a2f;
+  --node-bg: #f6eedb;
 
   body {
-    /* 牛皮纸底：纤维噪点 + 边缘晕影 */
-    background-color: #d9c5a2;
+    /* 暖象牙底：低刺眼度 · 纸纤维噪点 + 边缘暖晕 */
+    background-color: #efe6d3;
     background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23f)' opacity='0.06'/%3E%3C/svg%3E"),
-      radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 250, 240, 0.5), transparent 60%),
-      radial-gradient(ellipse 120% 100% at 50% 120%, rgba(96, 72, 40, 0.16), transparent 60%);
-    color: #2f2b23;
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23f)' opacity='0.05'/%3E%3C/svg%3E"),
+      radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 250, 240, 0.55), transparent 60%),
+      radial-gradient(ellipse 120% 100% at 50% 120%, rgba(110, 80, 45, 0.14), transparent 60%);
+    color: #3d362b;
   }
   .serif-title { text-shadow: 0 1px 8px rgba(255, 255, 255, 0.35); }
   .k-card {
-    background: linear-gradient(160deg, #fdfaf2, #f4ecdc);
-    border-color: rgba(120, 90, 50, 0.4);
+    background: linear-gradient(160deg, #faf4e6, #f2e9d5);
+    border-color: rgba(140, 110, 60, 0.38);
     box-shadow: 0 6px 22px rgba(90, 70, 40, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.85);
   }
   .k-card:hover {
     border-color: rgba(157, 34, 53, 0.5);
     box-shadow: 0 16px 38px rgba(90, 70, 40, 0.18), 0 0 18px rgba(157, 34, 53, 0.08);
   }
-  .glass { background: rgba(255, 255, 255, 0.82); border-color: rgba(0, 0, 0, 0.08); }
-  .paper-bg { background-color: #f6f2e8; }
-  .file-label { background: rgba(0, 0, 0, 0.04); border-color: #d6cfc1; }
-  .k-input { background: #ffffff; border-color: #d6cfc1; color: #2f2b23; }
-  .telegraph { color: rgba(143, 109, 14, 0.3); }
+  .glass { background: rgba(250, 244, 231, 0.84); border-color: rgba(110, 80, 45, 0.12); }
+  .paper-bg { background-color: #f2e9d5; }
+  .file-label { background: rgba(120, 90, 50, 0.07); border-color: #d9c9ab; }
+  .k-input { background: #fbf5e7; border-color: #d9c9ab; color: #3d362b; }
+  .telegraph { color: rgba(138, 106, 47, 0.3); }
   .film-holes::before,
   .film-holes::after {
-    background: repeating-linear-gradient(to bottom, transparent 0 6px, rgba(47, 43, 35, 0.22) 6px 18px, transparent 18px 24px);
+    background: repeating-linear-gradient(to bottom, transparent 0 6px, rgba(61, 54, 43, 0.2) 6px 18px, transparent 18px 24px);
   }
-  .film-holes::before { border-right-color: rgba(47, 43, 35, 0.15); }
-  .film-holes::after { border-left-color: rgba(47, 43, 35, 0.15); }
-  ::-webkit-scrollbar-track { background: #ede9de; border-left-color: #d6cfc1; }
-  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #b04a5c, #8d3646); border-color: #ede9de; }
-
-  /* 牛皮纸档案卡（历史背景页） */
-  .kraft-card {
-    background-color: #dcc9a6;
-    background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23f)' opacity='0.05'/%3E%3C/svg%3E"),
-      linear-gradient(160deg, rgba(255, 255, 255, 0.28), rgba(130, 95, 55, 0.12));
-    border-color: rgba(120, 90, 50, 0.5);
-    box-shadow: inset 0 0 26px rgba(120, 90, 50, 0.22), 0 8px 22px rgba(70, 50, 25, 0.2);
-  }
+  .film-holes::before { border-right-color: rgba(61, 54, 43, 0.14); }
+  .film-holes::after { border-left-color: rgba(61, 54, 43, 0.14); }
+  ::-webkit-scrollbar-track { background: #e6dbc2; border-left-color: #d9c9ab; }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #b0624a, #92493a); border-color: #e6dbc2; }
 
   /* 压在现代深色媒体上的元素必须保持浅字 */
   .on-media { color: #e8dcc8 !important; }

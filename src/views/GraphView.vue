@@ -198,7 +198,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="page-wrap !pt-16 !pb-0 h-screen flex flex-col">
     <div class="flex items-center gap-4 mb-4">
-      <SealStamp text="关系\n图谱" />
+      <SealStamp :text="'关系\n图谱'" />
       <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]">人物关系图谱</h2>
       <span class="file-label">WHO IS KITE · WHO IS SHADOW</span>
     </div>

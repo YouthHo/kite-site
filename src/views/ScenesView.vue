@@ -43,7 +43,7 @@ onBeforeUnmount(() => crossTween?.kill())
   <div class="scenes-page page-wrap">
     <div class="mb-8 flex flex-wrap items-center gap-6">
       <div class="flex items-center gap-4">
-        <SealStamp text="名场\n面录" />
+        <SealStamp :text="'名场\n面录'" />
         <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>名场面与台词</h2>
       </div>
       <!-- 标签切换 -->

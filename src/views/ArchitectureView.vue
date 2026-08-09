@@ -71,7 +71,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="arch-page page-wrap">
     <div class="mb-10 flex items-center gap-5">
-      <SealStamp text="势力\n架构" />
+      <SealStamp :text="'势力\n架构'" />
       <div>
         <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>势力架构</h2>
         <div class="gold-line w-40 mt-3" data-enter></div>

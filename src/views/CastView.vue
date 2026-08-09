@@ -5,7 +5,6 @@ import { X } from 'lucide-vue-next'
 import actors from '@/data/actors.json'
 import characters from '@/data/characters.json'
 import SealStamp from '@/components/SealStamp.vue'
-import { isRealPhoto } from '@/utils/avatar'
 import { pageEnter, prefersReduced } from '@/utils/anim'
 
 const detail = ref(null)
@@ -45,7 +44,7 @@ onBeforeUnmount(() => panelTween?.kill())
 <template>
   <div class="cast-page page-wrap">
     <div class="mb-10 flex items-center gap-5">
-      <SealStamp text="演员\n阵容" />
+      <SealStamp :text="'演员\n阵容'" />
       <div>
         <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>演员阵容</h2>
         <div class="gold-line w-40 mt-3" data-enter></div>
@@ -61,16 +60,9 @@ onBeforeUnmount(() => panelTween?.kill())
         data-enter
         @click="open(a)"
       >
-        <!-- 媒体区：真实照片 或 多彩名字卡（统一版式） -->
+        <!-- 媒体区：多彩名字卡（全站统一版式，不使用照片） -->
         <div class="aspect-[3/4] overflow-hidden bg-[#101010] relative">
-          <img
-            v-if="isRealPhoto(a.image)"
-            :src="a.image"
-            :alt="a.name"
-            loading="lazy"
-            class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
-          />
-          <div v-else class="w-full h-full grid place-items-center transition-all duration-700 group-hover:scale-[1.03]"
+          <div class="w-full h-full grid place-items-center transition-all duration-700 group-hover:scale-[1.03]"
             :style="{ background: `linear-gradient(155deg, ${paletteOf(i).from}, ${paletteOf(i).to})` }">
             <div class="text-center px-4">
               <div class="serif-title text-3xl md:text-4xl tracking-[0.18em] text-[#f5f2e9]" style="text-shadow: 0 2px 14px rgba(0,0,0,0.35)">{{ a.name }}</div>

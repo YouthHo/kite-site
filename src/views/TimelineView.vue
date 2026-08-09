@@ -80,6 +80,7 @@ function computeActiveEra() {
 // 节点逐个点亮 + 卡片浮现（手动驱动，避免容器内 ScrollTrigger 失效）
 const nodeDone = new Map()
 function updateNodes() {
+  if (!hTween) return
   const vw = window.innerWidth
   layout.value.items.forEach((it, i) => {
     if (it.type !== 'node' || nodeDone.has(i)) return
@@ -140,6 +141,9 @@ onMounted(async () => {
     }
   })
   initMiniChart()
+  // 兜底：JS 动画失效时内容依然可见（初始隐藏由 gsap.set 控制）
+  document.querySelectorAll('.timeline-track .tnode').forEach((el) => gsap.set(el, { opacity: 0 }))
+  requestAnimationFrame(() => updateNodes())
 })
 
 function initMiniChart() {
@@ -176,7 +180,7 @@ onBeforeUnmount(() => {
     <div class="sticky top-0 z-40 bg-[#080808]/95 backdrop-blur-md border-b border-[#1c1815]">
       <div class="px-5 md:px-8 py-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
         <div class="flex items-center gap-4">
-          <SealStamp text="全剧\n时间" />
+          <SealStamp :text="'全剧\n时间'" />
           <h2 class="serif-title text-3xl md:text-4xl text-[#e8dcc8]" data-enter>全剧时间线</h2>
           <span class="file-label hidden md:inline-block" data-enter>1927—1980 · 史诗长卷</span>
         </div>
@@ -185,8 +189,8 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- 桌面端：居中主线 + 钉住横向滚动 -->
-    <div ref="pinRef" class="relative hidden md:block h-[85vh] overflow-hidden border-y border-[#2a2520] bg-[#0a0a0a]">
-      <div ref="trackRef" class="absolute top-0 left-0 h-full flex will-change-transform" :style="{ width: layout.trackWidth + 'px' }">
+    <div ref="pinRef" class="relative hidden md:block h-[85vh] overflow-x-auto overflow-y-hidden border-y border-[#2a2520] bg-[#0a0a0a]">
+      <div ref="trackRef" class="timeline-track absolute top-0 left-0 h-full flex will-change-transform" :style="{ width: layout.trackWidth + 'px' }">
         <!-- 分区色带（绝对定位，覆盖各自区域） -->
         <div
           v-for="s in layout.secs"

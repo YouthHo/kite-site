@@ -74,7 +74,7 @@ watch(() => route.query.q, (q) => {
 <template>
   <div class="char-page page-wrap">
     <div class="mb-10 flex items-center gap-5">
-      <SealStamp text="角色\n档案" />
+      <SealStamp :text="'角色\n档案'" />
       <div>
         <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>角色档案库</h2>
         <div class="gold-line w-40 mt-3" data-enter></div>

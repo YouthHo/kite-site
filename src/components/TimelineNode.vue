@@ -44,7 +44,7 @@ onBeforeUnmount(() => tween?.kill())
 </script>
 
 <template>
-  <div :data-tnode="index" class="tnode relative w-[300px] md:w-[360px] opacity-0">
+  <div :data-tnode="index" class="tnode relative w-[300px] md:w-[360px]" :class="manual ? '' : 'opacity-0'">
     <!-- 节点圆点（由父级在线上点亮，这里只负责卡片） -->
     <div class="k-card p-4 archive-tape">
       <div class="font-mono text-[10px] tracking-[0.25em] text-[#9d2235]">{{ node.date }}</div>
