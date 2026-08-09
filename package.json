@@ -6,6 +6,7 @@
   "description": "《风筝》(2017) 影视专题静态站 — 电影级谍战沉浸体验",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/check-case.cjs",
     "build": "vite build",
     "preview": "vite preview"
   },
