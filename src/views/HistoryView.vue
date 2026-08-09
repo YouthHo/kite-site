@@ -24,11 +24,23 @@ function switchTab(id) {
 }
 
 function toggleExpand(id) {
-  expanded.value = expanded.value === id ? null : id
-  nextTick(() => {
-    if (prefersReduced || !expanded.value) return
-    gsap.fromTo('.hist-expand', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' })
-  })
+  // 单选互斥：点开一张卡时，自动收起其他卡（当前已展开的卡再点一次则收起）
+  const prev = expanded.value
+  if (prev === id) {
+    expanded.value = null
+    return
+  }
+  if (prev) {
+    const prevEl = document.querySelector(`[data-hist="${prev}"] .hist-expand`)
+    if (prevEl) gsap.to(prevEl, { opacity: 0, y: 14, duration: 0.18, ease: 'power2.in' })
+  }
+  setTimeout(() => {
+    expanded.value = id
+    nextTick(() => {
+      if (prefersReduced || !expanded.value) return
+      gsap.fromTo('.hist-expand', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' })
+    })
+  }, prev ? 180 : 0)
 }
 
 onMounted(async () => {
@@ -69,6 +81,8 @@ onBeforeUnmount(() => crossTween?.kill())
       <article
         v-for="card in currentCat().cards"
         :key="card.id"
+        :data-hist="card.id"
+        :aria-expanded="expanded === card.id ? 'true' : 'false'"
         class="hist-card kraft-card relative p-6 cursor-pointer transition-all duration-300"
         @click="toggleExpand(card.id)"
       >
