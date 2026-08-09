@@ -19,28 +19,18 @@ function switchTab(id) {
   nextTick(() => {
     if (prefersReduced) return
     crossTween?.kill()
-    crossTween = gsap.fromTo('.hist-card', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.09, ease: 'power3.out' })
+    // 三张卡一起丝滑浮现：无先后、无明暗差
+    crossTween = gsap.fromTo('.hist-card', { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' })
   })
 }
 
 function toggleExpand(id) {
-  // 单选互斥：点开一张卡时，自动收起其他卡（当前已展开的卡再点一次则收起）
-  const prev = expanded.value
-  if (prev === id) {
-    expanded.value = null
-    return
-  }
-  if (prev) {
-    const prevEl = document.querySelector(`[data-hist="${prev}"] .hist-expand`)
-    if (prevEl) gsap.to(prevEl, { opacity: 0, y: 14, duration: 0.18, ease: 'power2.in' })
-  }
-  setTimeout(() => {
-    expanded.value = id
-    nextTick(() => {
-      if (prefersReduced || !expanded.value) return
-      gsap.fromTo('.hist-expand', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' })
-    })
-  }, prev ? 180 : 0)
+  // 单选互斥：同一时间只展开一张卡
+  expanded.value = expanded.value === id ? null : id
+  nextTick(() => {
+    if (prefersReduced || !expanded.value) return
+    gsap.fromTo('.hist-expand', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' })
+  })
 }
 
 onMounted(async () => {
@@ -76,13 +66,11 @@ onBeforeUnmount(() => crossTween?.kill())
 
     <p class="mb-8 text-[13px] leading-7 text-[#8a8275] max-w-3xl" data-enter>{{ currentCat().desc }}</p>
 
-    <!-- 牛皮纸档案卡 -->
-    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <!-- 牛皮纸档案卡（items-start：展开一张卡时，其余卡片不被网格拉高） -->
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6 items-start">
       <article
         v-for="card in currentCat().cards"
         :key="card.id"
-        :data-hist="card.id"
-        :aria-expanded="expanded === card.id ? 'true' : 'false'"
         class="hist-card kraft-card relative p-6 cursor-pointer transition-all duration-300"
         @click="toggleExpand(card.id)"
       >
