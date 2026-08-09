@@ -74,13 +74,13 @@
   <h2>九大页面</h2>
   <div class="grid g4">
     <div class="card"><div class="t"><small>/</small>首页 Home</div><p>电影级开场：Ken Burns 主视觉、标题模糊→清晰、金色细线展开、8 功能入口错落入场、电报码装饰、全屏扫描线。</p></div>
-    <div class="card"><div class="t"><small>/graph</small>人物关系图谱</div><p>ECharts 动态图谱：节点爆炸式扩散入场、呼吸脉动、连线光点流动、阵营筛选、实时搜索、点击弹出档案卡。</p></div>
-    <div class="card"><div class="t"><small>/characters</small>角色档案库</div><p>29 人完整档案，按阵营分组；结局区块带防剧透锁，含台词、关联人物环形头像、出场集数标签云。</p></div>
+    <div class="card"><div class="t"><small>/graph</small>人物关系图谱</div><p>ECharts 图谱：名字徽章节点、连线关系标签、阵营筛选 + 人物自由勾选（全选/全不选）、四种排序（阵营/姓名拼音/代号/出场）、独立缩放控件。</p></div>
+    <div class="card"><div class="t"><small>/characters</small>角色档案库</div><p>29 人完整档案，按阵营分组（可折叠，全部展开/收起）；结局区块带防剧透锁，关联人物头像下标注关系。</p></div>
     <div class="card"><div class="t"><small>/cast</small>演员阵容</div><p>16 位演员卡片墙（黑白→彩色 hover），详情面板从下方滑入，角色照/演员照拖动对比滑块。</p></div>
-    <div class="card"><div class="t"><small>/episodes</small>分集剧情</div><p>46 集完整剧情，档案标签式集数导航 + 观剧进度锁，档案纸质感详情页，关键事件标签逐个弹入。</p></div>
+    <div class="card"><div class="t"><small>/episodes</small>分集剧情</div><p>46 集完整剧情（每集 7-9 句多源还原细节），档案标签式集数导航 + 观剧进度锁，档案纸质感详情页。</p></div>
     <div class="card"><div class="t"><small>/timeline</small>全剧时间线</div><p>横向长卷轴（ScrollTrigger 钉住滚动）：44 节点、五段分区、真实历史标注、节点滚动点亮 + ECharts 统计。</p></div>
     <div class="card"><div class="t"><small>/architecture</small>势力架构</div><p>军统保密局 / 中统党通局 / 中共情报战线三方树形图，徽章节点逐层展开，点击弹出人物档案。</p></div>
-    <div class="card"><div class="t"><small>/history</small>历史背景</div><p>四类真实历史档案（军统、中统、中共情报战线、建国后运动与平反），旧纸卡片可展开，术语高亮。</p></div>
+    <div class="card"><div class="t"><small>/history</small>历史背景</div><p>四类真实历史牛皮纸档案卡（纤维纹理、撕边折角、红印章），卡片互斥展开，术语高亮。</p></div>
     <div class="card"><div class="t"><small>/scenes</small>名场面与台词</div><p>37 个名场面瀑布流 + 点击位置放大的灯箱；57 句经典台词电报纸条卡片，一键复制。</p></div>
   </div>
 
@@ -96,11 +96,23 @@
     </div>
   </div>
 
+  <h2>全站能力</h2>
+  <div class="grid g2">
+    <div class="card"><div class="t">主题与质感</div>
+      <span class="tag">深色胶片主题</span><span class="tag">浅色档案纸主题（暖象牙/牛皮纸）</span><span class="tag">一键切换·持久化</span><span class="tag">红印章</span><span class="tag">名字徽章体系</span>
+      <p style="margin-top:10px">导航栏太阳/月亮按钮全局换肤，ECharts 图表同步换色；无真实照片的人物统一阵营色名字徽章。</p>
+    </div>
+    <div class="card"><div class="t">交互与数据</div>
+      <span class="tag">全局搜索</span><span class="tag">观剧进度锁</span><span class="tag">图谱人物勾选/排序</span><span class="tag">分组折叠</span><span class="tag">悬停分享栏</span>
+      <p style="margin-top:10px">图谱支持阵营+人物双重筛选、全选/全不选、四种排序；角色分组可折叠；首页分享条悬停浮现。</p>
+    </div>
+  </div>
+
   <h2>数据规模（内容基于真实剧集）</h2>
   <table>
     <tr><th>数据文件</th><th>规模</th><th>说明</th></tr>
     <tr><td>characters.json</td><td>29 人物</td><td>含代号、阵营、公开身份、履历、结局、关联、出场集数</td></tr>
-    <tr><td>episodes.json</td><td>46 集</td><td>每集标题、年代、剧情梗概、关键事件、出场人物</td></tr>
+    <tr><td>episodes.json</td><td>46 集</td><td>每集 7-9 句多源还原细节 + 标题、年代、关键事件、出场人物</td></tr>
     <tr><td>quotes.json</td><td>57 句</td><td>台词 + 说话人 + 集数 + 语境，来源标注</td></tr>
     <tr><td>scenes.json</td><td>37 场</td><td>名场面标题、出处集数、描述</td></tr>
     <tr><td>timeline.json</td><td>44 节点</td><td>1927—1980，剧情节点 + 真实历史（金色标注）</td></tr>
@@ -130,6 +142,9 @@ npm run preview    # 本地预览构建产物</pre>
 
   <h2>内容准确性说明</h2>
   <p style="color:var(--ink);font-size:13px">剧情、人物、演员、台词均基于百度百科、电视猫、豆瓣、知乎等公开资料整理，数据文件保留 <code>source</code> 字段。曾墨怡、高占龙、江万朝等配角的饰演者公开渠道未能核实，显示“待考”。本站为非官方粉丝站，图片均为占位，仅供学习交流。</p>
+
+  <h2>版权与许可</h2>
+  <p style="color:var(--ink);font-size:13px">本站原创内容采用 <b>CC BY-NC 4.0（署名-非商业性使用）</b> 许可：可自由分享与演绎，禁止商用，须署名（详见 <code>LICENSE.md</code>）。《风筝》剧集版权归权利人所有；站内历史照片来自 Wikimedia Commons（公共领域/自由许可）。</p>
 
   <div class="foot">KITE FILES · 信仰至上 半生潜伏 · 2026</div>
 </div>

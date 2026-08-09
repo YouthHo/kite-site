@@ -2,6 +2,7 @@
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import gsap from 'gsap'
+import { ChevronDown, ChevronRight } from 'lucide-vue-next'
 import characters from '@/data/characters.json'
 import episodes from '@/data/episodes.json'
 import quotes from '@/data/quotes.json'
@@ -14,6 +15,8 @@ import { pageEnter, imageReveal, prefersReduced } from '@/utils/anim'
 const route = useRoute()
 const selected = ref(characters[0])
 const detailEl = ref(null)
+// 左侧分组折叠状态（默认全部展开）
+const collapsedGroups = ref(new Set())
 
 const GROUPS = [
   { id: 'underground', label: '中共地下战线', color: '#1e4a52' },
@@ -47,6 +50,20 @@ function select(c) {
   if (c.id === selected.value.id) return
   selected.value = c
   animateDetail()
+}
+
+function toggleGroup(id) {
+  const s = new Set(collapsedGroups.value)
+  if (s.has(id)) s.delete(id)
+  else s.add(id)
+  collapsedGroups.value = s
+}
+
+function collapseAll() {
+  collapsedGroups.value = new Set(GROUPS.map((g) => g.id))
+}
+function expandAll() {
+  collapsedGroups.value = new Set()
 }
 
 function animateDetail() {
@@ -89,13 +106,25 @@ watch(() => route.query.q, (q) => {
     <div class="grid lg:grid-cols-[320px_1fr] gap-8">
       <!-- 左侧人物列表 -->
       <aside class="lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto pr-1">
-        <div v-for="g in grouped" :key="g.id" class="mb-5">
-          <div class="flex items-center gap-2 mb-2" data-enter>
+        <div class="flex items-center justify-between mb-3" data-enter>
+          <span class="font-mono text-[10px] tracking-[0.25em] text-[#555048]">按阵营分组 · 可折叠</span>
+          <div class="flex gap-3">
+            <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="expandAll">全部展开</button>
+            <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="collapseAll">全部收起</button>
+          </div>
+        </div>
+        <div v-for="g in grouped" :key="g.id" class="mb-4">
+          <button class="flex items-center gap-2 mb-1.5 w-full text-left group" data-enter @click="toggleGroup(g.id)">
             <span class="w-6 h-[2px]" :style="{ background: g.color }"></span>
             <span class="text-[12px] tracking-[0.25em]" :style="{ color: g.color }">{{ g.label }}</span>
             <span class="font-mono text-[10px] text-[#555048]">{{ g.items.length }}</span>
+            <span class="ml-auto transition-transform duration-300" :class="collapsedGroups.has(g.id) ? '-rotate-90' : ''">
+              <ChevronDown :size="14" class="text-[#555048] group-hover:text-[#8a8275]" />
+            </span>
+          </button>
+          <div v-show="!collapsedGroups.has(g.id)">
+            <CharacterCard v-for="c in g.items" :key="c.id" :character="c" :active="selected.id === c.id" compact @select="select" />
           </div>
-          <CharacterCard v-for="c in g.items" :key="c.id" :character="c" :active="selected.id === c.id" compact @select="select" />
         </div>
       </aside>
 

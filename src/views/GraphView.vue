@@ -23,6 +23,17 @@ let resizeObs = null
 let wheelCleanup = null
 
 const activeFactions = ref(new Set(Object.keys(FACTION)))
+// 人物级筛选（与阵营筛选叠加生效）+ 排序
+const personSel = ref(new Set(graph.nodes.map((n) => n.id)))
+const sortBy = ref('faction')
+
+const FACTION_ORDER = ['junton', 'zhongtong', 'underground', 'gongan', 'civilian']
+const SORTS = [
+  { id: 'faction', label: '阵营' },
+  { id: 'name', label: '姓名' },
+  { id: 'code', label: '代号' },
+  { id: 'span', label: '出场' },
+]
 
 const charMap = computed(() => {
   const m = {}
@@ -30,17 +41,52 @@ const charMap = computed(() => {
   return m
 })
 
+const sortedList = computed(() => {
+  const ids = new Set(visibleNodeIds().map((n) => n.id))
+  const list = graph.nodes.filter((n) => ids.has(n.id))
+  const copy = [...list]
+  const byName = (a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN-u-co-pinyin')
+  if (sortBy.value === 'faction') copy.sort((a, b) => FACTION_ORDER.indexOf(a.faction) - FACTION_ORDER.indexOf(b.faction) || byName(a, b))
+  else if (sortBy.value === 'name') copy.sort(byName)
+  else if (sortBy.value === 'code') copy.sort((a, b) => (b.code ? 1 : 0) - (a.code ? 1 : 0) || byName(a, b))
+  else if (sortBy.value === 'span') {
+    const span = (n) => {
+      const c = charMap.value[n.id]
+      return c?.episodes ? c.episodes[1] - c.episodes[0] : 0
+    }
+    copy.sort((a, b) => span(b) - span(a))
+  }
+  return copy
+})
+
+function togglePerson(id) {
+  const s = new Set(personSel.value)
+  if (s.has(id)) s.delete(id)
+  else s.add(id)
+  personSel.value = s
+  chart?.setOption(buildOption(), true)
+}
+function selectAllPeople() {
+  personSel.value = new Set(graph.nodes.map((n) => n.id))
+  chart?.setOption(buildOption(), true)
+}
+function selectNonePeople() {
+  personSel.value = new Set()
+  chart?.setOption(buildOption(), true)
+}
+
 function visibleNodeIds() {
   const kw = keyword.value.trim().toLowerCase()
   return graph.nodes.filter((n) => {
     if (!activeFactions.value.has(n.faction)) return false
+    if (!personSel.value.has(n.id)) return false
     if (!kw) return true
     const c = charMap.value[n.id]
     return (n.name + (n.code || '') + (c?.identity || '')).toLowerCase().includes(kw)
   })
 }
 
-/** 完整构建 option（全量重建；节点统一为“完整名字”徽章，无粒子流动） */
+/** 完整构建 option（全量重建；节点统一为“完整名字”徽章） */
 function buildOption({ center = false, pulse = 1 } = {}) {
   const light = theme.value === 'light'
   const ids = new Set(visibleNodeIds().map((n) => n.id))
@@ -158,7 +204,7 @@ onMounted(async () => {
   wheelCleanup = () => chartEl.value?.removeEventListener('wheel', onWheel)
 })
 
-// 主题切换时重绘（浅色主题下连线/标签配色不同）
+// 主题切换时重绘
 watch(theme, () => {
   if (chart) chart.setOption(buildOption(), true)
 })
@@ -199,7 +245,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="page-wrap !pt-16 !pb-0 h-screen flex flex-col">
     <div class="flex items-center gap-4 mb-4">
-      <SealStamp :text="'关系\n图谱'" />
+      <SealStamp text="关系图谱" />
       <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]">人物关系图谱</h2>
       <span class="file-label">WHO IS KITE · WHO IS SHADOW</span>
     </div>
@@ -240,12 +286,40 @@ onBeforeUnmount(() => {
             <input type="checkbox" class="hidden" :checked="activeFactions.has(k)" @change="toggleFaction(k)" />
           </label>
         </div>
-        <div class="mb-2 font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">人物索引（{{ visibleNodeIds().length }}）</div>
+        <div class="mb-2 mt-5 font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">排序方式</div>
+        <div class="flex gap-1 mb-5">
+          <button
+            v-for="s in SORTS"
+            :key="s.id"
+            class="flex-1 text-[11px] py-1.5 border transition-colors"
+            :class="sortBy === s.id ? 'border-[#9d2235] text-[#e8dcc8] bg-[#9d2235]/10' : 'border-[#2a2520] text-[#555048] hover:border-[#9d2235]/60 hover:text-[#8a8275]'"
+            @click="sortBy = s.id"
+          >
+            {{ s.label }}
+          </button>
+        </div>
+        <div class="mb-2 flex items-center justify-between">
+          <span class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">人物索引（{{ visibleNodeIds().length }}）</span>
+          <div class="flex gap-3">
+            <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectAllPeople">全选</button>
+            <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectNonePeople">全不选</button>
+          </div>
+        </div>
         <div class="space-y-0.5">
-          <button v-for="n in graph.nodes.filter((n) => visibleNodeIds().map((v) => v.id).includes(n.id))" :key="n.id"
+          <button
+            v-for="n in sortedList"
+            :key="n.id"
             class="w-full text-left flex items-center gap-2.5 px-2.5 py-2 text-[12px] border-l-2 border-transparent hover:border-[#9d2235] hover:bg-[#161616] transition-colors"
             :class="selected?.id === n.id ? 'border-[#9d2235] bg-[#161616]' : ''"
-            @click="openPanel(n.id)">
+            @click="openPanel(n.id)"
+          >
+            <span
+              class="w-3.5 h-3.5 border grid place-items-center shrink-0 transition-colors cursor-pointer"
+              :style="{ borderColor: FACTION[n.faction].color, background: personSel.has(n.id) ? FACTION[n.faction].color : 'transparent' }"
+              @click.stop="togglePerson(n.id)"
+            >
+              <span v-if="personSel.has(n.id)" class="text-[9px] text-white">✓</span>
+            </span>
             <span class="w-2 h-2 rounded-full shrink-0" :style="{ background: FACTION[n.faction].color }"></span>
             <span class="text-[#e8dcc8] truncate">{{ n.name }}</span>
             <span v-if="n.code" class="font-mono text-[9px] text-[#b8860b] shrink-0">{{ n.code }}</span>

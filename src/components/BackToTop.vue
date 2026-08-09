@@ -8,7 +8,7 @@ let tween = null
 
 onMounted(() => {
   const onScroll = () => {
-    const v = window.scrollY > 500
+    const v = window.scrollY > 300
     if (v !== show.value) {
       show.value = v
       const btn = document.querySelector('.k-backtop')
@@ -22,7 +22,7 @@ onMounted(() => {
 })
 
 function toTop() {
-  gsap.to(window, { scrollTo: 0, duration: 0.9, ease: 'power3.inOut' })
+  gsap.to(window, { scrollTo: 0, duration: 0.5, ease: 'power2.out' })
 }
 
 onBeforeUnmount(() => tween?.kill())

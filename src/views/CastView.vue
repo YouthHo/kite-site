@@ -9,7 +9,6 @@ import { pageEnter, prefersReduced } from '@/utils/anim'
 
 const detail = ref(null)
 const panel = ref(null)
-const compare = ref(50)
 let panelTween = null
 
 // 多彩档案配色（无真实照片时的名字卡，按索引轮换）
@@ -103,20 +102,14 @@ onBeforeUnmount(() => panelTween?.kill())
                   角色注：{{ roleInfo(detail).brief }}
                 </p>
 
+                <!-- 角色照（演员照片已在左侧展示，这里只保留角色照位） -->
                 <div class="mt-6">
-                  <div class="file-label mb-3">角色照 / 演员照 对比</div>
-                  <div class="relative h-52 overflow-hidden border border-[#2a2520] select-none" @mousemove="(e) => (compare = (e.offsetX / e.currentTarget.offsetWidth) * 100)">
-                    <img :src="detail.image" alt="演员照" class="absolute inset-0 w-full h-full object-cover" />
-                    <div class="absolute inset-0 overflow-hidden" :style="{ width: compare + '%' }">
-                      <img :src="roleInfo(detail)?.image || detail.image" alt="角色照（占位）" class="absolute inset-0 w-full h-full object-cover" />
-                    </div>
-                    <div class="absolute top-0 bottom-0 w-[2px] bg-[#9d2235] shadow-[0_0_12px_rgba(157,34,53,0.8)]" :style="{ left: compare + '%' }">
-                      <span class="absolute top-1/2 -translate-y-1/2 -left-3 w-6 h-6 rounded-full bg-[#9d2235] border-2 border-[#e8dcc8] grid place-items-center text-[10px] text-white cursor-ew-resize">⇔</span>
-                    </div>
-                    <span class="absolute top-2 left-2 font-mono text-[9px] tracking-[0.2em] text-white/80 bg-black/50 px-2 py-0.5">角色（占位）</span>
-                    <span class="absolute top-2 right-2 font-mono text-[9px] tracking-[0.2em] text-white/80 bg-black/50 px-2 py-0.5">演员（占位）</span>
+                  <div class="file-label mb-3">角色照</div>
+                  <div class="relative h-52 overflow-hidden border border-[#2a2520]">
+                    <img :src="roleInfo(detail)?.image || detail.image" alt="角色照（占位）" class="absolute inset-0 w-full h-full object-cover k-img" />
+                    <span class="absolute top-2 left-2 font-mono text-[9px] tracking-[0.2em] text-white/80 bg-black/50 px-2 py-0.5">角色照（占位）</span>
                   </div>
-                  <p class="mt-2 text-[10px] text-[#555048]">左右拖动查看 · 图片均为占位图，请替换为正式剧照与写真</p>
+                  <p class="mt-2 text-[10px] text-[#555048]">图片为占位，替换为正式剧照</p>
                 </div>
 
                 <div class="mt-6">
