@@ -1,9 +1,10 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import * as echarts from 'echarts'
 import timeline from '@/data/timeline.json'
+import SealStamp from '@/components/SealStamp.vue'
 import TimelineNode from '@/components/TimelineNode.vue'
 import { prefersReduced } from '@/utils/anim'
 
@@ -144,20 +145,24 @@ onMounted(async () => {
 function initMiniChart() {
   const el = document.querySelector('.mini-chart')
   if (!el) return
+  if (miniChart) miniChart.dispose()
   miniChart = echarts.init(el)
+  const light = theme.value === 'light'
   miniChart.setOption({
     backgroundColor: 'transparent',
     grid: { left: 40, right: 16, top: 30, bottom: 30 },
-    tooltip: { trigger: 'axis', backgroundColor: '#121212', borderColor: '#2a2520', textStyle: { color: '#e8dcc8' } },
-    legend: { data: ['剧情节点', '真实历史'], textStyle: { color: '#8a8275' }, top: 0 },
-    xAxis: { type: 'category', data: SECTIONS.map((s) => s.label), axisLine: { lineStyle: { color: '#2a2520' } }, axisLabel: { color: '#8a8275' } },
-    yAxis: { type: 'value', splitLine: { lineStyle: { color: 'rgba(42,37,32,0.6)' } }, axisLabel: { color: '#555048' } },
+    tooltip: { trigger: 'axis', backgroundColor: light ? '#fff' : '#121212', borderColor: light ? '#d6cfc1' : '#2a2520', textStyle: { color: light ? '#2f2b23' : '#e8dcc8' } },
+    legend: { data: ['剧情节点', '真实历史'], textStyle: { color: light ? '#6e675a' : '#8a8275' }, top: 0 },
+    xAxis: { type: 'category', data: SECTIONS.map((s) => s.label), axisLine: { lineStyle: { color: light ? '#c9b795' : '#2a2520' } }, axisLabel: { color: light ? '#6e675a' : '#8a8275' } },
+    yAxis: { type: 'value', splitLine: { lineStyle: { color: light ? 'rgba(150,120,70,0.2)' : 'rgba(42,37,32,0.6)' } }, axisLabel: { color: light ? '#7a7366' : '#555048' } },
     series: [
       { name: '剧情节点', type: 'bar', data: SECTIONS.map((s) => nodes.value.filter((n) => n.section === s.id && n.type === 'plot').length), itemStyle: { color: '#9d2235' }, barWidth: 18 },
-      { name: '真实历史', type: 'bar', data: SECTIONS.map((n) => nodes.value.filter((x) => x.section === n.id && x.type === 'history').length), itemStyle: { color: '#b8860b' }, barWidth: 18 },
+      { name: '真实历史', type: 'bar', data: SECTIONS.map((s) => nodes.value.filter((n) => n.section === s.id && n.type === 'history').length), itemStyle: { color: '#b8860b' }, barWidth: 18 },
     ],
   })
 }
+
+watch(theme, () => initMiniChart())
 
 onBeforeUnmount(() => {
   ctx?.revert()
@@ -171,6 +176,7 @@ onBeforeUnmount(() => {
     <div class="sticky top-0 z-40 bg-[#080808]/95 backdrop-blur-md border-b border-[#1c1815]">
       <div class="px-5 md:px-8 py-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
         <div class="flex items-center gap-4">
+          <SealStamp text="全剧\n时间" />
           <h2 class="serif-title text-3xl md:text-4xl text-[#e8dcc8]" data-enter>全剧时间线</h2>
           <span class="file-label hidden md:inline-block" data-enter>1927—1980 · 史诗长卷</span>
         </div>

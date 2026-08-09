@@ -7,6 +7,7 @@ import episodes from '@/data/episodes.json'
 import quotes from '@/data/quotes.json'
 import CharacterCard from '@/components/CharacterCard.vue'
 import NameBadge from '@/components/NameBadge.vue'
+import SealStamp from '@/components/SealStamp.vue'
 import SpoilerGuard from '@/components/SpoilerGuard.vue'
 import { pageEnter, imageReveal, prefersReduced } from '@/utils/anim'
 
@@ -72,10 +73,13 @@ watch(() => route.query.q, (q) => {
 
 <template>
   <div class="char-page page-wrap">
-    <div class="mb-8">
-      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>角色档案库</h2>
-      <div class="gold-line w-40 mt-3" data-enter></div>
-      <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>29 份档案 · 按阵营归档 · 结局含剧透保护</p>
+    <div class="mb-10 flex items-center gap-5">
+      <SealStamp text="角色\n档案" />
+      <div>
+        <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>角色档案库</h2>
+        <div class="gold-line w-40 mt-3" data-enter></div>
+        <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>29 份档案 · 按阵营归档 · 结局含剧透保护</p>
+      </div>
     </div>
 
     <div class="grid lg:grid-cols-[320px_1fr] gap-8">

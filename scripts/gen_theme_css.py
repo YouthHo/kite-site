@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # 生成浅色主题的 Tailwind 任意值类覆盖（src/styles/theme-light.css）
-# 纯 CSS 字面量选择器，避免 Sass 对反斜杠转义的二次解析
+# 覆盖 bg/border/text + hover:/group-hover: 变体，纯 CSS 字面量选择器
 import os
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "styles", "theme-light.css")
@@ -12,27 +12,32 @@ BG_MAP = {
     "#1a1415": "#f7e9e7", "#1a1a1a": "#f3efe7", "#1c1815": "#e5dfd2", "#2a2520": "#d6cfc1",
 }
 TX_MAP = {
-    "#555048": "#8c8577", "#8a8275": "#6e675a", "#d8a0a8": "#8e4d5c", "#d8ccb8": "#4d463c",
+    "#555048": "#7a7366", "#8a8275": "#6e675a", "#d8a0a8": "#8e4d5c", "#d8ccb8": "#4d463c",
     "#e8dcc8": "#2f2b23", "#f0e6d2": "#262119", "#f5e9d6": "#262119", "#b8860b": "#8f6d0e",
 }
-# 实际用到的透明度变体（bg-[#xxx]/n）
 ALPHA_VARIANTS = {"#080808": ["60"], "#0e0e0e": ["85", "80"]}
 
 def esc(hexv):
-    """#080808 -> \\#080808（CSS 选择器中的转义）"""
     return "\\#" + hexv[1:]
 
 lines = ["/* 自动生成：scripts/gen_theme_css.py —— 浅色主题「档案纸」的 Tailwind 任意值类映射 */"]
 lines.append("[data-theme='light'] {")
 for k, v in BG_MAP.items():
-    lines.append(f"  .bg-[{esc(k)}] {{ background-color: {v} !important; }}")
-    lines.append(f"  .border-[{esc(k)}] {{ border-color: {v} !important; }}")
+    e = esc(k)
+    lines.append(f"  .bg-[{e}] {{ background-color: {v} !important; }}")
+    lines.append(f"  .hover\\:bg-[{e}]:hover {{ background-color: {v} !important; }}")
+    lines.append(f"  .group:hover .group-hover\\:bg-[{e}] {{ background-color: {v} !important; }}")
+    lines.append(f"  .border-[{e}] {{ border-color: {v} !important; }}")
+    lines.append(f"  .hover\\:border-[{e}]:hover {{ border-color: {v} !important; }}")
 for k, variants in ALPHA_VARIANTS.items():
     for s in variants:
         lines.append(f"  .bg-[{esc(k)}]\\/{s} {{ background-color: {BG_MAP[k]} !important; }}")
 for k, v in TX_MAP.items():
-    lines.append(f"  .text-[{esc(k)}] {{ color: {v} !important; }}")
-    lines.append(f"  .border-[{esc(k)}] {{ border-color: {v} !important; }}")
+    e = esc(k)
+    lines.append(f"  .text-[{e}] {{ color: {v} !important; }}")
+    lines.append(f"  .hover\\:text-[{e}]:hover {{ color: {v} !important; }}")
+    lines.append(f"  .group:hover .group-hover\\:text-[{e}] {{ color: {v} !important; }}")
+    lines.append(f"  .border-[{e}] {{ border-color: {v} !important; }}")
 lines.append("}")
 lines.append("")
 

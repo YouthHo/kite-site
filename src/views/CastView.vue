@@ -4,13 +4,25 @@ import gsap from 'gsap'
 import { X } from 'lucide-vue-next'
 import actors from '@/data/actors.json'
 import characters from '@/data/characters.json'
+import SealStamp from '@/components/SealStamp.vue'
 import { isRealPhoto } from '@/utils/avatar'
 import { pageEnter, prefersReduced } from '@/utils/anim'
 
 const detail = ref(null)
 const panel = ref(null)
-const compare = ref(50) // 对比滑块位置 0-100
+const compare = ref(50)
 let panelTween = null
+
+// 多彩档案配色（无真实照片时的名字卡，按索引轮换）
+const PALETTE = [
+  { from: '#9d2235', to: '#5c141f' }, // 暗红
+  { from: '#1e4a52', to: '#123036' }, // 暗青
+  { from: '#7d3b52', to: '#4a2233' }, // 紫红
+  { from: '#8b5a2b', to: '#5c3a1a' }, // 赭棕
+  { from: '#3f6d5a', to: '#27463a' }, // 苔绿
+  { from: '#5a4a7a', to: '#382c50' }, // 靛紫
+]
+const paletteOf = (i) => PALETTE[i % PALETTE.length]
 
 onMounted(async () => {
   await nextTick()
@@ -32,22 +44,25 @@ onBeforeUnmount(() => panelTween?.kill())
 
 <template>
   <div class="cast-page page-wrap">
-    <div class="mb-8">
-      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>演员阵容</h2>
-      <div class="gold-line w-40 mt-3" data-enter></div>
-      <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>16 位主演 · 照片悬停彩色化 · 点击查看详情</p>
+    <div class="mb-10 flex items-center gap-5">
+      <SealStamp text="演员\n阵容" />
+      <div>
+        <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>演员阵容</h2>
+        <div class="gold-line w-40 mt-3" data-enter></div>
+        <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>16 位主演 · 点击查看详情</p>
+      </div>
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-7">
       <article
-        v-for="a in actors"
+        v-for="(a, i) in actors"
         :key="a.id"
-        class="k-card archive-tape relative overflow-hidden cursor-pointer group"
+        class="k-card relative overflow-hidden cursor-pointer group"
         data-enter
         @click="open(a)"
       >
-        <div class="aspect-[3/4] overflow-hidden bg-[#101010]">
-          <!-- 真实照片：悬停轻微放大（不再黑白化） -->
+        <!-- 媒体区：真实照片 或 多彩名字卡（统一版式） -->
+        <div class="aspect-[3/4] overflow-hidden bg-[#101010] relative">
           <img
             v-if="isRealPhoto(a.image)"
             :src="a.image"
@@ -55,26 +70,28 @@ onBeforeUnmount(() => panelTween?.kill())
             loading="lazy"
             class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
           />
-          <!-- 无真实照片：深色名字卡（on-media 保持浅字） -->
-          <div v-else class="w-full h-full grid place-items-center" style="background: linear-gradient(160deg, #1a1a1a, #0e0e0e)">
+          <div v-else class="w-full h-full grid place-items-center transition-all duration-700 group-hover:scale-[1.03]"
+            :style="{ background: `linear-gradient(155deg, ${paletteOf(i).from}, ${paletteOf(i).to})` }">
             <div class="text-center px-4">
-              <div class="serif-title text-3xl md:text-4xl tracking-[0.2em] text-[#e8dcc8] on-media">{{ a.name }}</div>
-              <div class="gold-line w-24 mx-auto mt-3"></div>
-              <div class="mt-2 font-mono text-[10px] tracking-[0.25em] text-[#8a8275] on-media">饰 {{ a.role }}</div>
+              <div class="serif-title text-3xl md:text-4xl tracking-[0.18em] text-[#f5f2e9]" style="text-shadow: 0 2px 14px rgba(0,0,0,0.35)">{{ a.name }}</div>
+              <div class="mx-auto mt-3 h-px w-24" style="background: linear-gradient(90deg, transparent, rgba(245,242,233,0.8), transparent)"></div>
+              <div class="mt-2 font-mono text-[10px] tracking-[0.25em] text-[#f5f2e9]/80">饰 {{ a.role }}</div>
             </div>
           </div>
+          <!-- 统一底部压影 -->
+          <div class="absolute inset-x-0 bottom-0 h-16 pointer-events-none" style="background: linear-gradient(transparent, rgba(0,0,0,0.35))"></div>
+          <span class="absolute top-3 right-3 font-mono text-[9px] tracking-[0.25em] text-[#f5f2e9]/60 border border-[#f5f2e9]/25 px-1.5 py-0.5">CAST-{{ String(i + 1).padStart(2, '0') }}</span>
         </div>
+        <!-- 底部信息区（所有卡片一致） -->
         <div class="p-5 relative">
           <h3 class="serif-title text-[17px] text-[#e8dcc8]">{{ a.name }}</h3>
-          <p class="mt-1 text-[12px] tracking-[0.15em] text-[#b8860b] transition-all duration-300 group-hover:-translate-y-0.5">
-            饰 {{ a.role }}
-          </p>
-          <p class="mt-1 font-mono text-[10px] text-[#555048]">{{ a.roleNote }}</p>
+          <p class="mt-1 text-[12px] tracking-[0.15em] text-[#b8860b]">饰 {{ a.role }}</p>
+          <p class="mt-1.5 font-mono text-[10px] text-[#555048] leading-4">{{ a.roleNote }}</p>
         </div>
       </article>
     </div>
 
-    <!-- 详情面板：从下方滑入 -->
+    <!-- 详情面板 -->
     <Teleport to="body">
       <div v-if="detail" class="fixed inset-0 z-[92]">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-md" @click="close"></div>
@@ -82,7 +99,6 @@ onBeforeUnmount(() => panelTween?.kill())
           <div class="max-w-5xl mx-auto p-6 md:p-10">
             <button class="absolute top-5 right-5 text-[#8a8275] hover:text-[#e8dcc8]" @click="close"><X :size="20" /></button>
             <div class="grid md:grid-cols-[280px_1fr] gap-8">
-              <!-- 演员写真 -->
               <div>
                 <img :src="detail.image" :alt="detail.name" class="w-full object-cover border border-[#2a2520] k-img" />
               </div>
@@ -95,7 +111,6 @@ onBeforeUnmount(() => panelTween?.kill())
                   角色注：{{ roleInfo(detail).brief }}
                 </p>
 
-                <!-- 角色照 vs 演员照 滑块对比 -->
                 <div class="mt-6">
                   <div class="file-label mb-3">角色照 / 演员照 对比</div>
                   <div class="relative h-52 overflow-hidden border border-[#2a2520] select-none" @mousemove="(e) => (compare = (e.offsetX / e.currentTarget.offsetWidth) * 100)">
@@ -112,7 +127,6 @@ onBeforeUnmount(() => panelTween?.kill())
                   <p class="mt-2 text-[10px] text-[#555048]">左右拖动查看 · 图片均为占位图，请替换为正式剧照与写真</p>
                 </div>
 
-                <!-- 代表作 -->
                 <div class="mt-6">
                   <div class="file-label mb-3">代表作</div>
                   <div class="flex flex-wrap gap-2">

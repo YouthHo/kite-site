@@ -7,6 +7,7 @@ import episodes from '@/data/episodes.json'
 import characters from '@/data/characters.json'
 import EpisodeCard from '@/components/EpisodeCard.vue'
 import NameBadge from '@/components/NameBadge.vue'
+import SealStamp from '@/components/SealStamp.vue'
 import { appState } from '@/store/app'
 import { pageEnter, imageReveal, prefersReduced } from '@/utils/anim'
 
@@ -60,7 +61,8 @@ onBeforeUnmount(() => gsap.killTweensOf('.ep-tag'))
 
 <template>
   <div class="ep-page page-wrap !pt-16">
-    <div class="mb-6 flex items-center gap-3">
+    <div class="mb-6 flex items-center gap-4">
+      <SealStamp text="分集\n剧情" />
       <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>分集剧情</h2>
       <span class="file-label" data-enter>46 EPISODES · 翻阅档案</span>
     </div>

@@ -3,6 +3,7 @@ import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue'
 import gsap from 'gsap'
 import scenes from '@/data/scenes.json'
 import quotes from '@/data/quotes.json'
+import SealStamp from '@/components/SealStamp.vue'
 import ImageLightbox from '@/components/ImageLightbox.vue'
 import QuoteCard from '@/components/QuoteCard.vue'
 import { pageEnter, prefersReduced } from '@/utils/anim'
@@ -41,7 +42,10 @@ onBeforeUnmount(() => crossTween?.kill())
 <template>
   <div class="scenes-page page-wrap">
     <div class="mb-8 flex flex-wrap items-center gap-6">
-      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>名场面与台词</h2>
+      <div class="flex items-center gap-4">
+        <SealStamp text="名场\n面录" />
+        <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>名场面与台词</h2>
+      </div>
       <!-- 标签切换 -->
       <div class="flex gap-1 border-b border-[#2a2520]" data-enter>
         <button

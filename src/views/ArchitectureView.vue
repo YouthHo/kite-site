@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { X } from 'lucide-vue-next'
 import architecture from '@/data/architecture.json'
 import characters from '@/data/characters.json'
+import SealStamp from '@/components/SealStamp.vue'
 import { pageEnter, prefersReduced } from '@/utils/anim'
 
 const activeTab = ref('junton')
@@ -69,10 +70,13 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="arch-page page-wrap">
-    <div class="mb-8">
-      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>势力架构</h2>
-      <div class="gold-line w-40 mt-3" data-enter></div>
-      <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>三方势力 · 徽章式树形图 · 点击节点查看详情</p>
+    <div class="mb-10 flex items-center gap-5">
+      <SealStamp text="势力\n架构" />
+      <div>
+        <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>势力架构</h2>
+        <div class="gold-line w-40 mt-3" data-enter></div>
+        <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>三方势力 · 徽章式树形图 · 点击节点查看详情</p>
+      </div>
     </div>
 
     <!-- 顶部标签页：下划线跟随 -->
@@ -115,7 +119,7 @@ onBeforeUnmount(() => {
                 class="relative w-24 h-24 md:w-28 md:h-28 rounded-full border-2 grid place-items-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_28px_rgba(157,34,53,0.45)]"
                 :style="{
                   borderColor: currentOrg.color,
-                  background: 'radial-gradient(circle, ' + currentOrg.color + '26, #0e0e0e 70%)',
+                  background: 'radial-gradient(circle, ' + currentOrg.color + '26, var(--node-bg) 70%)',
                   boxShadow: node.level === 0 ? `0 0 30px ${currentOrg.color}55` : 'none',
                 }"
               >

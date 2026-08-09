@@ -3,6 +3,7 @@ import { ref, onMounted, nextTick, onBeforeUnmount } from 'vue'
 import gsap from 'gsap'
 import { ChevronDown } from 'lucide-vue-next'
 import history from '@/data/history.json'
+import SealStamp from '@/components/SealStamp.vue'
 import { pageEnter, prefersReduced } from '@/utils/anim'
 
 const activeTab = ref('junton-history')
@@ -39,10 +40,13 @@ onBeforeUnmount(() => crossTween?.kill())
 
 <template>
   <div class="hist-page page-wrap">
-    <div class="mb-8">
-      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>历史背景</h2>
-      <div class="gold-line w-40 mt-3" data-enter></div>
-      <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>真实历史档案 · 四类分类 · 点击卡片展开</p>
+    <div class="mb-10 flex items-center gap-5">
+      <SealStamp text="历史\n档案" />
+      <div>
+        <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>历史背景</h2>
+        <div class="gold-line w-40 mt-3" data-enter></div>
+        <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>真实历史档案 · 四类分类 · 点击卡片展开</p>
+      </div>
     </div>
 
     <!-- 分类标签：仿档案分类签 -->
@@ -60,42 +64,44 @@ onBeforeUnmount(() => crossTween?.kill())
 
     <p class="mb-8 text-[13px] leading-7 text-[#8a8275] max-w-3xl" data-enter>{{ currentCat().desc }}</p>
 
-    <!-- 旧纸卡片列表 -->
+    <!-- 牛皮纸档案卡 -->
     <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
       <article
         v-for="card in currentCat().cards"
         :key="card.id"
-        class="hist-card k-card archive-tape relative p-6 cursor-pointer"
+        class="hist-card kraft-card relative p-6 cursor-pointer transition-all duration-300"
         @click="toggleExpand(card.id)"
       >
         <!-- 边角磨损 -->
-        <div class="absolute -top-px -left-px w-6 h-6 pointer-events-none" style="background: radial-gradient(circle at 0 0, #080808 40%, transparent 42%);"></div>
-        <div class="absolute -bottom-px -right-px w-6 h-6 pointer-events-none" style="background: radial-gradient(circle at 100% 100%, #080808 40%, transparent 42%);"></div>
+        <div class="absolute -top-px -left-px w-7 h-7 pointer-events-none" style="background: radial-gradient(circle at 0 0, #080808 42%, transparent 44%);"></div>
+        <div class="absolute -bottom-px -right-px w-7 h-7 pointer-events-none" style="background: radial-gradient(circle at 100% 100%, #080808 42%, transparent 44%);"></div>
+        <!-- 折角 -->
+        <div class="absolute top-0 right-0 w-0 h-0 pointer-events-none" style="border-style: solid; border-width: 0 26px 26px 0; border-color: transparent rgba(120, 90, 50, 0.35) transparent transparent;"></div>
 
-        <div class="font-mono text-[10px] tracking-[0.3em] text-[#b8860b]">{{ card.period }}</div>
-        <h3 class="serif-title text-lg mt-2 text-[#e8dcc8]">{{ card.title }}</h3>
+        <div class="kraft-period">{{ card.period }}</div>
+        <h3 class="kraft-title mt-2">{{ card.title }}</h3>
         <div class="red-line mt-3"></div>
 
         <div v-if="expanded === card.id" class="hist-expand mt-4">
           <div v-for="sec in card.body" :key="sec.h" class="mb-4">
-            <h4 class="text-[14px] tracking-[0.1em] text-[#b8860b] mb-2">{{ sec.h }}</h4>
-            <p class="text-[12.5px] leading-7 text-[#8a8275]">{{ sec.p }}</p>
+            <h4 class="text-[14px] tracking-[0.1em] text-[#6a3d1e] mb-2">{{ sec.h }}</h4>
+            <p class="kraft-body text-[12.5px] leading-7">{{ sec.p }}</p>
           </div>
-          <div class="mt-4 border-t border-[#2a2520] pt-3">
-            <div class="font-mono text-[10px] tracking-[0.25em] text-[#555048] mb-2">重要术语</div>
+          <div class="mt-4 border-t pt-3" style="border-color: rgba(120,90,50,0.4)">
+            <div class="kraft-period mb-2 !text-[#7a6a50]">重要术语</div>
             <div class="flex flex-wrap gap-2">
-              <span v-for="t in card.terms" :key="t.t" class="px-2.5 py-1 border border-[#9d2235]/50 text-[11px] text-[#d8a0a8]" :title="t.d">
-                {{ t.t }}<span class="block font-mono text-[9px] text-[#555048] mt-0.5">{{ t.d }}</span>
+              <span v-for="t in card.terms" :key="t.t" class="kraft-term px-2.5 py-1 border text-[11px]" :title="t.d">
+                {{ t.t }}<span class="block font-mono text-[9px] mt-0.5">{{ t.d }}</span>
               </span>
             </div>
           </div>
-          <div v-if="card.image" class="mt-4 border border-[#2a2520] p-1.5 bg-[#0b0b0b]">
+          <div v-if="card.image" class="mt-4 border p-1.5" style="border-color: rgba(120,90,50,0.5); background: #eadfc4;">
             <img :src="card.image" :alt="card.title" loading="lazy" class="w-full h-36 object-cover k-img" />
-            <div class="font-mono text-[9px] tracking-[0.2em] text-[#555048] mt-1.5">图：占位图，替换为历史照片</div>
+            <div class="font-mono text-[9px] tracking-[0.2em] text-[#7a6a50] mt-1.5">图：历史档案照片</div>
           </div>
         </div>
 
-        <div v-else class="mt-3 flex items-center justify-between text-[11px] tracking-[0.2em] text-[#555048]">
+        <div v-else class="mt-3 flex items-center justify-between text-[11px] tracking-[0.2em] text-[#7a6a50]">
           <span>{{ card.body.length }} 个章节 · {{ card.terms.length }} 个术语</span>
           <ChevronDown :size="14" />
         </div>
