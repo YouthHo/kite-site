@@ -9,6 +9,11 @@ const text = ref(null)
 let tweens = []
 
 onMounted(() => {
+  // 安全阀：无论动画是否异常，最多 6 秒后强制释放遮罩（防止页面卡死导致点击无响应）
+  const safety = setTimeout(() => {
+    gsap.set('.loading-screen', { opacity: 0 })
+    emit('done')
+  }, 6000)
   // 红色光点脉冲
   tweens.push(
     gsap.fromTo(
@@ -44,7 +49,10 @@ onMounted(() => {
           duration: 0.7,
           delay: 1.1,
           ease: 'power2.out',
-          onComplete: () => emit('done'),
+          onComplete: () => {
+            clearTimeout(safety)
+            emit('done')
+          },
         })
       )
     },

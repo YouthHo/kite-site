@@ -10,11 +10,16 @@ let enterTween = null
 onMounted(() => {
   const el = document.querySelector('.page-transition-root')
   if (!el) return
-  enterTween = gsap.fromTo(
-    el,
-    { opacity: 0, y: 28 },
-    { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out', delay: 0.05 }
-  )
+  try {
+    enterTween = gsap.fromTo(
+      el,
+      { opacity: 0, y: 28 },
+      { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out', delay: 0.05 }
+    )
+  } catch (e) {
+    // 兜底：动画异常时确保内容可见
+    gsap.set(el, { opacity: 1, y: 0 })
+  }
 })
 
 onBeforeUnmount(() => enterTween?.kill())

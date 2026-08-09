@@ -164,6 +164,7 @@ watch(theme, () => {
 })
 
 function setZoom(v) {
+  if (!Number.isFinite(v)) return
   zoom.value = Math.min(2.6, Math.max(0.55, Math.round(v * 100) / 100))
   if (chart) chart.setOption(buildOption(), false)
 }
@@ -210,9 +211,9 @@ onBeforeUnmount(() => {
         <div class="absolute top-3 left-3 font-mono text-[10px] tracking-[0.25em] text-[#555048] pointer-events-none">KITE-MAP · 拖拽平移 · 滚轮/按钮缩放 · 点击查看档案</div>
         <!-- 独立缩放控件 -->
         <div class="absolute top-3 right-3 flex items-center gap-1 border border-[#2a2520] bg-[#0e0e0e]/85 backdrop-blur px-1.5 py-1 z-10">
-          <button class="w-7 h-7 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] transition-colors" aria-label="缩小" @click="setZoom(zoom.value / 1.25)">−</button>
+          <button class="w-7 h-7 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] transition-colors" aria-label="缩小" @click="setZoom(zoom / 1.25)">−</button>
           <span class="w-12 text-center font-mono text-[11px] text-[#8a8275]">{{ Math.round(zoom * 100) }}%</span>
-          <button class="w-7 h-7 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] transition-colors" aria-label="放大" @click="setZoom(zoom.value * 1.25)">＋</button>
+          <button class="w-7 h-7 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] transition-colors" aria-label="放大" @click="setZoom(zoom * 1.25)">＋</button>
           <button class="w-7 h-7 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] transition-colors font-mono text-[10px]" aria-label="重置" @click="setZoom(1)">1:1</button>
         </div>
         <div class="absolute bottom-3 left-3 flex gap-4 font-mono text-[10px] tracking-[0.15em] text-[#8a8275] pointer-events-none">
