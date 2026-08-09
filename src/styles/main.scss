@@ -35,7 +35,8 @@ body {
   background-image:
     radial-gradient(ellipse 80% 60% at 50% -10%, rgba(30, 74, 82, 0.06), transparent 60%),
     radial-gradient(ellipse 60% 50% at 90% 110%, rgba(157, 34, 53, 0.05), transparent 60%);
-  overflow-x: hidden;
+  /* 用 clip 而非 hidden：hidden 会破坏 position:sticky（时间线标题条冻结失效） */
+  overflow-x: clip;
 }
 
 ::selection {

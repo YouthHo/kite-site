@@ -113,7 +113,7 @@ onMounted(async () => {
         ease: 'none',
         scrollTrigger: {
           trigger: pinRef.value,
-          start: 'top 88px', // 固定在标题栏下方
+          start: 'top 152px', // 冻结标题栏（64px 导航 + ~76px 标题条）下方
           end: () => '+=' + getDist(),
           pin: true,
           scrub: 1,
@@ -133,7 +133,7 @@ onMounted(async () => {
           scaleX: 1,
           ease: 'none',
           // 前 40% 滚动距离内完成绘制：线快速延伸穿过屏幕、右端渐隐，之后保持完整
-          scrollTrigger: { trigger: pinRef.value, start: 'top 88px', end: () => '+=' + getDist() * 0.4, scrub: 1 },
+          scrollTrigger: { trigger: pinRef.value, start: 'top 152px', end: () => '+=' + getDist() * 0.4, scrub: 1 },
         }
       )
     } else {
@@ -179,7 +179,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="page-wrap !pt-16 !max-w-none !px-0">
     <!-- 固定标题栏：滚动时保持可见 -->
-    <div class="sticky top-0 z-40 bg-[#080808]/95 backdrop-blur-md border-b border-[#1c1815]">
+    <div class="sticky top-16 z-40 bg-[#080808]/95 backdrop-blur-md border-b border-[#1c1815]">
       <div class="px-5 md:px-8 py-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
         <div class="flex items-center gap-4">
           <SealStamp :text="'全剧\n时间'" />
