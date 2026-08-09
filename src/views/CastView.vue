@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { X } from 'lucide-vue-next'
 import actors from '@/data/actors.json'
 import characters from '@/data/characters.json'
+import { avatarUri, isRealPhoto } from '@/utils/avatar'
 import { pageEnter, prefersReduced } from '@/utils/anim'
 
 const detail = ref(null)
@@ -45,14 +46,16 @@ onBeforeUnmount(() => panelTween?.kill())
         data-enter
         @click="open(a)"
       >
-        <div class="aspect-[3/4] overflow-hidden">
-          <!-- 黑白 → 悬停彩色 -->
+        <div class="aspect-[3/4] overflow-hidden bg-[#101010]">
+          <!-- 真实照片：悬停轻微放大（不再黑白化） -->
           <img
+            v-if="isRealPhoto(a.image)"
             :src="a.image"
             :alt="a.name"
             loading="lazy"
-            class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-700"
+            class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
           />
+          <img v-else :src="avatarUri(a.id, a.name, 'civilian')" :alt="a.name" loading="lazy" class="w-full h-full object-cover" />
         </div>
         <div class="p-5 relative">
           <h3 class="serif-title text-[17px] text-[#e8dcc8]">{{ a.name }}</h3>

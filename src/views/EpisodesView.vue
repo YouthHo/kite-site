@@ -7,6 +7,7 @@ import episodes from '@/data/episodes.json'
 import characters from '@/data/characters.json'
 import EpisodeCard from '@/components/EpisodeCard.vue'
 import { appState } from '@/store/app'
+import { avatarUri, isRealPhoto } from '@/utils/avatar'
 import { pageEnter, imageReveal, prefersReduced } from '@/utils/anim'
 
 const route = useRoute()
@@ -126,7 +127,9 @@ onBeforeUnmount(() => gsap.killTweensOf('.ep-tag'))
                 :to="`/characters?q=${id}`"
                 class="group flex flex-col items-center w-14"
               >
-                <img :src="castMap[id]?.image" :alt="castMap[id]?.name" loading="lazy"
+                <img v-if="isRealPhoto(castMap[id]?.image)" :src="castMap[id]?.image" :alt="castMap[id]?.name" loading="lazy"
+                  class="w-10 h-10 rounded-full object-cover border border-[#2a2520] group-hover:border-[#9d2235] group-hover:scale-110 transition-all" />
+                <img v-else :src="avatarUri(id, castMap[id]?.name || id, castMap[id]?.faction || 'civilian')" :alt="castMap[id]?.name" loading="lazy"
                   class="w-10 h-10 rounded-full object-cover border border-[#2a2520] group-hover:border-[#9d2235] group-hover:scale-110 transition-all" />
                 <span class="mt-1 text-[10px] text-[#8a8275] group-hover:text-[#e8dcc8] truncate w-full text-center">{{ castMap[id]?.name }}</span>
               </router-link>

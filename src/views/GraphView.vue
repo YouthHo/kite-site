@@ -5,16 +5,19 @@ import gsap from 'gsap'
 import { X, Search, ArrowRight } from 'lucide-vue-next'
 import graph from '@/data/relationships.json'
 import characters from '@/data/characters.json'
+import { avatarUri, isRealPhoto } from '@/utils/avatar'
 import { prefersReduced } from '@/utils/anim'
 
 const chartEl = ref(null)
 const panelEl = ref(null)
 const keyword = ref('')
 const selected = ref(null)
+const zoom = ref(1)
 let chart = null
 let pulseTimer = null
 let panelTween = null
 let resizeObs = null
+let wheelCleanup = null
 
 const FACTION = {
   junton: { label: '军统', color: '#9d2235' },
@@ -31,28 +34,7 @@ const charMap = computed(() => {
   return m
 })
 
-/** 生成字母头像（SVG data URI）：真实照片缺失时使用，避免随机占位图当头像 */
-function avatarUri(id, name, faction) {
-  const color = FACTION[faction]?.color || '#555048'
-  const ch = (name || '?').slice(0, 2)
-  const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120">` +
-    `<rect width="120" height="120" fill="${color}"/>` +
-    `<rect width="120" height="120" fill="url(#g)" opacity="0.55"/>` +
-    `<defs><radialGradient id="g" cx="0.5" cy="0.4" r="0.9">` +
-    `<stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/><stop offset="1" stop-color="#000000" stop-opacity="0.55"/>` +
-    `</radialGradient></defs>` +
-    `<text x="60" y="74" text-anchor="middle" font-family="'Noto Serif SC',serif" font-size="44" fill="#f0e6d2">${ch}</text>` +
-    `<rect x="18" y="96" width="84" height="2" fill="#e8dcc8" opacity="0.35"/>` +
-    `</svg>`
-  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
-}
-
-/** 是否真实照片（本地图片或 http 图片源，picsum 占位不算） */
-function isRealPhoto(url) {
-  return !!url && !String(url).includes('picsum.photos')
-}
-
+/** 生成字母头像（SVG data URI）：真实照片缺失时使用 */
 function visibleNodeIds() {
   const kw = keyword.value.trim().toLowerCase()
   return graph.nodes.filter((n) => {
@@ -66,38 +48,42 @@ function visibleNodeIds() {
 /** 完整构建 option（每次全量重建，杜绝增量更新破坏节点数据） */
 function buildOption({ center = false, pulse = 1 } = {}) {
   const ids = new Set(visibleNodeIds().map((n) => n.id))
+  const z = zoom.value
   const nodes = graph.nodes
     .filter((n) => ids.has(n.id))
     .map((n) => {
       const c = charMap.value[n.id] || {}
       const span = c.episodes ? c.episodes[1] - c.episodes[0] : 5
-      const base = span > 30 ? 54 : span > 10 ? 42 : 32
-      const size = Math.round(base * pulse)
+      const base = span > 30 ? 58 : span > 10 ? 46 : 34
+      const size = Math.round(base * z * pulse)
       const realImg = isRealPhoto(c.image)
       return {
         id: n.id,
         name: n.name,
-        x: center ? 50 : n.x,
-        y: center ? 50 : n.y,
+        // 围绕中心 (50,50) 缩放，支持独立缩放控件
+        x: center ? 50 : 50 + (n.x - 50) * z,
+        y: center ? 50 : 50 + (n.y - 50) * z,
         symbolSize: size,
-        symbol: realImg ? 'image://' + c.image : avatarUri(n.id, n.name, n.faction),
+        symbol: realImg ? 'image://' + c.image : avatarUri(n.id, n.name, n.faction, 160),
         symbolKeepAspect: true,
         category: n.faction,
         itemStyle: {
           color: FACTION[n.faction]?.color || '#555048',
-          borderColor: 'rgba(232,220,200,0.35)',
+          borderColor: 'rgba(232,220,200,0.4)',
           borderWidth: realImg ? 2 : 1,
-          shadowBlur: 18,
-          shadowColor: FACTION[n.faction]?.color + '99',
+          shadowBlur: 26,
+          shadowColor: FACTION[n.faction]?.color + 'aa',
         },
         label: {
           show: true,
           position: 'bottom',
-          distance: 6,
+          distance: 8,
           formatter: (p) => (p.data.name ? p.data.name + (n.code ? ' · ' + n.code : '') : ''),
           color: '#e8dcc8',
-          fontSize: 12,
+          fontSize: 13,
           fontFamily: '"Noto Serif SC", serif',
+          textShadowColor: 'rgba(0,0,0,0.85)',
+          textShadowBlur: 6,
         },
       }
     })
@@ -126,7 +112,7 @@ function buildOption({ center = false, pulse = 1 } = {}) {
       {
         type: 'graph',
         layout: 'none',
-        roam: true,
+        roam: 'move', // 拖拽平移；缩放由独立控件 + 滚轮控制
         data: nodes,
         links,
         animationDurationUpdate: pulse === 1 ? 750 : 500,
@@ -136,20 +122,20 @@ function buildOption({ center = false, pulse = 1 } = {}) {
         edgeLabel: {
           show: true,
           formatter: (p) => p.data.label || '',
-          color: 'rgba(232,220,200,0.55)',
-          fontSize: 9,
+          color: 'rgba(232,220,200,0.6)',
+          fontSize: 9.5,
           fontFamily: '"JetBrains Mono","Noto Sans SC",monospace',
-          distance: 8,
+          distance: 10,
         },
         emphasis: {
           focus: 'adjacency',
           blurScope: 'coordinateSystem',
-          itemStyle: { shadowBlur: 34, shadowColor: '#9d2235' },
-          lineStyle: { width: 2.5, color: '#b8860b', opacity: 0.95 },
-          edgeLabel: { show: true, color: '#f0e6d2', fontSize: 10 },
-          label: { color: '#f0e6d2', fontSize: 13 },
+          itemStyle: { shadowBlur: 40, shadowColor: '#9d2235' },
+          lineStyle: { width: 3, color: '#b8860b', opacity: 0.95 },
+          edgeLabel: { show: true, color: '#f0e6d2', fontSize: 11 },
+          label: { color: '#f0e6d2', fontSize: 15 },
         },
-        lineStyle: { color: 'rgba(138,130,117,0.4)', width: 1 },
+        lineStyle: { color: 'rgba(138,130,117,0.38)', width: 1.2 },
         label: { show: true },
       },
       {
@@ -185,7 +171,20 @@ onMounted(async () => {
   // 窗口尺寸变化自适应
   resizeObs = new ResizeObserver(() => chart && chart.resize())
   resizeObs.observe(chartEl.value)
+  // 滚轮缩放（独立于 roam 平移）
+  const onWheel = (e) => {
+    e.preventDefault()
+    const factor = e.deltaY < 0 ? 1.12 : 1 / 1.12
+    setZoom(zoom.value * factor)
+  }
+  chartEl.value.addEventListener('wheel', onWheel, { passive: false })
+  wheelCleanup = () => chartEl.value?.removeEventListener('wheel', onWheel)
 })
+
+function setZoom(v) {
+  zoom.value = Math.min(2.6, Math.max(0.55, Math.round(v * 100) / 100))
+  if (chart) chart.setOption(buildOption(), false)
+}
 
 function openPanel(id) {
   const c = charMap.value[id]
@@ -208,6 +207,7 @@ function toggleFaction(f) {
 onBeforeUnmount(() => {
   clearInterval(pulseTimer)
   resizeObs?.disconnect()
+  wheelCleanup?.()
   panelTween?.kill()
   chart?.dispose()
 })
@@ -224,7 +224,14 @@ onBeforeUnmount(() => {
       <div class="flex-1 relative min-h-[420px] border border-[#2a2520] bg-[#0b0b0b]"
         style="background-image: linear-gradient(rgba(138,130,117,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(138,130,117,0.05) 1px, transparent 1px); background-size: 42px 42px;">
         <div ref="chartEl" class="absolute inset-0"></div>
-        <div class="absolute top-3 left-3 font-mono text-[10px] tracking-[0.25em] text-[#555048] pointer-events-none">KITE-MAP · 悬停高亮 · 点击查看档案</div>
+        <div class="absolute top-3 left-3 font-mono text-[10px] tracking-[0.25em] text-[#555048] pointer-events-none">KITE-MAP · 拖拽平移 · 滚轮/按钮缩放</div>
+        <!-- 独立缩放控件 -->
+        <div class="absolute top-3 right-3 flex items-center gap-1 border border-[#2a2520] bg-[#0e0e0e]/85 backdrop-blur px-1.5 py-1 z-10">
+          <button class="w-7 h-7 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] transition-colors" aria-label="缩小" @click="setZoom(zoom.value / 1.25)">−</button>
+          <span class="w-12 text-center font-mono text-[11px] text-[#8a8275]">{{ Math.round(zoom * 100) }}%</span>
+          <button class="w-7 h-7 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] transition-colors" aria-label="放大" @click="setZoom(zoom.value * 1.25)">＋</button>
+          <button class="w-7 h-7 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] transition-colors font-mono text-[10px]" aria-label="重置" @click="setZoom(1)">1:1</button>
+        </div>
         <div class="absolute bottom-3 left-3 flex gap-4 font-mono text-[10px] tracking-[0.15em] text-[#8a8275] pointer-events-none">
           <span v-for="(v, k) in FACTION" :key="k" class="flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full" :style="{ background: v.color }"></span>{{ v.label }}

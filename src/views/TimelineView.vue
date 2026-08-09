@@ -88,7 +88,11 @@ function updateNodes() {
     if (viewX < vw - 60) {
       nodeDone.set(i, true)
       lit.value = new Set(lit.value).add(i)
-      gsap.fromTo(el.querySelector('.tnode'), { opacity: 0, y: it.node.section % 2 ? -26 : 26 }, { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' })
+      gsap.fromTo(
+        el.querySelector('.tnode'),
+        { opacity: 0, y: it.node.type === 'history' ? 30 : -30 },
+        { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' }
+      )
     }
   })
 }
@@ -106,7 +110,7 @@ onMounted(async () => {
         ease: 'none',
         scrollTrigger: {
           trigger: pinRef.value,
-          start: 'top top',
+          start: 'top 88px', // 固定在标题栏下方
           end: () => '+=' + getDist(),
           pin: true,
           scrub: 1,
@@ -125,7 +129,7 @@ onMounted(async () => {
         {
           scaleX: 1,
           ease: 'none',
-          scrollTrigger: { trigger: pinRef.value, start: 'top top', end: () => '+=' + getDist(), scrub: 1 },
+          scrollTrigger: { trigger: pinRef.value, start: 'top 88px', end: () => '+=' + getDist(), scrub: 1 },
         }
       )
     } else {
@@ -163,10 +167,15 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="page-wrap !pt-16 !max-w-none !px-0">
-    <div class="px-5 md:px-8 mb-6 flex flex-wrap items-center gap-3">
-      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>全剧时间线</h2>
-      <span class="file-label" data-enter>1927—1980 · 史诗长卷</span>
-      <p class="w-full font-mono text-[11px] tracking-[0.25em] text-[#8a8275]" data-enter>上下滚动页面，时间线将横向展开 · 金色节点为真实历史</p>
+    <!-- 固定标题栏：滚动时保持可见 -->
+    <div class="sticky top-0 z-40 bg-[#080808]/95 backdrop-blur-md border-b border-[#1c1815]">
+      <div class="px-5 md:px-8 py-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+        <div class="flex items-center gap-4">
+          <h2 class="serif-title text-3xl md:text-4xl text-[#e8dcc8]" data-enter>全剧时间线</h2>
+          <span class="file-label hidden md:inline-block" data-enter>1927—1980 · 史诗长卷</span>
+        </div>
+        <p class="font-mono text-[10px] md:text-[11px] tracking-[0.25em] text-[#8a8275]" data-enter>上下滚动 → 横向展开 · 剧情上行 · 历史下行</p>
+      </div>
     </div>
 
     <!-- 桌面端：居中主线 + 钉住横向滚动 -->
@@ -190,8 +199,8 @@ onBeforeUnmount(() => {
           <div class="mt-4 font-mono text-[11px] tracking-[0.45em] text-[#8a8275]">1927 — 1980</div>
           <div class="mt-10 font-mono text-[10px] tracking-[0.3em] text-[#555048]">↓ 向下滚动 · 横向展开</div>
           <div class="mt-6 flex gap-5 font-mono text-[10px] tracking-[0.2em] text-[#8a8275]">
-            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#9d2235]"></span>剧情节点</span>
-            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#b8860b]"></span>真实历史</span>
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#9d2235]"></span>剧情 · 上行</span>
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#b8860b]"></span>真实历史 · 下行</span>
           </div>
         </div>
 
@@ -216,8 +225,8 @@ onBeforeUnmount(() => {
                 transform: lit.has(i) ? 'translate(-50%,-50%) scale(1.25)' : 'translate(-50%,-50%)',
               }"
             ></span>
-            <!-- 卡片：交替在线上下，居中于主线 -->
-            <div class="absolute left-1/2 -translate-x-1/2 w-[340px]" :style="it.node.section % 2 ? { top: 'calc(50% - 226px)' } : { top: 'calc(50% + 34px)' }">
+            <!-- 卡片：剧情上行 · 历史下行，居中于主线 -->
+            <div class="absolute left-1/2 -translate-x-1/2 w-[340px]" :style="it.node.type === 'history' ? { top: 'calc(50% + 34px)' } : { top: 'calc(50% - 226px)' }">
               <TimelineNode :node="it.node" :index="i" :side="it.node.section % 2 ? 'top' : 'bottom'" manual />
             </div>
           </div>
