@@ -86,6 +86,11 @@
 [data-theme='light'] .bg-\[\#0e0e0e\]\/95 { background-color: #f9f2e3 !important; }
 [data-theme='light'] .bg-\[\#0e0e0e\]\/85 { background-color: #f9f2e3 !important; }
 [data-theme='light'] .bg-\[\#0e0e0e\]\/80 { background-color: #f9f2e3 !important; }
+[data-theme='light'] .text-\[\#e8dcc8\]\/90 { color: #3d362b !important; }
+[data-theme='light'] .text-\[\#e8dcc8\]\/70 { color: #3d362b !important; }
+[data-theme='light'] .text-\[\#e8dcc8\]\/50 { color: #3d362b !important; }
+[data-theme='light'] .text-\[\#8a8275\]\/70 { color: #62574a !important; }
+[data-theme='light'] .border-\[\#2a2520\]\/70 { border-color: #d9c9ab !important; }
 [data-theme='light'] .text-\[\#555048\] { color: #8b7f6a !important; }
 [data-theme='light'] .hover\:text-\[\#555048\]:hover { color: #8b7f6a !important; }
 [data-theme='light'] .group:hover .group-hover\:text-\[\#555048\] { color: #8b7f6a !important; }

@@ -16,6 +16,10 @@ TX_MAP = {
     "#e8dcc8": "#3d362b", "#f0e6d2": "#342d22", "#f5e9d6": "#342d22", "#b8860b": "#8a6a2f",
 }
 ALPHA_VARIANTS = {"#080808": ["95", "90", "60"], "#0e0e0e": ["95", "85", "80"]}
+# 文字透明度变体（浅色下映射为对应的深色实色）
+TEXT_ALPHA = {"#e8dcc8": ["90", "70", "50"], "#8a8275": ["70"]}
+# 边框透明度变体
+BORDER_ALPHA = {"#2a2520": ["70"]}
 
 def esc(hexv):
     # #080808 -> \[\#080808\]：类名中的方括号与 # 都必须转义（与 Tailwind 输出一致）
@@ -33,6 +37,12 @@ for k, v in BG_MAP.items():
 for k, variants in ALPHA_VARIANTS.items():
     for s in variants:
         lines.append(f"[data-theme='light'] .bg-{esc(k)}\\/{s} {{ background-color: {BG_MAP[k]} !important; }}")
+for k, variants in TEXT_ALPHA.items():
+    for s in variants:
+        lines.append(f"[data-theme='light'] .text-{esc(k)}\\/{s} {{ color: {TX_MAP[k]} !important; }}")
+for k, variants in BORDER_ALPHA.items():
+    for s in variants:
+        lines.append(f"[data-theme='light'] .border-{esc(k)}\\/{s} {{ border-color: {BG_MAP[k]} !important; }}")
 for k, v in TX_MAP.items():
     e = esc(k)
     lines.append(f"[data-theme='light'] .text-{e} {{ color: {v} !important; }}")
