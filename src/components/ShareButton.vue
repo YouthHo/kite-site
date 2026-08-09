@@ -8,11 +8,18 @@ const props = defineProps({
 })
 const open = ref(false)
 const copied = ref(false)
+const menuLeft = ref(false)
 let tween = null
 
 function toggle() {
   open.value = !open.value
   if (open.value) {
+    // 自适应展开方向：按钮在屏幕左半侧时菜单向右展开，避免跑出屏幕
+    const btn = document.querySelector('[aria-label="分享"]')
+    if (btn) {
+      const rect = btn.getBoundingClientRect()
+      menuLeft.value = rect.left < window.innerWidth / 2
+    }
     gsap.fromTo('.share-menu', { opacity: 0, y: 8, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: 'back.out(1.6)' })
   }
 }
@@ -54,7 +61,7 @@ onBeforeUnmount(() => tween?.kill())
     >
       <Share2 :size="16" />
     </button>
-    <div v-if="open" class="share-menu absolute right-0 bottom-12 z-20 glass p-2 w-44">
+    <div v-if="open" class="share-menu absolute bottom-12 z-20 glass p-2 w-44" :class="menuLeft ? 'left-0' : 'right-0'">
       <button class="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-[#8a8275] hover:bg-[#161616] hover:text-[#e8dcc8]" @click="copyLink">
         <Check v-if="copied" :size="13" class="share-check text-[#b8860b]" />
         <Link2 v-else :size="13" />

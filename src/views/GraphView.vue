@@ -16,9 +16,15 @@ const panelEl = ref(null)
 const keyword = ref('')
 const selected = ref(null)
 let chart = null
-let pulseTimer = null
 let panelTween = null
 let resizeObs = null
+let resizeTimer = null
+let resizeTimer2 = null
+let winResizeCleanup = null
+
+function onWinResize() {
+  chart?.resize()
+}
 
 const activeFactions = ref(new Set(Object.keys(FACTION)))
 // 人物级筛选（与阵营筛选叠加生效）+ 排序
@@ -156,7 +162,7 @@ function buildOption({ center = false, pulse = 1 } = {}) {
         roam: true,
         data: nodes,
         links,
-        animationDurationUpdate: pulse === 1 ? 750 : 500,
+        animationDurationUpdate: 300,
         animationEasingUpdate: 'cubicOut',
         edgeSymbol: ['none', 'circle'],
         edgeSymbolSize: [0, 4],
@@ -197,18 +203,13 @@ onMounted(async () => {
   chart.on('click', (p) => {
     if (p.dataType === 'node') openPanel(p.data.id)
   })
-  // 呼吸脉动：全量重建，安全不破坏节点
-  if (!prefersReduced) {
-    let pulse = 1
-    pulseTimer = setInterval(() => {
-      if (!chart || selected.value) return
-      pulse = pulse === 1 ? 1.04 : 1
-      chart.setOption(buildOption({ pulse }), false)
-    }, 2800)
-  }
-  // 窗口尺寸变化自适应
+  // 窗口尺寸变化自适应（防止画布被 CSS 非等比拉伸导致圆形变椭圆）
   resizeObs = new ResizeObserver(() => chart && chart.resize())
   resizeObs.observe(chartEl.value)
+  window.addEventListener('resize', onWinResize)
+  // 加载屏消失、布局稳定后各补一次 resize（兜底非等比拉伸）
+  resizeTimer = setTimeout(() => chart?.resize(), 3500)
+  resizeTimer2 = setTimeout(() => chart?.resize(), 6000)
 })
 
 // 主题切换时重绘
@@ -241,7 +242,9 @@ function toggleFaction(f) {
 }
 
 onBeforeUnmount(() => {
-  clearInterval(pulseTimer)
+  clearTimeout(resizeTimer)
+  clearTimeout(resizeTimer2)
+  window.removeEventListener('resize', onWinResize)
   resizeObs?.disconnect()
   panelTween?.kill()
   chart?.dispose()
