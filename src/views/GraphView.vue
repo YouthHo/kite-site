@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import gsap from 'gsap'
-import { X, Search, ArrowRight } from 'lucide-vue-next'
+import { X, Search, ArrowRight, Info } from 'lucide-vue-next'
 import graph from '@/data/relationships.json'
 import characters from '@/data/characters.json'
 import NameBadge from '@/components/NameBadge.vue'
@@ -316,26 +316,34 @@ onBeforeUnmount(() => {
             <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectNonePeople">全不选</button>
           </div>
         </div>
-        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#555048]">勾选 = 在图谱中显示；不勾选仅隐藏图谱中的节点，名字保留在列表，可随时反悔</div>
+        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#555048]">点击名字行 = 勾选/取消（控制图谱显示）· 点击右侧详情图标查看档案</div>
         <div class="space-y-0.5">
-          <button
+          <!-- 行点击 = 勾选切换；详情为独立按钮 -->
+          <div
             v-for="n in sortedList"
             :key="n.id"
-            class="w-full text-left flex items-center gap-2.5 px-2.5 py-2 text-[12px] border-l-2 border-transparent hover:border-[#9d2235] hover:bg-[#161616] transition-colors"
-            :class="selected?.id === n.id ? 'border-[#9d2235] bg-[#161616]' : ''"
-            @click="openPanel(n.id)"
+            class="w-full flex items-center gap-2.5 px-2.5 py-2 text-[12px] border-l-2 cursor-pointer select-none transition-colors"
+            :class="selected?.id === n.id ? 'border-[#9d2235] bg-[#161616]' : 'border-transparent hover:bg-[#161616]'"
+            @click="togglePerson(n.id)"
           >
             <span
-              class="w-3.5 h-3.5 border grid place-items-center shrink-0 transition-colors cursor-pointer"
+              class="w-3.5 h-3.5 border grid place-items-center shrink-0 transition-colors"
               :style="{ borderColor: FACTION[n.faction].color, background: personSel.has(n.id) ? FACTION[n.faction].color : 'transparent' }"
-              @click.stop="togglePerson(n.id)"
             >
               <span v-if="personSel.has(n.id)" class="text-[9px] text-white">✓</span>
             </span>
             <span class="w-2 h-2 rounded-full shrink-0" :style="{ background: FACTION[n.faction].color }"></span>
             <span class="text-[#e8dcc8] truncate">{{ n.name }}</span>
             <span v-if="n.code" class="font-mono text-[9px] text-[#b8860b] shrink-0">{{ n.code }}</span>
-          </button>
+            <button
+              class="ml-auto w-6 h-6 grid place-items-center rounded border border-[#2a2520] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] transition-colors shrink-0"
+              :aria-label="`查看 ${n.name} 详情`"
+              :title="`查看 ${n.name} 详情`"
+              @click.stop="openPanel(n.id)"
+            >
+              <Info :size="12" />
+            </button>
+          </div>
         </div>
       </aside>
     </div>
