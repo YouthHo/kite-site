@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>风筝专题站 · Vercel 构建失败修复记录</title>
+<style>
+  :root{--bg:#080808;--card:#121212;--blood:#9d2235;--gold:#b8860b;--paper:#e8dcc8;--ink:#8a8275;--dim:#555048;--line:#2a2520}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--paper);font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.8}
+  .wrap{max-width:920px;margin:0 auto;padding:48px 24px 80px}
+  h1{font-family:"Noto Serif SC",serif;letter-spacing:.25em;font-size:26px;text-align:center}
+  .goldline{width:220px;height:1px;margin:18px auto 8px;background:linear-gradient(90deg,transparent,rgba(184,134,11,.8),transparent)}
+  .sub{text-align:center;color:var(--ink);font-family:monospace;font-size:11px;letter-spacing:.3em}
+  h2{font-size:18px;margin:40px 0 12px;display:flex;align-items:center;gap:10px}
+  h2::before{content:"";width:20px;height:2px;background:var(--blood)}
+  p{color:var(--ink);font-size:14px;margin-bottom:10px}
+  .card{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--blood);padding:16px 18px;margin-bottom:12px;border-radius:3px}
+  .card.ok{border-left-color:var(--gold)}
+  .card h3{font-size:14px;color:var(--paper);margin-bottom:6px;letter-spacing:.06em}
+  code,pre{font-family:Consolas,monospace;background:#0c0c0c;border:1px solid var(--line);color:#d8a0a8;font-size:12.5px}
+  code{padding:1px 7px}
+  pre{padding:12px 14px;margin:8px 0 12px;overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0 14px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;color:var(--ink)}
+  th{color:var(--paper);background:#0e0e0e;font-weight:500;letter-spacing:.08em}
+  td:first-child{color:var(--paper);font-family:monospace;font-size:11.5px}
+  .foot{text-align:center;color:var(--dim);font-size:10px;letter-spacing:.3em;font-family:monospace;margin-top:48px;border-top:1px solid var(--line);padding-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Vercel 构建失败 · 修复记录</h1>
+  <div class="goldline"></div>
+  <div class="sub">2026-08-09 · 提交 5b8b46b</div>
+
+  <h2>现象</h2>
+  <div class="card">
+    <p>本地 <code>npm run build</code> 成功，Vercel 部署日志在 <code>transforming...</code> 阶段中断，仅有 Sass legacy-js-api 弃用警告，无明确报错即失败。</p>
+  </div>
+
+  <h2>根因：文件名字母大小写不一致（跨平台经典坑）</h2>
+  <div class="card">
+    <p>项目源码里 import 全部是驼峰写法（<code>@/views/HomeView.vue</code>、<code>@/components/NavBar.vue</code>、<code>./App.vue</code>），但落盘与 git 索引中的 26 个 .vue 文件名全是小写（<code>homeview.vue</code>、<code>navbar.vue</code>、<code>app.vue</code>）。</p>
+    <p><b>Windows 文件系统不区分大小写</b> → 本地构建照常解析通过；<b>Vercel 的 Linux 文件系统严格区分大小写</b> → Rollup 找不到 <code>HomeView.vue</code>，构建失败。这是"本地能跑、线上必挂"的典型场景。</p>
+  </div>
+
+  <h2>修复内容</h2>
+  <table>
+    <tr><th>文件</th><th>说明</th></tr>
+    <tr><td>src/app.vue → App.vue</td><td>入口组件</td></tr>
+    <tr><td>src/views/*.vue（9 个）</td><td>HomeView / GraphView / CharactersView / CastView / EpisodesView / TimelineView / ArchitectureView / HistoryView / ScenesView</td></tr>
+    <tr><td>src/components/*.vue（16 个）</td><td>NavBar / Footer / SearchModal / ProgressSetting / BackToTop / FilmGrain / ScanLine / LoadingScreen / PageTransition / CharacterCard / EpisodeCard / QuoteCard / TimelineNode / SpoilerGuard / ShareButton / ImageLightbox</td></tr>
+    <tr><td>vite.config.js</td><td>新增 <code>css.preprocessorOptions.scss.api: 'modern'</code>，消除 Sass legacy-js-api 弃用警告</td></tr>
+  </table>
+  <p>共 26 个文件通过两步 git mv 完成大小写修正（Windows 上直接改名会因大小写不敏感而无效），随后本地重新构建通过（12.6s，无警告），已推送 GitHub（91cd1f5..5b8b46b），Vercel 自动重新部署。</p>
+
+  <h2>经验清单（防止复发）</h2>
+  <div class="card ok">
+    <p>① 新建 Vue 组件/页面时，文件名首字母大写（SFC 惯例），import 路径与文件名逐字符一致；</p>
+    <p>② 提交前执行 <code>git ls-files | findstr /i "homeview navbar"</code> 之类检查，或直接在本机用 Linux 容器/CI 验证构建；</p>
+    <p>③ 本项目校验命令：本地构建通过 ≠ 线上通过，凡涉及新增文件必须核对 git 索引中的大小写；</p>
+    <p>④ 日志中的 lucide-vue-next 弃用提示（官方改名 @lucide/vue）仅为警告，不影响构建，可后续统一替换。</p>
+  </div>
+
+  <div class="foot">KITE FILES · 修复记录归档 · 2026</div>
+</div>
+</body>
+</html>
