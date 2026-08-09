@@ -5,6 +5,12 @@ import { fileURLToPath, URL } from 'node:url'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  css: {
+    preprocessorOptions: {
+      // 使用 Dart Sass 现代 API，避免 legacy-js-api 弃用警告
+      scss: { api: 'modern' },
+    },
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
