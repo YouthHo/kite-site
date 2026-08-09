@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import App from './app.vue'
+import App from './App.vue'
 import router from './router'
 import './styles/main.scss'
 // 全局注册 GSAP + ScrollTrigger（所有页面共用）
