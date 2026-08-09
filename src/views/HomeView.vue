@@ -101,8 +101,8 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
       </div>
     </div>
 
-    <!-- 分享：右下角小圆按钮（不占主视觉） -->
-    <div class="absolute bottom-6 right-6 z-20">
+    <!-- 分享：左下角小圆按钮（右下角留给返回顶部，避免重叠） -->
+    <div class="absolute bottom-6 left-6 z-20">
       <ShareButton title="风筝 The Kite · 信仰至上 半生潜伏" />
     </div>
   </div>

@@ -180,7 +180,7 @@ onBeforeUnmount(() => {
   <div class="page-wrap !pt-16 !max-w-none !px-0">
     <!-- 固定标题栏：滚动时保持可见 -->
     <div class="sticky top-16 z-40 bg-[#080808]/95 backdrop-blur-md border-b border-[#1c1815]">
-      <div class="px-5 md:px-8 py-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+      <div class="px-5 md:px-8 pr-16 md:pr-20 py-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
         <div class="flex items-center gap-4">
           <SealStamp :text="'全剧\n时间'" />
           <h2 class="serif-title text-3xl md:text-4xl text-[#e8dcc8]" data-enter>全剧时间线</h2>
