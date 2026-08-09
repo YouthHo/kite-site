@@ -109,20 +109,28 @@ server {
 
 > 注意：`sitemap.xml` / `robots.txt` 中的 `kite.example.com` 部署前请替换为你的真实域名。
 
-## 图片替换指南（占位图）
+## 图片说明（真实图片 + 占位待替换）
 
-当前全部图片使用 picsum.photos 占位（暗角/黑白滤镜由 CSS 统一处理，替换后观感一致）。需要替换的位置：
+已接入的真实图片（自由许可/公共领域，来源 Wikimedia，见 `scripts/fetch_*.py`）：
+
+| 用途 | 文件 |
+| --- | --- |
+| 首页主视觉 | `public/images/history/hist_chongqing_bombing.jpg`（重庆大轰炸历史影像） |
+| 李小冉 / 张檬演员照 | `public/images/actors/actor_li_xiaoran.jpg`、`actor_zhang_meng.jpg` |
+| 戴笠 / 毛人凤 / 周恩来 / 徐恩曾 | `public/images/history/hist_戴笠.jpg` 等 |
+| 延安 1938 | `public/images/history/hist_yanan.jpg` |
+
+其余图片（虚构角色剧照、分集/名场面图）因剧照版权无法自动获取，暂用 picsum 占位，正式上线前请按下表替换：
 
 | 位置 | 推荐尺寸 | 文件/字段 |
 | --- | --- | --- |
-| 首页主视觉 | 1920×1080 | `HomeView.vue` 中的 hero `<img>` |
-| 人物头像 | 600×800（竖） | `src/data/characters.json` → `image` 字段 |
-| 演员照片 | 600×800（竖） | `src/data/actors.json` → `image` 字段 |
+| 人物头像/剧照位 | 600×800（竖） | `src/data/characters.json` → `image` 字段（真实照片会优先用于图谱头像） |
+| 演员照片（缺 14 位） | 600×800（竖） | `src/data/actors.json` → `image` 字段 |
 | 剧集剧照 | 960×540（横） | `src/data/episodes.json` → `image` 字段 |
 | 名场面 | 800×500（横） | `src/data/scenes.json` → `image` 字段 |
-| 历史配图 | 800×450（横） | `src/data/history.json` → `image` 字段 |
+| 历史配图（剩余卡片） | 800×450（横） | `src/data/history.json` → `image` 字段 |
 
-建议正式素材放 `public/images/` 并改用相对路径（如 `/images/zyx.jpg`）。
+建议正式素材放 `public/images/` 并直接改 JSON 里的路径（如 `/images/stills/zyx.jpg`）。图谱中暂无真实照片的角色会自动显示阵营色字母头像（SVG 生成，无需维护）。
 
 ## 内容准确性说明
 
