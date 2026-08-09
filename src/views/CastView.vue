@@ -4,7 +4,7 @@ import gsap from 'gsap'
 import { X } from 'lucide-vue-next'
 import actors from '@/data/actors.json'
 import characters from '@/data/characters.json'
-import { avatarUri, isRealPhoto } from '@/utils/avatar'
+import { isRealPhoto } from '@/utils/avatar'
 import { pageEnter, prefersReduced } from '@/utils/anim'
 
 const detail = ref(null)
@@ -55,7 +55,14 @@ onBeforeUnmount(() => panelTween?.kill())
             loading="lazy"
             class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
           />
-          <img v-else :src="avatarUri(a.id, a.name, 'civilian')" :alt="a.name" loading="lazy" class="w-full h-full object-cover" />
+          <!-- 无真实照片：深色名字卡（on-media 保持浅字） -->
+          <div v-else class="w-full h-full grid place-items-center" style="background: linear-gradient(160deg, #1a1a1a, #0e0e0e)">
+            <div class="text-center px-4">
+              <div class="serif-title text-3xl md:text-4xl tracking-[0.2em] text-[#e8dcc8] on-media">{{ a.name }}</div>
+              <div class="gold-line w-24 mx-auto mt-3"></div>
+              <div class="mt-2 font-mono text-[10px] tracking-[0.25em] text-[#8a8275] on-media">饰 {{ a.role }}</div>
+            </div>
+          </div>
         </div>
         <div class="p-5 relative">
           <h3 class="serif-title text-[17px] text-[#e8dcc8]">{{ a.name }}</h3>

@@ -2,8 +2,8 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import gsap from 'gsap'
-import { Search, Menu, X, FileText, Share2, BarChart3, Users, Calendar, Landmark, Clapperboard, Library } from 'lucide-vue-next'
-import { searchOpen } from '@/store/app'
+import { Search, Menu, X, FileText, Share2, BarChart3, Users, Calendar, Landmark, Clapperboard, Library, Sun, Moon } from 'lucide-vue-next'
+import { searchOpen, theme, toggleTheme } from '@/store/app'
 
 const route = useRoute()
 const open = ref(false)
@@ -74,6 +74,16 @@ function toggleDrawer() {
       </nav>
 
       <div class="flex items-center gap-2">
+        <!-- 主题切换：深色胶片 / 浅色档案纸 -->
+        <button
+          class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] border border-transparent transition-colors"
+          :aria-label="theme === 'dark' ? '切换到浅色主题' : '切换到深色主题'"
+          :title="theme === 'dark' ? '浅色主题' : '深色主题'"
+          @click="toggleTheme"
+        >
+          <Sun v-if="theme === 'dark'" :size="16" />
+          <Moon v-else :size="16" />
+        </button>
         <button
           class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] border border-transparent transition-colors"
           aria-label="全局搜索"

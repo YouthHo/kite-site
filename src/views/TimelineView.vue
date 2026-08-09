@@ -235,7 +235,7 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- 当前时期指示 -->
-      <div class="absolute top-4 right-5 z-20 font-mono text-[10px] tracking-[0.35em] text-[#8a8275] bg-black/50 px-3 py-1.5 border border-[#2a2520]">
+      <div class="absolute top-4 right-5 z-20 font-mono text-[10px] tracking-[0.35em] text-[#8a8275] on-media bg-black/50 px-3 py-1.5 border border-[#2a2520]">
         ERA {{ activeEra }} · {{ SECTIONS[activeEra - 1].label }}
       </div>
     </div>

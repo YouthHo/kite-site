@@ -6,8 +6,8 @@ import characters from '@/data/characters.json'
 import episodes from '@/data/episodes.json'
 import quotes from '@/data/quotes.json'
 import CharacterCard from '@/components/CharacterCard.vue'
+import NameBadge from '@/components/NameBadge.vue'
 import SpoilerGuard from '@/components/SpoilerGuard.vue'
-import { avatarUri, isRealPhoto } from '@/utils/avatar'
 import { pageEnter, imageReveal, prefersReduced } from '@/utils/anim'
 
 const route = useRoute()
@@ -94,16 +94,10 @@ watch(() => route.query.q, (q) => {
       <!-- 右侧详情 -->
       <section ref="detailEl" class="char-detail-root min-w-0">
         <div class="k-card archive-tape relative p-6 md:p-12">
-          <!-- 顶部大图：真实照片或阵营色字母头像 -->
+          <!-- 顶部档案名卡（统一名字版式） -->
           <div class="film-holes">
-            <img
-              v-if="isRealPhoto(selected.image)"
-              :src="selected.image"
-              :alt="selected.name"
-              class="char-hero-img k-img w-full h-56 md:h-72 object-cover border border-[#2a2520]"
-            />
-            <div v-else class="char-hero-img w-full h-56 md:h-72 border border-[#2a2520] overflow-hidden">
-              <img :src="avatarUri(selected.id, selected.name, selected.faction)" :alt="selected.name" class="w-full h-full object-cover" />
+            <div class="char-hero-img w-full h-56 md:h-72 border border-[#2a2520] overflow-hidden">
+              <NameBadge :name="selected.name" :faction="selected.faction" :code="selected.code" :sub="selected.identity" size="lg" />
             </div>
           </div>
           <div class="flex flex-wrap items-end justify-between gap-3 mt-6">

@@ -79,13 +79,13 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
     <!-- 居中标题 -->
     <div class="relative z-10 min-h-screen flex flex-col items-center justify-center px-5 pt-20">
       <div ref="heroTitle" class="text-center">
-        <h1 class="serif-title text-[17vw] md:text-[10rem] leading-none text-[#e8dcc8]" style="letter-spacing: 0.42em; text-indent: 0.42em; text-shadow: 0 0 34px rgba(157,34,53,0.55), 0 2px 18px rgba(0,0,0,0.9);">
+        <h1 class="serif-title text-[17vw] md:text-[10rem] leading-none text-[#e8dcc8] on-media" style="letter-spacing: 0.42em; text-indent: 0.42em; text-shadow: 0 0 34px rgba(157,34,53,0.55), 0 2px 18px rgba(0,0,0,0.9);">
           风 筝
         </h1>
       </div>
       <div class="hero-goldline gold-line w-[280px] md:w-[420px] mt-6 origin-center"></div>
-      <p class="hero-sub mt-6 font-mono text-[12px] md:text-sm tracking-[0.5em] text-[#b8860b]">信仰至上 · 半生潜伏</p>
-      <p class="hero-sub mt-3 font-mono text-[10px] tracking-[0.4em] text-[#8a8275]">THE KITE · 2017 · 柳云龙 导演作品</p>
+      <p class="hero-sub mt-6 font-mono text-[12px] md:text-sm tracking-[0.5em] text-[#b8860b] on-media">信仰至上 · 半生潜伏</p>
+      <p class="hero-sub mt-3 font-mono text-[10px] tracking-[0.4em] text-[#8a8275] on-media">THE KITE · 2017 · 柳云龙 导演作品</p>
 
       <!-- 功能入口卡片 8 个 -->
       <div class="hero-cards grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-16 w-full max-w-6xl">
@@ -106,11 +106,11 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
     <!-- 底部信息栏 -->
     <div class="hero-bottom absolute bottom-0 left-0 right-0 z-10 border-t border-[#2a2520]/70 bg-black/40 backdrop-blur-sm">
       <div class="max-w-[1400px] mx-auto px-5 md:px-8 py-4 flex flex-wrap items-center justify-between gap-3">
-        <div class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">
+        <div class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275] on-media">
           46 EPISODES · 1946—1979 · 信仰至上 半生潜伏
         </div>
         <div class="flex items-center gap-3">
-          <span class="hidden md:inline font-mono text-[10px] tracking-[0.3em] text-[#555048]">内容整理自公开资料，仅供学习交流</span>
+          <span class="hidden md:inline font-mono text-[10px] tracking-[0.3em] text-[#555048] on-media">内容整理自公开资料，仅供学习交流</span>
           <ShareButton title="风筝 The Kite · 信仰至上 半生潜伏" />
         </div>
       </div>

@@ -110,7 +110,7 @@ body {
   opacity: 1;
 }
 
-/* ---------- 档案袋封口条纹（卡片顶部装饰） ---------- */
+/* ---------- 档案袋封口条纹（克制版：细、低透明，仅作质感） ---------- */
 .archive-tape {
   position: relative;
   overflow: hidden;
@@ -133,15 +133,6 @@ body {
 }
 
 /* ---------- 邮票齿孔边框 ---------- */
-.stamp-border {
-  position: relative;
-  border: 1px solid var(--line);
-  background:
-    radial-gradient(circle at 0 0, transparent 5px, #121212 5px) top left / 12px 12px,
-    #121212;
-  background-repeat: repeat;
-}
-/* 简化实现：用遮罩齿孔 */
 .stamp-border {
   --hole: 5px;
   -webkit-mask:
@@ -299,11 +290,6 @@ body {
   border: 1px solid rgba(232, 220, 200, 0.08);
 }
 
-/* 页面大标题基线（简约大气） */
-.page-title {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-}
-
 /* ---------- 视图容器通用 ---------- */
 .page-wrap {
   @apply max-w-[1400px] mx-auto px-5 md:px-8 pt-24 pb-20;
@@ -319,4 +305,54 @@ body {
 /* 移动端适配细节 */
 @media (max-width: 767px) {
   .telegraph { display: none; }
+}
+
+/* ============================================================
+   浅色主题「档案纸」：默认深色不变，<html data-theme="light"> 时启用
+   颜色类映射见 theme-light.css（scripts/gen_theme_css.py 生成）
+   ============================================================ */
+[data-theme='light'] {
+  --bg: #f5f2e9;
+  --card: #ffffff;
+  --card2: #fbf8f1;
+  --hoverc: #f3efe7;
+  --paper: #2f2b23;
+  --ink: #6e675a;
+  --dim: #8c8577;
+  --line: #d6cfc1;
+  --gold: #8f6d0e;
+
+  body {
+    background: #f5f2e9;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(30, 74, 82, 0.05), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 110%, rgba(157, 34, 53, 0.04), transparent 60%);
+    color: #2f2b23;
+  }
+  .serif-title { text-shadow: 0 1px 8px rgba(255, 255, 255, 0.35); }
+  .k-card {
+    background: linear-gradient(160deg, #fbf8f1, #ffffff);
+    border-color: #d6cfc1;
+    box-shadow: 0 6px 22px rgba(90, 80, 60, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+  .k-card:hover {
+    border-color: rgba(157, 34, 53, 0.45);
+    box-shadow: 0 16px 38px rgba(90, 80, 60, 0.16), 0 0 18px rgba(157, 34, 53, 0.08);
+  }
+  .glass { background: rgba(255, 255, 255, 0.82); border-color: rgba(0, 0, 0, 0.08); }
+  .paper-bg { background-color: #f6f2e8; }
+  .file-label { background: rgba(0, 0, 0, 0.04); border-color: #d6cfc1; }
+  .k-input { background: #ffffff; border-color: #d6cfc1; color: #2f2b23; }
+  .telegraph { color: rgba(143, 109, 14, 0.3); }
+  .film-holes::before,
+  .film-holes::after {
+    background: repeating-linear-gradient(to bottom, transparent 0 6px, rgba(47, 43, 35, 0.22) 6px 18px, transparent 18px 24px);
+  }
+  .film-holes::before { border-right-color: rgba(47, 43, 35, 0.15); }
+  .film-holes::after { border-left-color: rgba(47, 43, 35, 0.15); }
+  ::-webkit-scrollbar-track { background: #ede9de; border-left-color: #d6cfc1; }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #b04a5c, #8d3646); border-color: #ede9de; }
+
+  /* 压在现代深色媒体上的元素必须保持浅字 */
+  .on-media { color: #e8dcc8 !important; }
 }

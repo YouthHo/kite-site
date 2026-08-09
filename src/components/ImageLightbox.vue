@@ -51,7 +51,7 @@ onBeforeUnmount(() => tween?.kill())
       <div class="absolute inset-0 grid place-items-center p-8">
         <figure class="max-w-4xl w-full">
           <img ref="img" :src="src" :alt="alt" class="w-full max-h-[78vh] object-contain border border-[#2a2520] shadow-2xl" />
-          <figcaption class="mt-3 text-center font-mono text-[11px] tracking-[0.3em] text-[#8a8275]">{{ alt }}</figcaption>
+          <figcaption class="mt-3 text-center font-mono text-[11px] tracking-[0.3em] text-[#8a8275] on-media">{{ alt }}</figcaption>
         </figure>
       </div>
     </div>

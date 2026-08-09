@@ -75,8 +75,8 @@ onBeforeUnmount(() => crossTween?.kill())
         <!-- 底部文字：默认半透明，hover 清晰 -->
         <figcaption class="absolute inset-x-0 bottom-0 p-4 pt-10" style="background: linear-gradient(transparent, rgba(8,8,8,0.92))">
           <div class="font-mono text-[10px] tracking-[0.3em] text-[#9d2235]">EP.{{ String(s.episode).padStart(2, '0') }}</div>
-          <div class="serif-title text-[15px] mt-1 text-[#e8dcc8] opacity-60 group-hover:opacity-100 transition-opacity duration-500">{{ s.title }}</div>
-          <div class="text-[11px] leading-5 text-[#8a8275] opacity-0 group-hover:opacity-100 transition-opacity duration-500 mt-1">{{ s.desc }}</div>
+          <div class="serif-title text-[15px] mt-1 text-[#e8dcc8] on-media opacity-60 group-hover:opacity-100 transition-opacity duration-500">{{ s.title }}</div>
+          <div class="text-[11px] leading-5 text-[#8a8275] on-media opacity-0 group-hover:opacity-100 transition-opacity duration-500 mt-1">{{ s.desc }}</div>
         </figcaption>
         <!-- 胶片角标 -->
         <span class="absolute top-3 left-3 font-mono text-[9px] tracking-[0.25em] text-[#e8dcc8]/50 border border-[#e8dcc8]/20 px-1.5 py-0.5">SCENE-{{ s.id.toUpperCase() }}</span>
