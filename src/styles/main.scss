@@ -372,6 +372,9 @@ body {
   line-height: 2;
   color: rgba(232, 220, 200, 0.85);
 }
+[data-theme='light'] .para-indent p {
+  color: rgba(61, 54, 43, 0.85);
+}
 
 /* 移动端适配细节 */
 @media (max-width: 767px) {

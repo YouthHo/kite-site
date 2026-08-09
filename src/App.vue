@@ -13,7 +13,9 @@ import PageTransition from '@/components/PageTransition.vue'
 import { refreshTriggers } from '@/utils/anim'
 
 const route = useRoute()
-const loading = ref(true)
+// 加载屏：每个浏览器会话只完整播放一次（sessionStorage 标记），刷新/二次访问秒进
+const loading = ref(!sessionStorage.getItem('kite-loaded'))
+let idleTimer = null
 
 // 路由切换顶部红色进度条
 const progress = ref(null)
@@ -28,9 +30,9 @@ watch(
       { scaleX: 0, opacity: 1 },
       {
         scaleX: 1,
-        duration: 0.7,
+        duration: 0.4,
         ease: 'power2.inOut',
-        onComplete: () => gsap.to(progress.value, { opacity: 0, duration: 0.4, delay: 0.2 }),
+        onComplete: () => gsap.to(progress.value, { opacity: 0, duration: 0.3, delay: 0.1 }),
       }
     )
     refreshTriggers()
@@ -40,9 +42,31 @@ watch(
 // 首屏加载完成后淡出
 function onLoaded() {
   loading.value = false
+  try {
+    sessionStorage.setItem('kite-loaded', '1')
+  } catch {
+    /* ignore */
+  }
 }
 
-onBeforeUnmount(() => progressTween?.kill())
+onMounted(() => {
+  // 空闲时预热常用页面分包（跳过图谱/时间线，避免提前拉取 1MB 的 echarts）
+  const idle = (cb) => (window.requestIdleCallback ? requestIdleCallback(cb) : setTimeout(cb, 600))
+  idleTimer = idle(() => {
+    import('@/views/HomeView.vue')
+    import('@/views/CharactersView.vue')
+    import('@/views/CastView.vue')
+    import('@/views/EpisodesView.vue')
+    import('@/views/HistoryView.vue')
+    import('@/views/ArchitectureView.vue')
+    import('@/views/ScenesView.vue')
+  })
+})
+
+onBeforeUnmount(() => {
+  progressTween?.kill()
+  if (idleTimer && typeof cancelIdleCallback === 'function') cancelIdleCallback(idleTimer)
+})
 </script>
 
 <template>

@@ -4,11 +4,13 @@ import NameBadge from '@/components/NameBadge.vue'
 
 /**
  * 角色卡片（列表行 / 头像两种形态），统一使用完整名字徽章
+ * rel 传入时，头像下方显示与当前人物的关系（而非重复名字）
  */
 const props = defineProps({
   character: { type: Object, required: true },
   active: { type: Boolean, default: false },
   compact: { type: Boolean, default: false },
+  rel: { type: String, default: '' },
 })
 const emit = defineEmits(['select'])
 
@@ -37,11 +39,12 @@ const factionClass = computed(() => `f-${props.character.faction}`)
     <span class="badge-faction shrink-0" :class="factionClass">{{ FACTION_LABEL[character.faction] }}</span>
   </button>
 
-  <!-- 图谱/关联人物头像卡 -->
-  <div v-else class="text-center group cursor-pointer w-16" @click="emit('select', character)">
-    <div class="relative mx-auto transition-all duration-300 group-hover:scale-110">
+  <!-- 图谱/关联人物头像卡：头像内是名字，下方文字为关系 -->
+  <div v-else class="text-center group cursor-pointer w-20" @click="emit('select', character)">
+    <div class="relative mx-auto w-14 h-14 transition-all duration-300 group-hover:scale-110">
       <NameBadge :name="character.name" :faction="character.faction" size="md" />
     </div>
-    <p class="mt-1.5 text-[11px] text-[#8a8275] group-hover:text-[#e8dcc8] transition-colors truncate">{{ character.name }}</p>
+    <p v-if="rel" class="mt-1.5 text-[10px] leading-4 text-[#b8860b] group-hover:text-[#e8dcc8] transition-colors">{{ rel }}</p>
+    <p v-else class="mt-1.5 text-[11px] text-[#8a8275] group-hover:text-[#e8dcc8] transition-colors truncate">{{ character.name }}</p>
   </div>
 </template>

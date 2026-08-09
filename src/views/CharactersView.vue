@@ -35,8 +35,12 @@ const epTags = computed(() => {
 })
 const charQuotes = computed(() => quotes.filter((q) => q.speaker === selected.value.name).slice(0, 3))
 const relatedChars = computed(() => {
-  const ids = selected.value.related.map((r) => r.id)
-  return characters.filter((c) => ids.includes(c.id))
+  return (selected.value.related || [])
+    .map((r) => {
+      const c = characters.find((x) => x.id === r.id)
+      return c ? { char: c, rel: r.rel } : null
+    })
+    .filter(Boolean)
 })
 
 function select(c) {
@@ -160,11 +164,11 @@ watch(() => route.query.q, (q) => {
             </blockquote>
           </div>
 
-          <!-- 关联人物 -->
+          <!-- 关联人物：头像内为名字，下方标注关系 -->
           <div v-if="relatedChars.length" class="mt-8">
             <div class="file-label mb-4">关联人物</div>
             <div class="flex flex-wrap gap-4">
-              <CharacterCard v-for="c in relatedChars" :key="c.id" :character="c" @select="select" />
+              <CharacterCard v-for="rc in relatedChars" :key="rc.char.id" :character="rc.char" :rel="rc.rel" @select="select" />
             </div>
           </div>
 

@@ -47,8 +47,7 @@ onMounted(() => {
   // 入口卡片错落入场（含图标旋转）
   pageEnter(document.querySelector('.hero-cards'), { stagger: 0.08, y: 34, delay: 2.3 })
   gsap.fromTo('.hero-card-icon', { rotate: -140, scale: 0 }, { rotate: 0, scale: 1, duration: 0.7, stagger: 0.08, delay: 2.5, ease: 'back.out(1.8)' })
-  // 底部信息栏
-  tweens.push(gsap.fromTo('.hero-bottom', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.9, delay: 2.6 }))
+  // 底部信息栏由 CSS 悬停控制（默认隐藏），不再做入场动画
 })
 
 onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
@@ -103,15 +102,19 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
       </div>
     </div>
 
-    <!-- 底部信息栏 -->
-    <div class="hero-bottom absolute bottom-0 left-0 right-0 z-10 border-t border-[#2a2520]/70 bg-black/40 backdrop-blur-sm">
-      <div class="max-w-[1400px] mx-auto px-5 md:px-8 py-4 flex flex-wrap items-center justify-between gap-3">
-        <div class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275] on-media">
-          46 EPISODES · 1946—1979 · 信仰至上 半生潜伏
-        </div>
-        <div class="flex items-center gap-3">
-          <span class="hidden md:inline font-mono text-[10px] tracking-[0.3em] text-[#555048] on-media">内容整理自公开资料，仅供学习交流</span>
-          <ShareButton title="风筝 The Kite · 信仰至上 半生潜伏" />
+    <!-- 底部信息栏：悬停底部热区时浮现（默认隐藏，不干扰主视觉） -->
+    <div class="absolute bottom-0 left-0 right-0 z-10">
+      <div class="group h-14 flex items-end">
+        <div class="hero-bottom w-full border-t border-[#2a2520]/70 bg-black/40 backdrop-blur-sm opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+          <div class="max-w-[1400px] mx-auto px-5 md:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
+            <div class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275] on-media">
+              46 EPISODES · 1946—1979 · 信仰至上 半生潜伏
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="hidden md:inline font-mono text-[10px] tracking-[0.3em] text-[#555048] on-media">内容整理自公开资料，仅供学习交流</span>
+              <ShareButton title="风筝 The Kite · 信仰至上 半生潜伏" />
+            </div>
+          </div>
         </div>
       </div>
     </div>

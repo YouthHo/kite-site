@@ -158,7 +158,7 @@ function initMiniChart() {
     grid: { left: 40, right: 16, top: 30, bottom: 30 },
     tooltip: { trigger: 'axis', backgroundColor: light ? '#fff' : '#121212', borderColor: light ? '#d6cfc1' : '#2a2520', textStyle: { color: light ? '#2f2b23' : '#e8dcc8' } },
     legend: { data: ['剧情节点', '真实历史'], textStyle: { color: light ? '#6e675a' : '#8a8275' }, top: 0 },
-    xAxis: { type: 'category', data: SECTIONS.map((s) => s.label), axisLine: { lineStyle: { color: light ? '#c9b795' : '#2a2520' } }, axisLabel: { color: light ? '#6e675a' : '#8a8275' } },
+    xAxis: { type: 'category', data: SECTIONS.map((s) => s.label + ' ' + s.sub), axisLine: { lineStyle: { color: light ? '#c9b795' : '#2a2520' } }, axisLabel: { color: light ? '#6e675a' : '#8a8275', interval: 0, rotate: 0, fontSize: 10 } },
     yAxis: { type: 'value', splitLine: { lineStyle: { color: light ? 'rgba(150,120,70,0.2)' : 'rgba(42,37,32,0.6)' } }, axisLabel: { color: light ? '#7a7366' : '#555048' } },
     series: [
       { name: '剧情节点', type: 'bar', data: SECTIONS.map((s) => nodes.value.filter((n) => n.section === s.id && n.type === 'plot').length), itemStyle: { color: '#9d2235' }, barWidth: 18 },

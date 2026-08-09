@@ -29,25 +29,25 @@ onMounted(() => {
       }
     )
   )
-  // 打字机："正在解密档案..."
+  // 打字机："正在解密档案..."（提速）
   typewriter(text.value, '正在解密档案……', {
-    speed: 110,
+    speed: 70,
     onDone: () => {
       // 光点扩散消失 → 页面淡入
       tweens.push(
         gsap.to(dot.value, {
           scale: 14,
           opacity: 0,
-          duration: 0.9,
+          duration: 0.8,
           ease: 'power2.in',
-          delay: 0.4,
+          delay: 0.2,
         })
       )
       tweens.push(
         gsap.to('.loading-screen', {
           opacity: 0,
-          duration: 0.7,
-          delay: 1.1,
+          duration: 0.6,
+          delay: 0.7,
           ease: 'power2.out',
           onComplete: () => {
             clearTimeout(safety)

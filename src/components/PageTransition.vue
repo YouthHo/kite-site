@@ -13,8 +13,8 @@ onMounted(() => {
   try {
     enterTween = gsap.fromTo(
       el,
-      { opacity: 0, y: 28 },
-      { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out', delay: 0.05 }
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }
     )
   } catch (e) {
     // 兜底：动画异常时确保内容可见
