@@ -55,6 +55,12 @@
   </table>
   <p>共 26 个文件通过两步 git mv 完成大小写修正（Windows 上直接改名会因大小写不敏感而无效），随后本地重新构建通过（12.6s，无警告），已推送 GitHub（91cd1f5..5b8b46b），Vercel 自动重新部署。</p>
 
+  <h2>追加：第二次修复（2026-08-09 下午）</h2>
+  <div class="card">
+    <p>第一次修复推送后 Vercel 仍失败，错误：<code>Could not resolve "./app.vue" from "src/main.js"</code>。根因：创建文件时写文件环境把路径规范成了小写，<code>src/main.js</code> 内容里的入口引用也变成了 <code>import App from './app.vue'</code>；上一轮只改了 26 个文件名，漏了文件内容里的这一行。</p>
+    <p>修复：改为 <code>import App from './App.vue'</code>；并新增 <code>scripts/check-case.cjs</code>（模拟 Linux 大小写敏感解析，扫描全部 import 与文件名比对），挂到 <code>package.json</code> 的 <code>prebuild</code>，本地与 Vercel 每次构建前自动执行，不通过即拒绝构建，杜绝同类问题复发。提交 <code>558fe35</code>、<code>e345ab3</code>。</p>
+  </div>
+
   <h2>经验清单（防止复发）</h2>
   <div class="card ok">
     <p>① 新建 Vue 组件/页面时，文件名首字母大写（SFC 惯例），import 路径与文件名逐字符一致；</p>
