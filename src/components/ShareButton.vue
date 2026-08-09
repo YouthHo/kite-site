@@ -61,7 +61,7 @@ onBeforeUnmount(() => tween?.kill())
     >
       <Share2 :size="16" />
     </button>
-    <div v-if="open" class="share-menu absolute bottom-12 z-20 glass p-2 w-44" :class="menuLeft ? 'left-0' : 'right-0'">
+    <div v-if="open" class="share-menu absolute top-full mt-2 z-20 glass p-2 w-44" :class="menuLeft ? 'left-0' : 'right-0'">
       <button class="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-[#8a8275] hover:bg-[#161616] hover:text-[#e8dcc8]" @click="copyLink">
         <Check v-if="copied" :size="13" class="share-check text-[#b8860b]" />
         <Link2 v-else :size="13" />

@@ -77,10 +77,10 @@ onBeforeUnmount(() => crossTween?.kill())
       >
         <img :src="s.image" :alt="s.title" loading="lazy" class="w-full object-cover brightness-[0.82] contrast-105 group-hover:brightness-100 group-hover:scale-[1.03] transition-all duration-700" />
         <!-- 底部文字：默认半透明，hover 清晰 -->
-        <figcaption class="absolute inset-x-0 bottom-0 p-4 pt-10" style="background: linear-gradient(transparent, rgba(8,8,8,0.92))">
-          <div class="font-mono text-[10px] tracking-[0.3em] text-[#9d2235]">EP.{{ String(s.episode).padStart(2, '0') }}</div>
-          <div class="serif-title text-[15px] mt-1 text-[#e8dcc8] on-media opacity-60 group-hover:opacity-100 transition-opacity duration-500">{{ s.title }}</div>
-          <div class="text-[11px] leading-5 text-[#8a8275] on-media opacity-0 group-hover:opacity-100 transition-opacity duration-500 mt-1">{{ s.desc }}</div>
+        <figcaption class="absolute inset-x-0 bottom-0 p-4 pt-14" style="background: linear-gradient(rgba(8,8,8,0.05) 0%, rgba(8,8,8,0.72) 42%, rgba(8,8,8,0.94) 100%)">
+          <div class="font-mono text-[10px] tracking-[0.3em] text-[#d8a0a8] on-media">EP.{{ String(s.episode).padStart(2, '0') }}</div>
+          <div class="serif-title text-[15px] mt-1 text-[#e8dcc8] on-media opacity-60 group-hover:opacity-100 transition-opacity duration-500" style="text-shadow: 0 1px 8px rgba(0,0,0,0.9);">{{ s.title }}</div>
+          <div class="text-[11px] leading-5 text-[#f0e6d2] on-media opacity-0 group-hover:opacity-100 transition-opacity duration-500 mt-1" style="text-shadow: 0 1px 6px rgba(0,0,0,0.9);">{{ s.desc }}</div>
         </figcaption>
         <!-- 胶片角标 -->
         <span class="absolute top-3 left-3 font-mono text-[9px] tracking-[0.25em] text-[#e8dcc8]/50 border border-[#e8dcc8]/20 px-1.5 py-0.5">SCENE-{{ s.id.toUpperCase() }}</span>

@@ -102,20 +102,21 @@ onBeforeUnmount(() => panelTween?.kill())
                   角色注：{{ roleInfo(detail).brief }}
                 </p>
 
-                <!-- 角色照（竖版：演员照片已在左侧展示） -->
-                <div class="mt-6">
-                  <div class="file-label mb-3">角色照</div>
-                  <div class="w-52 md:w-60 aspect-[3/4] overflow-hidden border border-[#2a2520] relative">
-                    <img :src="roleInfo(detail)?.image || detail.image" alt="角色照（占位）" class="absolute inset-0 w-full h-full object-cover k-img" />
-                    <span class="absolute top-2 left-2 font-mono text-[9px] tracking-[0.2em] text-white/80 bg-black/50 px-2 py-0.5">角色照（占位）</span>
+                <!-- 角色照 + 代表作：左右分栏均匀布局 -->
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
+                  <div>
+                    <div class="file-label mb-3">角色照</div>
+                    <div class="w-full max-w-[220px] aspect-[3/4] overflow-hidden border border-[#2a2520] relative">
+                      <img :src="roleInfo(detail)?.image || detail.image" alt="角色照（占位）" class="absolute inset-0 w-full h-full object-cover k-img" />
+                      <span class="absolute top-2 left-2 font-mono text-[9px] tracking-[0.2em] text-white/80 bg-black/50 px-2 py-0.5">角色照（占位）</span>
+                    </div>
+                    <p class="mt-2 text-[10px] text-[#555048]">图片为占位，替换为正式剧照</p>
                   </div>
-                  <p class="mt-2 text-[10px] text-[#555048]">图片为占位，替换为正式剧照</p>
-                </div>
-
-                <div class="mt-6">
-                  <div class="file-label mb-3">代表作</div>
-                  <div class="flex flex-wrap gap-2">
-                    <span v-for="w in detail.works" :key="w" class="px-3 py-1 text-[12px] border border-[#2a2520] text-[#8a8275]">{{ w }}</span>
+                  <div>
+                    <div class="file-label mb-3">代表作</div>
+                    <div class="flex flex-wrap gap-2">
+                      <span v-for="w in detail.works" :key="w" class="px-3 py-1.5 text-[12px] border border-[#2a2520] text-[#8a8275]">{{ w }}</span>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -99,7 +99,7 @@ watch(() => route.query.q, (q) => {
       <div>
         <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>角色档案库</h2>
         <div class="gold-line w-40 mt-3" data-enter></div>
-        <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>29 份档案 · 按阵营归档 · 结局含剧透保护</p>
+        <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>30 份档案 · 按阵营归档 · 结局含剧透保护</p>
       </div>
     </div>
 
