@@ -15,12 +15,10 @@ const chartEl = ref(null)
 const panelEl = ref(null)
 const keyword = ref('')
 const selected = ref(null)
-const zoom = ref(1)
 let chart = null
 let pulseTimer = null
 let panelTween = null
 let resizeObs = null
-let wheelCleanup = null
 
 const activeFactions = ref(new Set(Object.keys(FACTION)))
 // 人物级筛选（与阵营筛选叠加生效）+ 排序
@@ -101,19 +99,18 @@ function visibleNodeIds() {
 function buildOption({ center = false, pulse = 1 } = {}) {
   const light = theme.value === 'light'
   const ids = new Set(visibleNodeIds().map((n) => n.id))
-  const z = zoom.value
   const nodes = graph.nodes
     .filter((n) => ids.has(n.id))
     .map((n) => {
       const c = charMap.value[n.id] || {}
       const span = c.episodes ? c.episodes[1] - c.episodes[0] : 5
-      // 缩放只作用于布局坐标（Obsidian 式图谱：圆圈恒定大小，缩放=间距拉开/聚拢）
-      const size = span > 30 ? 96 : span > 10 ? 84 : 72
+      // 节点尺寸缩小一档（64/54/44），给关系标签留出可读空间；缩放由原生 roam 整体等比处理
+      const size = span > 30 ? 64 : span > 10 ? 54 : 44
       return {
         id: n.id,
         name: n.name,
-        x: center ? 50 : 50 + (n.x - 50) * z,
-        y: center ? 50 : 50 + (n.y - 50) * z,
+        x: center ? 50 : n.x,
+        y: center ? 50 : n.y,
         symbolSize: size,
         symbol: 'circle',
         category: n.faction,
@@ -129,9 +126,9 @@ function buildOption({ center = false, pulse = 1 } = {}) {
           position: 'inside',
           formatter: n.name,
           color: '#f5f2e9',
-          fontSize: n.name.length > 2 ? 13 : 15,
+          fontSize: n.name.length > 2 ? 12 : 13,
           fontFamily: '"Noto Serif SC", serif',
-          letterSpacing: 2,
+          letterSpacing: 1,
           textShadowColor: 'rgba(0,0,0,0.5)',
           textShadowBlur: 4,
         },
@@ -155,7 +152,8 @@ function buildOption({ center = false, pulse = 1 } = {}) {
       {
         type: 'graph',
         layout: 'none',
-        roam: 'move',
+        // 原生 roam：滚轮/双指 = 以光标为中心局部缩放，拖拽 = 平移，全部元素等比缩放（顶级关系图工具标准手感）
+        roam: true,
         data: nodes,
         links,
         animationDurationUpdate: pulse === 1 ? 750 : 500,
@@ -165,9 +163,14 @@ function buildOption({ center = false, pulse = 1 } = {}) {
         edgeLabel: {
           show: true,
           formatter: (p) => p.data.label || '',
-          color: light ? 'rgba(70,63,52,0.7)' : 'rgba(232,220,200,0.6)',
-          fontSize: 9.5,
+          color: light ? 'rgba(70,63,52,0.95)' : 'rgba(232,220,200,0.95)',
+          fontSize: 10,
           fontFamily: '"JetBrains Mono","Noto Sans SC",monospace',
+          backgroundColor: light ? 'rgba(250,244,231,0.78)' : 'rgba(8,8,8,0.68)',
+          borderColor: light ? 'rgba(70,63,52,0.2)' : 'rgba(232,220,200,0.15)',
+          borderWidth: 1,
+          borderRadius: 3,
+          padding: [2, 5],
           distance: 10,
         },
         emphasis: {
@@ -175,8 +178,8 @@ function buildOption({ center = false, pulse = 1 } = {}) {
           blurScope: 'coordinateSystem',
           itemStyle: { shadowBlur: 42, shadowColor: '#9d2235' },
           lineStyle: { width: 3, color: '#b8860b', opacity: 0.95 },
-          edgeLabel: { show: true, color: '#8f6d0e', fontSize: 11 },
-          label: { color: '#ffffff', fontSize: 16 },
+          edgeLabel: { show: true, color: light ? '#7a1a29' : '#f0e6d2', fontSize: 11 },
+          label: { color: '#ffffff', fontSize: 14 },
         },
         lineStyle: { color: light ? 'rgba(110,103,90,0.4)' : 'rgba(138,130,117,0.38)', width: 1.2 },
         label: { show: true },
@@ -206,14 +209,6 @@ onMounted(async () => {
   // 窗口尺寸变化自适应
   resizeObs = new ResizeObserver(() => chart && chart.resize())
   resizeObs.observe(chartEl.value)
-  // 滚轮缩放（独立于 roam 平移）
-  const onWheel = (e) => {
-    e.preventDefault()
-    const factor = e.deltaY < 0 ? 1.12 : 1 / 1.12
-    setZoom(zoom.value * factor)
-  }
-  chartEl.value.addEventListener('wheel', onWheel, { passive: false })
-  wheelCleanup = () => chartEl.value?.removeEventListener('wheel', onWheel)
 })
 
 // 主题切换时重绘
@@ -221,10 +216,10 @@ watch(theme, () => {
   if (chart) chart.setOption(buildOption(), true)
 })
 
-function setZoom(v) {
-  if (!Number.isFinite(v)) return
-  zoom.value = Math.min(2.6, Math.max(0.55, Math.round(v * 100) / 100))
-  if (chart) chart.setOption(buildOption(), false)
+// 重置视图：恢复初始缩放与位置（notMerge 清空 roam 变换）
+function resetView() {
+  if (!chart) return
+  chart.setOption(buildOption(), true)
 }
 
 function openPanel(id) {
@@ -248,7 +243,6 @@ function toggleFaction(f) {
 onBeforeUnmount(() => {
   clearInterval(pulseTimer)
   resizeObs?.disconnect()
-  wheelCleanup?.()
   panelTween?.kill()
   chart?.dispose()
 })
@@ -266,13 +260,15 @@ onBeforeUnmount(() => {
       <div class="flex-1 relative min-h-[420px] border border-[#2a2520] bg-[#0b0b0b]"
         style="background-image: linear-gradient(rgba(138,130,117,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(138,130,117,0.05) 1px, transparent 1px); background-size: 42px 42px;">
         <div ref="chartEl" class="absolute inset-0"></div>
-        <div class="absolute top-3 left-3 font-mono text-[10px] tracking-[0.25em] text-[#555048] pointer-events-none">KITE-MAP · 拖拽平移 · 滚轮/按钮缩放 · 点击查看档案</div>
-        <!-- 独立缩放控件 -->
-        <div class="absolute top-3 right-3 flex items-center gap-1 border border-[#2a2520] bg-[#0e0e0e]/85 backdrop-blur px-1.5 py-1 z-10">
-          <button class="w-7 h-7 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] transition-colors" aria-label="缩小" @click="setZoom(zoom / 1.25)">−</button>
-          <span class="w-12 text-center font-mono text-[11px] text-[#8a8275]">{{ Math.round(zoom * 100) }}%</span>
-          <button class="w-7 h-7 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] transition-colors" aria-label="放大" @click="setZoom(zoom * 1.25)">＋</button>
-          <button class="w-7 h-7 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] transition-colors font-mono text-[10px]" aria-label="重置" @click="setZoom(1)">1:1</button>
+        <div class="absolute top-3 left-3 font-mono text-[10px] tracking-[0.25em] text-[#555048] pointer-events-none">KITE-MAP · 滚轮/双指局部缩放 · 拖拽平移 · 点击节点查看档案</div>
+        <!-- 视图重置 -->
+        <div class="absolute top-3 right-3 z-10">
+          <button
+            class="px-3 py-1.5 border border-[#2a2520] bg-[#0e0e0e]/85 backdrop-blur font-mono text-[11px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] transition-colors"
+            @click="resetView"
+          >
+            重置视图
+          </button>
         </div>
         <div class="absolute bottom-3 left-3 flex gap-4 font-mono text-[10px] tracking-[0.15em] text-[#8a8275] pointer-events-none">
           <span v-for="(v, k) in FACTION" :key="k" class="flex items-center gap-1.5">
