@@ -159,8 +159,8 @@ function buildOption({ center = false, pulse = 1 } = {}) {
       {
         type: 'graph',
         layout: 'none',
-        // roam 关闭：改为容器级手动平移/缩放（任意空白处可拖拽，双指捏合缩放）
-        roam: false,
+        // 原生 roam：滚轮以光标为中心缩放、双指捏合、节点拖拽平移（顶级工具手感）
+        roam: true,
         data: nodes,
         links,
         animationDurationUpdate: 300,
@@ -212,71 +212,50 @@ onMounted(async () => {
   resizeTimer = setTimeout(() => chart?.resize(), 3500)
   resizeTimer2 = setTimeout(() => chart?.resize(), 6000)
 
-  // ---- 容器级手动 roam：任意位置拖拽平移、滚轮以光标为中心缩放、双指捏合 ----
+  // ---- 混合 roam：原生 roam（节点上拖拽/滚轮/捏合）+ 空白处手动平移（窗口级，互斥不冲突） ----
   const el = chartEl.value
-  const pointers = new Map()
+  let manualPan = false
   let lastX = 0
   let lastY = 0
-  let pinchDist = 0
 
-  const onPointerDown = (e) => {
-    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
-    el.setPointerCapture?.(e.pointerId)
-    if (pointers.size === 1) {
-      lastX = e.clientX
-      lastY = e.clientY
-    }
-  }
-  const onPointerMove = (e) => {
-    if (!pointers.has(e.pointerId)) return
-    if (pointers.size === 1) {
-      const dx = e.clientX - lastX
-      const dy = e.clientY - lastY
-      lastX = e.clientX
-      lastY = e.clientY
-      if (chart) chart.dispatchAction({ type: 'graphRoam', seriesIndex: 0, dx, dy })
-    } else if (pointers.size === 2) {
-      // 双指捏合缩放
-      const pts = [...pointers.values()]
-      const d = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y)
-      if (pinchDist > 0 && d > 0 && chart) {
-        const midX = (pts[0].x + pts[1].x) / 2 - el.getBoundingClientRect().left
-        const midY = (pts[0].y + pts[1].y) / 2 - el.getBoundingClientRect().top
-        chart.dispatchAction({ type: 'graphRoam', seriesIndex: 0, zoom: d / pinchDist, originX: midX, originY: midY })
-      }
-      pinchDist = d
-      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
-    }
-  }
-  const onPointerUp = (e) => {
-    pointers.delete(e.pointerId)
-    pinchDist = 0
-  }
-  const onWheel = (e) => {
-    e.preventDefault()
-    if (!chart) return
-    const factor = e.deltaY < 0 ? 1.12 : 1 / 1.12
+  const pxPerUnit = () => {
     const rect = el.getBoundingClientRect()
-    chart.dispatchAction({
-      type: 'graphRoam',
-      seriesIndex: 0,
-      zoom: factor,
-      originX: e.clientX - rect.left,
-      originY: e.clientY - rect.top,
-    })
+    // grid 左右各留 8%，坐标 0-100 映射到 grid 宽度
+    return (rect.width * 0.84) / 100
   }
-
+  const onPointerDown = (e) => {
+    if (e.button !== undefined && e.button !== 0) return
+    const rect = el.getBoundingClientRect()
+    const coord = chart?.convertFromPixel({ seriesIndex: 0 }, [e.clientX - rect.left, e.clientY - rect.top])
+    let hitNode = false
+    if (coord && Number.isFinite(coord[0])) {
+      // 命中检测：节点半径 + 余量（数据坐标系单位）
+      const thr = (64 / 2 + 6) / pxPerUnit()
+      hitNode = graph.nodes.some((n) => Math.hypot(coord[0] - n.x, coord[1] - n.y) < thr)
+    }
+    if (hitNode) return // 交给原生 roam（节点拖拽）
+    manualPan = true
+    lastX = e.clientX
+    lastY = e.clientY
+  }
+  const onWinMove = (e) => {
+    if (!manualPan || !chart) return
+    chart.dispatchAction({ type: 'graphRoam', seriesIndex: 0, dx: e.clientX - lastX, dy: e.clientY - lastY })
+    lastX = e.clientX
+    lastY = e.clientY
+  }
+  const onWinUp = () => {
+    manualPan = false
+  }
   el.addEventListener('pointerdown', onPointerDown)
-  el.addEventListener('pointermove', onPointerMove)
-  el.addEventListener('pointerup', onPointerUp)
-  el.addEventListener('pointercancel', onPointerUp)
-  el.addEventListener('wheel', onWheel, { passive: false })
+  window.addEventListener('pointermove', onWinMove)
+  window.addEventListener('pointerup', onWinUp)
+  window.addEventListener('pointercancel', onWinUp)
   roamCleanup = () => {
     el.removeEventListener('pointerdown', onPointerDown)
-    el.removeEventListener('pointermove', onPointerMove)
-    el.removeEventListener('pointerup', onPointerUp)
-    el.removeEventListener('pointercancel', onPointerUp)
-    el.removeEventListener('wheel', onWheel)
+    window.removeEventListener('pointermove', onWinMove)
+    window.removeEventListener('pointerup', onWinUp)
+    window.removeEventListener('pointercancel', onWinUp)
   }
 })
 
