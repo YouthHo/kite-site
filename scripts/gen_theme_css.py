@@ -12,33 +12,34 @@ BG_MAP = {
     "#1a1415": "#f5e4dc", "#1a1a1a": "#f1e8d4", "#1c1815": "#dfd3b8", "#2a2520": "#d9c9ab",
 }
 TX_MAP = {
-    "#555048": "#8b7f6a", "#8a8275": "#6f6350", "#d8a0a8": "#96605a", "#d8ccb8": "#4a4134",
+    "#555048": "#8b7f6a", "#8a8275": "#62574a", "#d8a0a8": "#96605a", "#d8ccb8": "#4a4134",
     "#e8dcc8": "#3d362b", "#f0e6d2": "#342d22", "#f5e9d6": "#342d22", "#b8860b": "#8a6a2f",
 }
-ALPHA_VARIANTS = {"#080808": ["60"], "#0e0e0e": ["85", "80"]}
+ALPHA_VARIANTS = {"#080808": ["95", "90", "60"], "#0e0e0e": ["95", "85", "80"]}
 
 def esc(hexv):
-    return "\\#" + hexv[1:]
+    # #080808 -> \[\#080808\]：类名中的方括号与 # 都必须转义（与 Tailwind 输出一致）
+    return "\\[\\#" + hexv[1:] + "\\]"
 
 lines = ["/* 自动生成：scripts/gen_theme_css.py —— 浅色主题「档案纸」的 Tailwind 任意值类映射 */"]
-lines.append("[data-theme='light'] {")
+lines.append("/* 注意：必须使用扁平选择器，不能依赖 CSS 嵌套（旧浏览器不支持） */")
 for k, v in BG_MAP.items():
     e = esc(k)
-    lines.append(f"  .bg-[{e}] {{ background-color: {v} !important; }}")
-    lines.append(f"  .hover\\:bg-[{e}]:hover {{ background-color: {v} !important; }}")
-    lines.append(f"  .group:hover .group-hover\\:bg-[{e}] {{ background-color: {v} !important; }}")
-    lines.append(f"  .border-[{e}] {{ border-color: {v} !important; }}")
-    lines.append(f"  .hover\\:border-[{e}]:hover {{ border-color: {v} !important; }}")
+    lines.append(f"[data-theme='light'] .bg-{e} {{ background-color: {v} !important; }}")
+    lines.append(f"[data-theme='light'] .hover\\:bg-{e}:hover {{ background-color: {v} !important; }}")
+    lines.append(f"[data-theme='light'] .group:hover .group-hover\\:bg-{e} {{ background-color: {v} !important; }}")
+    lines.append(f"[data-theme='light'] .border-{e} {{ border-color: {v} !important; }}")
+    lines.append(f"[data-theme='light'] .hover\\:border-{e}:hover {{ border-color: {v} !important; }}")
 for k, variants in ALPHA_VARIANTS.items():
     for s in variants:
-        lines.append(f"  .bg-[{esc(k)}]\\/{s} {{ background-color: {BG_MAP[k]} !important; }}")
+        lines.append(f"[data-theme='light'] .bg-{esc(k)}\\/{s} {{ background-color: {BG_MAP[k]} !important; }}")
 for k, v in TX_MAP.items():
     e = esc(k)
-    lines.append(f"  .text-[{e}] {{ color: {v} !important; }}")
-    lines.append(f"  .hover\\:text-[{e}]:hover {{ color: {v} !important; }}")
-    lines.append(f"  .group:hover .group-hover\\:text-[{e}] {{ color: {v} !important; }}")
-    lines.append(f"  .border-[{e}] {{ border-color: {v} !important; }}")
-lines.append("}")
+    lines.append(f"[data-theme='light'] .text-{e} {{ color: {v} !important; }}")
+    lines.append(f"[data-theme='light'] .hover\\:text-{e}:hover {{ color: {v} !important; }}")
+    lines.append(f"[data-theme='light'] .group:hover .group-hover\\:text-{e} {{ color: {v} !important; }}")
+    lines.append(f"[data-theme='light'] .border-{e} {{ border-color: {v} !important; }}")
+lines.append("")
 lines.append("")
 
 os.makedirs(os.path.dirname(OUT), exist_ok=True)

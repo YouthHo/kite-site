@@ -6,6 +6,7 @@ import * as echarts from 'echarts'
 import timeline from '@/data/timeline.json'
 import SealStamp from '@/components/SealStamp.vue'
 import TimelineNode from '@/components/TimelineNode.vue'
+import { theme } from '@/store/app'
 import { prefersReduced } from '@/utils/anim'
 
 const pinRef = ref(null)
