@@ -13,7 +13,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
-    chunkSizeWarningLimit: 900,
+    chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
         // 手动分包：GSAP / ECharts / 框架各自独立 chunk，利于缓存与首屏
