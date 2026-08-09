@@ -1,0 +1,141 @@
+<script setup>
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
+import gsap from 'gsap'
+import { Search, X, Users, Clapperboard, FileText, Quote, Film, ArrowRight } from 'lucide-vue-next'
+import { searchOpen } from '@/store/app'
+import characters from '@/data/characters.json'
+import actors from '@/data/actors.json'
+import episodes from '@/data/episodes.json'
+import quotes from '@/data/quotes.json'
+import scenes from '@/data/scenes.json'
+
+const router = useRouter()
+const keyword = ref('')
+const tab = ref('all')
+const panel = ref(null)
+const input = ref(null)
+
+const TABS = [
+  { id: 'all', label: '全部', icon: Search },
+  { id: 'character', label: '人物', icon: Users },
+  { id: 'actor', label: '演员', icon: Clapperboard },
+  { id: 'episode', label: '剧集', icon: FileText },
+  { id: 'quote', label: '台词', icon: Quote },
+  { id: 'scene', label: '名场面', icon: Film },
+]
+
+const results = computed(() => {
+  const kw = keyword.value.trim().toLowerCase()
+  if (!kw) return []
+  const hit = (s) => (s || '').toLowerCase().includes(kw)
+  const list = []
+  if (tab.value === 'all' || tab.value === 'character') {
+    characters.forEach((c) => {
+      if (hit(c.name) || hit(c.code) || hit(c.identity) || hit(c.brief)) list.push({ type: 'character', title: c.name, sub: c.identity, to: `/characters?q=${c.id}` })
+    })
+  }
+  if (tab.value === 'all' || tab.value === 'actor') {
+    actors.forEach((a) => {
+      if (hit(a.name) || hit(a.role)) list.push({ type: 'actor', title: `${a.name}`, sub: `饰 ${a.role}`, to: '/cast' })
+    })
+  }
+  if (tab.value === 'all' || tab.value === 'episode') {
+    episodes.forEach((e) => {
+      if (hit(e.title) || hit(e.summary)) list.push({ type: 'episode', title: `第${e.id}集 · ${e.title}`, sub: e.summary.slice(0, 30) + '…', to: `/episodes?ep=${e.id}` })
+    })
+  }
+  if (tab.value === 'all' || tab.value === 'quote') {
+    quotes.forEach((q) => {
+      if (hit(q.text) || hit(q.speaker)) list.push({ type: 'quote', title: q.text.slice(0, 26) + (q.text.length > 26 ? '…' : ''), sub: `${q.speaker} · 第${q.episode}集`, to: '/scenes?tab=quotes' })
+    })
+  }
+  if (tab.value === 'all' || tab.value === 'scene') {
+    scenes.forEach((s) => {
+      if (hit(s.title) || hit(s.desc)) list.push({ type: 'scene', title: s.title, sub: `第${s.episode}集`, to: '/scenes' })
+    })
+  }
+  return list.slice(0, 24)
+})
+
+let openTween = null
+watch(searchOpen, async (v) => {
+  if (v) {
+    await nextTick()
+    keyword.value = ''
+    tab.value = 'all'
+    gsap.fromTo('.search-panel', { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' })
+    gsap.fromTo('.search-mask', { opacity: 0 }, { opacity: 1, duration: 0.35 })
+    setTimeout(() => input.value?.focus(), 350)
+  } else {
+    gsap.to('.search-panel', { y: -60, opacity: 0, duration: 0.3, ease: 'power2.in' })
+    gsap.to('.search-mask', { opacity: 0, duration: 0.3 })
+  }
+})
+
+function close() {
+  searchOpen.value = false
+}
+function go(r) {
+  close()
+  router.push(r.to)
+}
+function onKey(e) {
+  if (e.key === 'Escape') close()
+  if (e.key === 'Enter' && results.value.length) go(results.value[0])
+}
+onBeforeUnmount(() => openTween?.kill())
+</script>
+
+<template>
+  <Teleport to="body">
+    <div v-if="searchOpen" class="fixed inset-0 z-[95]">
+      <div class="search-mask absolute inset-0 bg-black/80 backdrop-blur-md" @click="close"></div>
+      <div ref="panel" class="search-panel relative max-w-2xl mx-auto mt-[12vh] mx-4 px-2">
+        <div class="glass p-5 md:p-7">
+          <div class="flex items-center gap-3 border-b border-[#2a2520] pb-4">
+            <Search :size="18" class="text-[#9d2235]" />
+            <input
+              ref="input"
+              v-model="keyword"
+              class="flex-1 bg-transparent outline-none text-[15px] text-[#e8dcc8] placeholder:text-[#555048] tracking-wider"
+              placeholder="搜索人物 / 演员 / 剧集 / 台词 / 名场面……"
+              @keydown="onKey"
+            />
+            <button class="text-[#8a8275] hover:text-[#e8dcc8]" @click="close"><X :size="18" /></button>
+          </div>
+          <!-- 分类标签：下划线滑动 -->
+          <div class="flex gap-1 mt-4 overflow-x-auto">
+            <button
+              v-for="t in TABS"
+              :key="t.id"
+              class="shrink-0 px-3 py-1.5 text-[12px] tracking-[0.15em] border-b-2 transition-colors"
+              :class="tab === t.id ? 'border-[#9d2235] text-[#e8dcc8]' : 'border-transparent text-[#555048] hover:text-[#8a8275]'"
+              @click="tab = t.id"
+            >
+              <component :is="t.icon" :size="12" class="inline mr-1" />{{ t.label }}
+            </button>
+          </div>
+          <!-- 结果列表 -->
+          <div class="mt-3 max-h-[46vh] overflow-y-auto">
+            <p v-if="keyword && !results.length" class="py-8 text-center text-[12px] tracking-[0.2em] text-[#555048]">没有匹配的档案</p>
+            <p v-else-if="!keyword" class="py-8 text-center font-mono text-[11px] tracking-[0.3em] text-[#555048]">输入关键词开始解密……</p>
+            <button
+              v-for="(r, i) in results"
+              :key="r.type + r.title + i"
+              class="w-full text-left flex items-center gap-3 px-3 py-2.5 border-l-2 border-transparent hover:border-[#9d2235] hover:bg-[#161616] transition-colors"
+              @click="go(r)"
+            >
+              <span class="font-mono text-[10px] text-[#9d2235] w-14 shrink-0">{{ { character: '人物', actor: '演员', episode: '剧集', quote: '台词', scene: '场面' }[r.type] }}</span>
+              <span class="flex-1 min-w-0">
+                <span class="block text-[13px] text-[#e8dcc8] truncate">{{ r.title }}</span>
+                <span class="block text-[11px] text-[#555048] truncate">{{ r.sub }}</span>
+              </span>
+              <ArrowRight :size="14" class="text-[#555048]" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Teleport>
+</template>

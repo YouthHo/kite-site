@@ -1,0 +1,57 @@
+[
+  {
+    "id": "junton",
+    "name": "军统 · 保密局",
+    "color": "#9d2235",
+    "desc": "国民政府军事委员会调查统计局（1938-1946），后改组为国防部保密局（1946-1949）。剧中“风筝”潜伏于此，戴笠、毛人凤、郑介民先后掌舵。",
+    "nodes": [
+      { "id": "j1", "name": "戴笠", "role": "军统局长", "level": 0, "parent": null, "person": "daili", "desc": "蒋介石最倚重的特务头子，掌握73人名单与“影子”的绝密线。1946年3月坠机身亡。" },
+      { "id": "j2", "name": "毛人凤", "role": "军统→保密局局长", "level": 1, "parent": "j1", "person": "mao-renfeng", "desc": "戴笠死后以同学会笼络门生，坐稳第一把交椅。与郑耀先明争暗斗半生。" },
+      { "id": "j3", "name": "郑介民", "role": "保密局局长", "level": 1, "parent": "j1", "person": null, "desc": "广东系代表，首任保密局局长，曾授予郑耀先少将军衔。晚年欲“复活”郑耀先这枚死子。" },
+      { "id": "j4", "name": "徐百川", "role": "军统四哥", "level": 1, "parent": "j1", "person": "xu-baichuan", "desc": "郑耀先结拜四哥，八大金刚之一。解放后为救儿子被迫变节，在狱中痛哭忏悔。" },
+      { "id": "j5", "name": "郑耀先（风筝）", "role": "王牌特工 · 潜伏者", "level": 1, "parent": "j1", "person": "zheng-yaoxian", "desc": "军统“六哥”，实为1932年打入的共产党特工“风筝”。全剧核心人物。" },
+      { "id": "j6", "name": "宫庶", "role": "行动骨干 → 重庆站站长", "level": 2, "parent": "j5", "person": "gong-shu", "desc": "郑耀先一手培养的枪法与智谋传人，后任潜伏特务重庆站站长，1961年潜回大陆被擒枪决。" },
+      { "id": "j7", "name": "赵简之", "role": "行动队骨干", "level": 2, "parent": "j5", "person": "zhao-jianzhi", "desc": "为六哥可以大开杀戒的兄弟。被捕后宁死不当叛徒，一头撞墙自尽。" },
+      { "id": "j8", "name": "宋孝安", "role": "行动骨干", "level": 2, "parent": "j5", "person": "song-xiaoan", "desc": "信奉道教、行动前必算卦的兄弟。码头出逃时被乱枪击毙，临死前护住六哥。" },
+      { "id": "j9", "name": "江心", "role": "译电员（潜伏）", "level": 2, "parent": "j5", "person": "jiang-xin", "desc": "与曾墨怡并称“双娇”，实为地下党员，牺牲于1946年返程途中。" },
+      { "id": "j10", "name": "韩冰（影子）", "role": "戴笠直属潜伏特工", "level": 1, "parent": "j1", "person": "han-bing", "desc": "戴笠布下的“影子”，潜伏于共产党内部四十年，任务是查出“风筝”。" }
+    ]
+  },
+  {
+    "id": "zhongtong",
+    "name": "中统 · 党通局",
+    "color": "#7d3b52",
+    "desc": "国民党中央执行委员会调查统计局（1938-1947），后改组为党通局。CC系把持，与军统常年内斗；剧中高占龙、田湖、林桃（剃刀）均属此系。",
+    "nodes": [
+      { "id": "z1", "name": "高占龙", "role": "中统山城负责人", "level": 0, "parent": null, "person": "gao-zhanlong", "desc": "识破程真儿身份、制造借刀杀人车祸。1946年3月在玫瑰饭店门口被宫庶击毙。" },
+      { "id": "z2", "name": "田湖", "role": "中统骨干", "level": 1, "parent": "z1", "person": "tian-hu", "desc": "高占龙门生，策划“木马计划”，与郑耀先缠斗半生。解放后被俘枪决。" },
+      { "id": "z3", "name": "林桃（剃刀）", "role": "中统特工", "level": 1, "parent": "z1", "person": "lin-tao", "desc": "奉命执行“木马计划”色诱郑耀先，反坠情网成为其妻，最终割腕毁容自杀保全丈夫。" },
+      { "id": "z4", "name": "庞雄", "role": "行动队队长", "level": 1, "parent": "z1", "person": "peng-xiong", "desc": "绑架郑耀先反被杀，成为“杀一儆百”的祭品。" },
+      { "id": "z5", "name": "延娥（曹依非）", "role": "潜伏特工", "level": 1, "parent": "z1", "person": "yan-e", "desc": "潜伏延安十余年，后为宫庶恋人，劫法场失败被全歼。" },
+      { "id": "z6", "name": "赵长林", "role": "外聘枪手", "level": 2, "parent": "z2", "person": "zhao-changlin", "desc": "田湖重金雇用的神枪手，误杀马军、劫持郑耀先，最终趟雷区牺牲。" },
+      { "id": "z7", "name": "坚冰", "role": "潜伏者（共党卧底）", "level": 2, "parent": "z2", "person": "jian-bing", "desc": "潜伏中统的地下党员，身份暴露后咬舌自尽。" },
+      { "id": "z8", "name": "江万朝", "role": "胁迫内应", "level": 1, "parent": "z1", "person": "jiang-wanchao", "desc": "以妻女性命被胁迫变节的八路军副政委，身份败露后自称“影子”服毒自尽。" },
+      { "id": "z9", "name": "高君宝", "role": "后继特工", "level": 1, "parent": "z1", "person": "gao-junbao", "desc": "高占龙之子，被仇恨裹挟的孤雏。成年后加入国民党特务组织，最终在复仇的顶点自杀。" }
+    ]
+  },
+  {
+    "id": "ccp",
+    "name": "中共情报战线",
+    "color": "#1e4a52",
+    "desc": "从中央特科到国家政治保卫局、延安社会部，中共隐蔽战线以单线联系与极端纪律著称。“风筝”是插在敌人心脏的利剑，也是一条断线三十年的暗线。",
+    "nodes": [
+      { "id": "c1", "name": "中央情报部门", "role": "大姐 · 钱副部长", "level": 0, "parent": null, "person": "qian-zhongwen", "desc": "掌握风筝身份的最高层。大姐亲赴山城提审周志乾，确认其身份却无法公开平反。" },
+      { "id": "c2", "name": "陆汉卿", "role": "山城联络员（风筝上线）", "level": 1, "parent": "c1", "person": "lu-hanqing", "desc": "回春堂郎中，风筝唯一上线。被捕后竹签刺目壮烈牺牲。" },
+      { "id": "c3", "name": "郑耀先（风筝）", "role": "潜伏军统高层", "level": 2, "parent": "c2", "person": "zheng-yaoxian", "desc": "1932年受国家政治保卫局委派打入国民党，潜伏三十余年。" },
+      { "id": "c4", "name": "程真儿", "role": "潜伏中统电讯处", "level": 2, "parent": "c2", "person": "cheng-zhener", "desc": "郑耀先的初恋与同志，被高占龙设计杀害。" },
+      { "id": "c5", "name": "曾墨怡", "role": "潜伏军统电讯处", "level": 1, "parent": "c1", "person": "zeng-moyi", "desc": "盗出73人名单后被捕牺牲，是袁农的未婚妻。" },
+      { "id": "c6", "name": "袁农", "level": 1, "role": "山城地下党负责人", "parent": "c1", "person": "yuan-nong", "desc": "偏执激进，误判郑耀先为叛徒。解放后转入公安，文革中自尽。" },
+      { "id": "c7", "name": "江心", "role": "潜伏军统", "level": 1, "parent": "c1", "person": "jiang-xin", "desc": "江万朝之女，潜伏军统的地下党员，牺牲于1946年。" },
+      { "id": "c8", "name": "坚冰", "role": "潜伏中统", "level": 2, "parent": "c6", "person": "jian-bing", "desc": "身份暴露后咬舌自尽，曾为郑耀先身份作证。" },
+      { "id": "c9", "name": "肖队长", "role": "游击队负责人", "level": 2, "parent": "c6", "person": null, "desc": "率游击队追杀“鬼子六”，负伤后仍自责放跑了郑耀先。" },
+      { "id": "c10", "name": "陈国华", "role": "山城公安负责人", "level": 1, "parent": "c1", "person": "chen-guohua", "desc": "从延安到山城，郑耀先在组织中最坚实的依靠。" },
+      { "id": "c11", "name": "马小五", "role": "侦查员", "level": 2, "parent": "c10", "person": "ma-xiaowu", "desc": "郑耀先关门弟子，成长为优秀侦查员，晚年接师父回家。" },
+      { "id": "c12", "name": "韩冰（影子）", "role": "延安侦查科长（潜伏）", "level": 1, "parent": "c1", "person": "han-bing", "desc": "以八路军侦查科长身份潜伏四十年，实为戴笠直属的“影子”。" }
+    ]
+  }
+]

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>风筝专题站 · 项目总览</title>
+<style>
+  :root{
+    --bg:#080808;--card:#121212;--card2:#161616;--blood:#9d2235;--teal:#1e4a52;
+    --paper:#e8dcc8;--ink:#8a8275;--dim:#555048;--line:#2a2520;--gold:#b8860b;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--paper);font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
+  .wrap{max-width:1180px;margin:0 auto;padding:48px 24px 80px}
+  .serif{font-family:"Noto Serif SC","Songti SC",SimSun,serif;letter-spacing:.1em}
+  .hero{text-align:center;padding:60px 0 40px;position:relative}
+  .hero h1{font-size:64px;letter-spacing:.42em;text-indent:.42em;text-shadow:0 0 34px rgba(157,34,53,.55)}
+  .goldline{width:320px;height:1px;margin:22px auto;background:linear-gradient(90deg,transparent,rgba(184,134,11,.8),transparent)}
+  .hero p{color:var(--ink);letter-spacing:.35em;font-size:13px;font-family:monospace}
+  h2{font-size:24px;margin:52px 0 18px;display:flex;align-items:center;gap:12px}
+  h2::before{content:"";width:26px;height:2px;background:var(--blood)}
+  h3{font-size:16px;color:var(--gold);margin:20px 0 10px}
+  .grid{display:grid;gap:16px}
+  .g4{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(420px,1fr))}
+  .card{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);padding:20px;border-radius:4px;box-shadow:inset 0 1px 0 rgba(232,220,200,.05),0 10px 30px rgba(0,0,0,.45)}
+  .card .t{font-family:"Noto Serif SC",serif;font-size:16px;color:var(--paper);margin-bottom:8px}
+  .card .t small{color:var(--blood);font-size:11px;font-family:monospace;letter-spacing:.2em;display:block;margin-bottom:4px}
+  .card p{color:var(--ink);font-size:13px}
+  .tag{display:inline-block;border:1px solid rgba(157,34,53,.6);color:#d8a0a8;font-size:11px;padding:2px 10px;margin:4px 6px 0 0;letter-spacing:.1em}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:14px 0}
+  th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;color:var(--ink)}
+  th{color:var(--paper);background:#0e0e0e;font-weight:500;letter-spacing:.1em}
+  td:first-child{color:var(--paper)}
+  code{background:#0c0c0c;border:1px solid var(--line);padding:2px 8px;font-size:12px;color:#d8a0a8;font-family:monospace}
+  pre{background:#0c0c0c;border:1px solid var(--line);padding:16px;font-size:12px;overflow-x:auto;color:var(--ink);font-family:monospace;line-height:1.8}
+  .swatches{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .sw{width:90px;padding:8px;border:1px solid var(--line);font-size:11px;color:#ddd}
+  .sw b{display:block;font-size:10px;color:#bbb;font-weight:400;margin-top:6px;font-family:monospace}
+  figure{margin:24px 0;border:1px solid var(--line);padding:12px;background:#0c0c0c}
+  figcaption{font-family:monospace;font-size:11px;color:var(--dim);letter-spacing:.2em;text-align:center;margin-top:10px}
+  .foot{text-align:center;color:var(--dim);font-size:11px;letter-spacing:.3em;font-family:monospace;margin-top:60px;border-top:1px solid var(--line);padding-top:24px}
+  @media(max-width:640px){.hero h1{font-size:40px}.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1 class="serif">风 筝</h1>
+    <div class="goldline"></div>
+    <p>THE KITE · 影视专题站项目总览</p>
+    <p style="margin-top:10px;color:var(--dim);letter-spacing:.2em">Vue 3 + Vite + Tailwind v3 + GSAP + ECharts</p>
+  </div>
+
+  <h2>项目定位</h2>
+  <p style="color:var(--ink);font-size:14px">
+    《风筝》（柳云龙执导，2017）观众专属影视资料站。视觉上按电影官网标准打造：极深黑底、暗血红与暗青双阵营色、旧纸米黄文字、胶片颗粒与扫描线氛围；内容上 9 个页面覆盖人物、剧情、图谱、历史、台词五大维度，全部基于真实剧集资料整理。
+  </p>
+
+  <h2>视觉设计系统</h2>
+  <div class="swatches">
+    <div class="sw" style="background:#080808;color:#e8dcc8">#080808<b>BG 极深黑</b></div>
+    <div class="sw" style="background:#9d2235;color:#fff">#9d2235<b>BLOOD 暗血红</b></div>
+    <div class="sw" style="background:#1e4a52;color:#fff">#1e4a52<b>TEAL 暗青灰</b></div>
+    <div class="sw" style="background:#e8dcc8;color:#222">#e8dcc8<b>PAPER 旧纸米黄</b></div>
+    <div class="sw" style="background:#b8860b;color:#fff">#b8860b<b>GOLD 暗金</b></div>
+    <div class="sw" style="background:#2a2520;color:#fff">#2a2520<b>LINE 暗棕灰</b></div>
+    <div class="sw" style="background:#7d3b52;color:#fff">#7d3b52<b>ZHONGTONG 中统</b></div>
+    <div class="sw" style="background:#3d3d3d;color:#fff">#3d3d3d<b>GONGAN 公安</b></div>
+    <div class="sw" style="background:#8b7355;color:#fff">#8b7355<b>CIVILIAN 平民</b></div>
+  </div>
+
+  <h2>九大页面</h2>
+  <div class="grid g4">
+    <div class="card"><div class="t"><small>/</small>首页 Home</div><p>电影级开场：Ken Burns 主视觉、标题模糊→清晰、金色细线展开、8 功能入口错落入场、电报码装饰、全屏扫描线。</p></div>
+    <div class="card"><div class="t"><small>/graph</small>人物关系图谱</div><p>ECharts 动态图谱：节点爆炸式扩散入场、呼吸脉动、连线光点流动、阵营筛选、实时搜索、点击弹出档案卡。</p></div>
+    <div class="card"><div class="t"><small>/characters</small>角色档案库</div><p>29 人完整档案，按阵营分组；结局区块带防剧透锁，含台词、关联人物环形头像、出场集数标签云。</p></div>
+    <div class="card"><div class="t"><small>/cast</small>演员阵容</div><p>16 位演员卡片墙（黑白→彩色 hover），详情面板从下方滑入，角色照/演员照拖动对比滑块。</p></div>
+    <div class="card"><div class="t"><small>/episodes</small>分集剧情</div><p>46 集完整剧情，档案标签式集数导航 + 观剧进度锁，档案纸质感详情页，关键事件标签逐个弹入。</p></div>
+    <div class="card"><div class="t"><small>/timeline</small>全剧时间线</div><p>横向长卷轴（ScrollTrigger 钉住滚动）：44 节点、五段分区、真实历史标注、节点滚动点亮 + ECharts 统计。</p></div>
+    <div class="card"><div class="t"><small>/architecture</small>势力架构</div><p>军统保密局 / 中统党通局 / 中共情报战线三方树形图，徽章节点逐层展开，点击弹出人物档案。</p></div>
+    <div class="card"><div class="t"><small>/history</small>历史背景</div><p>四类真实历史档案（军统、中统、中共情报战线、建国后运动与平反），旧纸卡片可展开，术语高亮。</p></div>
+    <div class="card"><div class="t"><small>/scenes</small>名场面与台词</div><p>37 个名场面瀑布流 + 点击位置放大的灯箱；57 句经典台词电报纸条卡片，一键复制。</p></div>
+  </div>
+
+  <h2>动画系统（全部 GSAP 驱动）</h2>
+  <div class="grid g2">
+    <div class="card"><div class="t">入场与氛围</div>
+      <span class="tag">首屏解密加载</span><span class="tag">Ken Burns</span><span class="tag">呼吸明暗</span><span class="tag">胶片颗粒</span><span class="tag">扫描线</span><span class="tag">电报码闪烁</span><span class="tag">打字机光标</span>
+      <p style="margin-top:10px">加载屏：红色光点脉冲 + “正在解密档案……”逐字打出，完成后光点扩散、页面淡入。</p>
+    </div>
+    <div class="card"><div class="t">滚动与交互</div>
+      <span class="tag">ScrollTrigger 浮现</span><span class="tag">视差</span><span class="tag">钉住横向时间线</span><span class="tag">节点点亮</span><span class="tag">卡片上浮红光带</span><span class="tag">按钮渐变填充</span>
+      <p style="margin-top:10px">滚动到视口滑入淡入；卡片 hover 上浮 4px、边框点亮、图片 1.03 放大、底部红色光带；导航栏滚动加深。</p>
+    </div>
+  </div>
+
+  <h2>数据规模（内容基于真实剧集）</h2>
+  <table>
+    <tr><th>数据文件</th><th>规模</th><th>说明</th></tr>
+    <tr><td>characters.json</td><td>29 人物</td><td>含代号、阵营、公开身份、履历、结局、关联、出场集数</td></tr>
+    <tr><td>episodes.json</td><td>46 集</td><td>每集标题、年代、剧情梗概、关键事件、出场人物</td></tr>
+    <tr><td>quotes.json</td><td>57 句</td><td>台词 + 说话人 + 集数 + 语境，来源标注</td></tr>
+    <tr><td>scenes.json</td><td>37 场</td><td>名场面标题、出处集数、描述</td></tr>
+    <tr><td>timeline.json</td><td>44 节点</td><td>1927—1980，剧情节点 + 真实历史（金色标注）</td></tr>
+    <tr><td>relationships.json</td><td>24 节点 / 40 关系</td><td>图谱坐标 + 关系标签</td></tr>
+    <tr><td>architecture.json</td><td>3 势力 / 31 节点</td><td>军统保密局 · 中统党通局 · 中共情报战线</td></tr>
+    <tr><td>history.json</td><td>4 类 / 11 档案</td><td>每档案含章节正文、重要术语、配图位</td></tr>
+    <tr><td>actors.json</td><td>16 演员</td><td>饰演角色、简介、代表作</td></tr>
+  </table>
+
+  <h2>架构图</h2>
+  <figure>
+    <img src="site-architecture.svg" alt="站点架构图" style="width:100%">
+    <figcaption>SITE ARCHITECTURE · 数据层 / 页面层 / 动画层 / 部署</figcaption>
+  </figure>
+
+  <h2>快速开始与部署</h2>
+  <pre>npm install
+npm run dev        # 开发 http://localhost:5173
+npm run build      # 产物 dist/
+npm run preview    # 本地预览构建产物</pre>
+  <p style="color:var(--ink);font-size:13px">
+    Vercel：导入仓库即部署（<code>vercel.json</code> 已内置 SPA 回退与缓存头）。Netlify：Build <code>npm run build</code>、Publish <code>dist</code>（<code>netlify.toml</code> 已就绪）。自有服务器：<code>dist/</code> 全量上传，Nginx 配置 <code>try_files $uri $uri/ /index.html</code>。
+  </p>
+
+  <h2>图片替换</h2>
+  <p style="color:var(--ink);font-size:13px">全部图片为 picsum.photos 占位图（统一暗角/黑白滤镜处理，替换后观感一致）。替换位置：首页主视觉（HomeView.vue）、各 JSON 数据文件的 <code>image</code> 字段。建议正式素材放 <code>public/images/</code> 用相对路径引用。</p>
+
+  <h2>内容准确性说明</h2>
+  <p style="color:var(--ink);font-size:13px">剧情、人物、演员、台词均基于百度百科、电视猫、豆瓣、知乎等公开资料整理，数据文件保留 <code>source</code> 字段。曾墨怡、高占龙、江万朝等配角的饰演者公开渠道未能核实，显示“待考”。本站为非官方粉丝站，图片均为占位，仅供学习交流。</p>
+
+  <div class="foot">KITE FILES · 信仰至上 半生潜伏 · 2026</div>
+</div>
+</body>
+</html>

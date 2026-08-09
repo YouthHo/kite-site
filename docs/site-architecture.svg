@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0a0a"/><stop offset="1" stop-color="#101010"/>
+    </linearGradient>
+    <linearGradient id="line1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#9d2235"/><stop offset="0.5" stop-color="#b8860b"/><stop offset="1" stop-color="#9d2235"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <g opacity="0.06" fill="#b8860b" font-family="monospace" font-size="12" letter-spacing="6">
+    <text x="30" y="60">01001010 01101011 01010100 01101011</text>
+    <text x="1180" y="860">01101011 01101010 11010110 01011010</text>
+  </g>
+
+  <!-- 标题 -->
+  <text x="800" y="64" text-anchor="middle" fill="#e8dcc8" font-size="34" font-weight="700" letter-spacing="14" font-family="'Noto Serif SC',serif">风 筝 · 影视专题站架构</text>
+  <line x1="560" y1="86" x2="1040" y2="86" stroke="url(#line1)" stroke-width="1.5"/>
+  <text x="800" y="108" text-anchor="middle" fill="#8a8275" font-size="13" letter-spacing="6">THE KITE · 2017 · VUE 3 + VITE + GSAP + ECHARTS</text>
+
+  <!-- 技术底座 -->
+  <rect x="80" y="140" width="1440" height="64" rx="6" fill="#121212" stroke="#2a2520"/>
+  <text x="110" y="178" fill="#b8860b" font-size="14" letter-spacing="3">技术底座</text>
+  <g fill="#8a8275" font-size="13">
+    <text x="280" y="178">Vue 3</text><text x="360" y="178">Vue Router (history)</text><text x="560" y="178">Tailwind v3 + SCSS</text>
+    <text x="790" y="178">GSAP + ScrollTrigger</text><text x="1010" y="178">ECharts 5</text><text x="1150" y="178">Lucide Icons</text><text x="1280" y="178">9 × JSON 数据层</text>
+  </g>
+
+  <!-- 数据层 -->
+  <rect x="80" y="228" width="300" height="300" rx="6" fill="#0f0d0b" stroke="#8b7355" stroke-dasharray="5 4"/>
+  <text x="105" y="258" fill="#8b7355" font-size="14" letter-spacing="3">数据层 · 全部真实内容</text>
+  <g font-size="12.5" fill="#8a8275">
+    <text x="105" y="290">· characters.json — 29 人物档案</text>
+    <text x="105" y="314">· actors.json — 16 演员</text>
+    <text x="105" y="338">· episodes.json — 46 集剧情</text>
+    <text x="105" y="362">· relationships.json — 图谱 24 节点</text>
+    <text x="105" y="386">· timeline.json — 44 时间节点</text>
+    <text x="105" y="410">· architecture.json — 三方势力树</text>
+    <text x="105" y="434">· history.json — 4 类历史档案</text>
+    <text x="105" y="458">· quotes.json — 57 句台词</text>
+    <text x="105" y="482">· scenes.json — 37 个名场面</text>
+  </g>
+
+  <!-- 页面层 9 宫格 -->
+  <rect x="420" y="228" width="1100" height="300" rx="6" fill="#121212" stroke="#2a2520"/>
+  <text x="448" y="258" fill="#e8dcc8" font-size="14" letter-spacing="3">页面层 · 9 个沉浸页面</text>
+  <g>
+    <rect x="448" y="278" width="240" height="70" rx="4" fill="#0e0e0e" stroke="#2a2520"/>
+    <text x="462" y="304" fill="#e8dcc8" font-size="14">首页 Home</text>
+    <text x="462" y="326" fill="#555048" font-size="11">Ken Burns · 呼吸光 · 打字机解密</text>
+
+    <rect x="704" y="278" width="240" height="70" rx="4" fill="#0e0e0e" stroke="#2a2520"/>
+    <text x="718" y="304" fill="#e8dcc8" font-size="14">关系图谱 Graph</text>
+    <text x="718" y="326" fill="#555048" font-size="11">ECharts · 光点流动 · 阵营筛选</text>
+
+    <rect x="960" y="278" width="240" height="70" rx="4" fill="#0e0e0e" stroke="#2a2520"/>
+    <text x="974" y="304" fill="#e8dcc8" font-size="14">角色档案 Characters</text>
+    <text x="974" y="326" fill="#555048" font-size="11">29 档案 · 结局防剧透锁</text>
+
+    <rect x="1216" y="278" width="284" height="70" rx="4" fill="#0e0e0e" stroke="#2a2520"/>
+    <text x="1230" y="304" fill="#e8dcc8" font-size="14">演员阵容 Cast</text>
+    <text x="1230" y="326" fill="#555048" font-size="11">黑白→彩色 · 角色/演员对比滑块</text>
+
+    <rect x="448" y="364" width="240" height="70" rx="4" fill="#0e0e0e" stroke="#2a2520"/>
+    <text x="462" y="390" fill="#e8dcc8" font-size="14">分集剧情 Episodes</text>
+    <text x="462" y="412" fill="#555048" font-size="11">46 集 · 进度锁 · 档案纸质感</text>
+
+    <rect x="704" y="364" width="240" height="70" rx="4" fill="#0e0e0e" stroke="#2a2520"/>
+    <text x="718" y="390" fill="#e8dcc8" font-size="14">全剧时间线 Timeline</text>
+    <text x="718" y="412" fill="#555048" font-size="11">横向长卷轴 · 节点点亮</text>
+
+    <rect x="960" y="364" width="240" height="70" rx="4" fill="#0e0e0e" stroke="#2a2520"/>
+    <text x="974" y="390" fill="#e8dcc8" font-size="14">势力架构 Architecture</text>
+    <text x="974" y="412" fill="#555048" font-size="11">三方树形 · 逐层展开</text>
+
+    <rect x="1216" y="364" width="284" height="70" rx="4" fill="#0e0e0e" stroke="#2a2520"/>
+    <text x="1230" y="390" fill="#e8dcc8" font-size="14">历史背景 History</text>
+    <text x="1230" y="412" fill="#555048" font-size="11">四类档案 · 术语高亮</text>
+  </g>
+  <rect x="448" y="450" width="1052" height="56" rx="4" fill="#0e0e0e" stroke="#2a2520"/>
+  <text x="462" y="484" fill="#e8dcc8" font-size="13">名场面与台词 Scenes</text>
+  <text x="680" y="484" fill="#555048" font-size="11">37 名场面瀑布流 + 灯箱 · 57 句台词卡片（复制）</text>
+
+  <!-- 动画层 -->
+  <rect x="80" y="556" width="700" height="260" rx="6" fill="#121212" stroke="#2a2520"/>
+  <text x="105" y="588" fill="#9d2235" font-size="14" letter-spacing="3">动画层 · 全部 GSAP 驱动</text>
+  <g font-size="12.5" fill="#8a8275">
+    <text x="105" y="620">· 首屏解密加载：光点脉冲 + 打字机“正在解密档案…”</text>
+    <text x="105" y="646">· 页面过渡：淡入上移 + 元素错落入场（data-enter）</text>
+    <text x="105" y="672">· 滚动：ScrollTrigger 浮现 / 视差 / 时间线钉住横向滚动</text>
+    <text x="105" y="698">· 图谱：节点爆炸式扩散 · 呼吸脉动 · 连线光点流动</text>
+    <text x="105" y="724">· 卡片 hover：上浮 + 边框点亮 + 底部红光带 + 图放大</text>
+    <text x="105" y="750">· 氛围：Ken Burns · 呼吸明暗 · 扫描线 · 胶片颗粒 · 电报码闪烁</text>
+    <text x="105" y="776">· 细节：路由红色进度条 · 打字机光标 · 灯箱缩放 · 标签下划线滑动</text>
+  </g>
+
+  <!-- 全站能力层 -->
+  <rect x="820" y="556" width="700" height="260" rx="6" fill="#121212" stroke="#2a2520"/>
+  <text x="848" y="588" fill="#b8860b" font-size="14" letter-spacing="3">全站能力 + 部署</text>
+  <g font-size="12.5" fill="#8a8275">
+    <text x="848" y="620">· 全局搜索（人物/演员/剧集/台词/名场面 分类实时检索）</text>
+    <text x="848" y="646">· 观剧进度锁：localStorage 持久化 · 防剧透模糊→清晰解锁</text>
+    <text x="848" y="672">· 分享 / 返回顶部 / 自定义滚动条 / 选中文字暗红</text>
+    <text x="848" y="698">· 响应式：桌面 / 平板 / 移动（汉堡菜单 · 手势缩放 · 动画降级）</text>
+    <text x="848" y="724">· 性能：路由懒加载 · 分包（gsap/echarts/vendor）· 图片懒加载</text>
+    <text x="848" y="750">· 部署：vercel.json + netlify.toml + sitemap + robots + Nginx 示例</text>
+    <text x="848" y="776">· npm run build → dist/ → 任意静态托管可直接上线</text>
+  </g>
+
+  <line x1="80" y1="842" x2="1520" y2="842" stroke="#2a2520"/>
+  <text x="800" y="874" text-anchor="middle" fill="#555048" font-size="12" letter-spacing="4">KITE FILES · 信仰至上 半生潜伏 · 2026</text>
+</svg>

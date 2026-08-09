@@ -1,0 +1,68 @@
+<script setup>
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute } from 'vue-router'
+import gsap from 'gsap'
+import NavBar from '@/components/NavBar.vue'
+import Footer from '@/components/Footer.vue'
+import SearchModal from '@/components/SearchModal.vue'
+import ProgressSetting from '@/components/ProgressSetting.vue'
+import BackToTop from '@/components/BackToTop.vue'
+import FilmGrain from '@/components/FilmGrain.vue'
+import LoadingScreen from '@/components/LoadingScreen.vue'
+import PageTransition from '@/components/PageTransition.vue'
+import { refreshTriggers } from '@/utils/anim'
+
+const route = useRoute()
+const loading = ref(true)
+
+// 路由切换顶部红色进度条
+const progress = ref(null)
+let progressTween = null
+watch(
+  () => route.fullPath,
+  () => {
+    if (!progress.value) return
+    progressTween?.kill()
+    progressTween = gsap.fromTo(
+      progress.value,
+      { scaleX: 0, opacity: 1 },
+      {
+        scaleX: 1,
+        duration: 0.7,
+        ease: 'power2.inOut',
+        onComplete: () => gsap.to(progress.value, { opacity: 0, duration: 0.4, delay: 0.2 }),
+      }
+    )
+    refreshTriggers()
+  }
+)
+
+// 首屏加载完成后淡出
+function onLoaded() {
+  loading.value = false
+}
+
+onBeforeUnmount(() => progressTween?.kill())
+</script>
+
+<template>
+  <LoadingScreen v-if="loading" @done="onLoaded" />
+  <FilmGrain />
+
+  <!-- 路由切换进度条 -->
+  <div
+    ref="progress"
+    class="fixed top-0 left-0 right-0 h-[2px] z-[90] origin-left opacity-0"
+    style="background: linear-gradient(90deg, transparent, #9d2235 30%, #b8860b 70%, transparent)"
+  ></div>
+
+  <NavBar />
+  <PageTransition>
+    <router-view :key="route.fullPath" />
+  </PageTransition>
+  <Footer />
+
+  <SearchModal />
+  <ProgressSetting />
+  <BackToTop />
+</template>

@@ -1,0 +1,27 @@
+<script setup>
+import { onMounted, onBeforeUnmount } from 'vue'
+import { useRoute } from 'vue-router'
+import gsap from 'gsap'
+
+// 页面切换过渡：淡入 + 轻微上移；元素错落入场在页面内由 data-enter 驱动
+const route = useRoute()
+let enterTween = null
+
+onMounted(() => {
+  const el = document.querySelector('.page-transition-root')
+  if (!el) return
+  enterTween = gsap.fromTo(
+    el,
+    { opacity: 0, y: 28 },
+    { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out', delay: 0.05 }
+  )
+})
+
+onBeforeUnmount(() => enterTween?.kill())
+</script>
+
+<template>
+  <div class="page-transition-root" :key="route.fullPath">
+    <slot />
+  </div>
+</template>
