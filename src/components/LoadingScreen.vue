@@ -60,8 +60,8 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
     <div class="mt-6 font-mono text-[13px] tracking-[0.35em] text-[#8a8275] h-6">
       <span ref="text"></span>
     </div>
-    <div class="absolute bottom-8 font-mono text-[10px] tracking-[0.5em] text-[#555048] select-none">
-      KITE / 1946 — 1988 · TOP SECRET
-    </div>
+      <div class="absolute bottom-8 font-mono text-[10px] tracking-[0.5em] text-[#555048] select-none">
+      THE KITE · TOP SECRET
+      </div>
   </div>
 </template>

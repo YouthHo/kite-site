@@ -60,11 +60,11 @@ onBeforeUnmount(() => gsap.killTweensOf('.ep-tag'))
 <template>
   <div class="ep-page page-wrap !pt-16">
     <div class="mb-6 flex items-center gap-3">
-      <h2 class="serif-title text-3xl text-[#e8dcc8]" data-enter>分集剧情</h2>
+      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>分集剧情</h2>
       <span class="file-label" data-enter>46 EPISODES · 翻阅档案</span>
     </div>
 
-    <div class="grid lg:grid-cols-[280px_1fr] gap-6">
+    <div class="grid lg:grid-cols-[300px_1fr] gap-8">
       <!-- 左侧集数导航 -->
       <aside class="lg:max-h-[calc(100vh-110px)] lg:overflow-y-auto pr-1">
         <div class="grid grid-cols-10 lg:grid-cols-7 gap-1.5" data-enter>

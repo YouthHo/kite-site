@@ -10,12 +10,15 @@ const props = defineProps({
   node: { type: Object, required: true },
   side: { type: String, default: 'top' },
   index: { type: Number, default: 0 },
+  /** 手动模式：由父级（横向时间线）驱动入场动画，组件自身不建 ScrollTrigger */
+  manual: { type: Boolean, default: false },
 })
 const emit = defineEmits(['visible'])
 
 let tween = null
 
 onMounted(() => {
+  if (props.manual) return
   const el = document.querySelector(`[data-tnode="${props.index}"]`)
   if (!el) return
   tween = gsap.fromTo(

@@ -121,15 +121,15 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 5px;
+  height: 3px;
   background: repeating-linear-gradient(
     135deg,
-    rgba(157, 34, 53, 0.5) 0 10px,
+    rgba(157, 34, 53, 0.28) 0 10px,
     transparent 10px 20px,
-    rgba(184, 134, 11, 0.25) 20px 26px,
+    rgba(184, 134, 11, 0.14) 20px 26px,
     transparent 26px 36px
   );
-  opacity: 0.7;
+  opacity: 0.55;
 }
 
 /* ---------- 邮票齿孔边框 ---------- */
@@ -297,6 +297,11 @@ body {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(232, 220, 200, 0.08);
+}
+
+/* 页面大标题基线（简约大气） */
+.page-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
 }
 
 /* ---------- 视图容器通用 ---------- */

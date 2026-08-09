@@ -40,7 +40,7 @@ onBeforeUnmount(() => crossTween?.kill())
 <template>
   <div class="hist-page page-wrap">
     <div class="mb-8">
-      <h2 class="serif-title text-3xl text-[#e8dcc8]" data-enter>历史背景</h2>
+      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>历史背景</h2>
       <div class="gold-line w-40 mt-3" data-enter></div>
       <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>真实历史档案 · 四类分类 · 点击卡片展开</p>
     </div>
@@ -61,11 +61,11 @@ onBeforeUnmount(() => crossTween?.kill())
     <p class="mb-8 text-[13px] leading-7 text-[#8a8275] max-w-3xl" data-enter>{{ currentCat().desc }}</p>
 
     <!-- 旧纸卡片列表 -->
-    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
       <article
         v-for="card in currentCat().cards"
         :key="card.id"
-        class="hist-card k-card archive-tape relative p-5 cursor-pointer"
+        class="hist-card k-card archive-tape relative p-6 cursor-pointer"
         @click="toggleExpand(card.id)"
       >
         <!-- 边角磨损 -->

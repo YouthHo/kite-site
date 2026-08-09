@@ -67,7 +67,7 @@ function toggleDrawer() {
       </router-link>
 
       <!-- 桌面导航 -->
-      <nav class="hidden lg:flex items-center gap-6 text-[13px] tracking-[0.12em] text-[#8a8275]">
+      <nav class="hidden lg:flex items-center gap-8 text-[14px] tracking-[0.12em] text-[#8a8275]">
         <router-link v-for="l in links" :key="l.to" :to="l.to" class="nav-link hover:text-[#e8dcc8] transition-colors">
           {{ l.label }}
         </router-link>

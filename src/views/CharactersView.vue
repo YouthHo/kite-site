@@ -72,12 +72,12 @@ watch(() => route.query.q, (q) => {
 <template>
   <div class="char-page page-wrap">
     <div class="mb-8">
-      <h2 class="serif-title text-3xl text-[#e8dcc8]" data-enter>角色档案库</h2>
+      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>角色档案库</h2>
       <div class="gold-line w-40 mt-3" data-enter></div>
       <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>29 份档案 · 按阵营归档 · 结局含剧透保护</p>
     </div>
 
-    <div class="grid lg:grid-cols-[300px_1fr] gap-6">
+    <div class="grid lg:grid-cols-[320px_1fr] gap-8">
       <!-- 左侧人物列表 -->
       <aside class="lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto pr-1">
         <div v-for="g in grouped" :key="g.id" class="mb-5">
@@ -92,7 +92,7 @@ watch(() => route.query.q, (q) => {
 
       <!-- 右侧详情 -->
       <section ref="detailEl" class="char-detail-root min-w-0">
-        <div class="k-card archive-tape relative p-6 md:p-10">
+        <div class="k-card archive-tape relative p-6 md:p-12">
           <!-- 顶部大图 -->
           <div class="film-holes">
             <img :src="selected.image" :alt="selected.name" class="char-hero-img k-img w-full h-56 md:h-72 object-cover border border-[#2a2520]" />

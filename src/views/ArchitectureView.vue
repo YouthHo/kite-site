@@ -70,7 +70,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="arch-page page-wrap">
     <div class="mb-8">
-      <h2 class="serif-title text-3xl text-[#e8dcc8]" data-enter>势力架构</h2>
+      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>势力架构</h2>
       <div class="gold-line w-40 mt-3" data-enter></div>
       <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>三方势力 · 徽章式树形图 · 点击节点查看详情</p>
     </div>

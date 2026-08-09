@@ -10,17 +10,18 @@ import { prefersReduced } from '@/utils/anim'
 const pinRef = ref(null)
 const trackRef = ref(null)
 const lineRef = ref(null)
+const activeEra = ref(1)
 const lit = ref(new Set())
+let hTween = null
 let ctx = null
 let miniChart = null
 
-// 五个时间段分区
 const SECTIONS = [
-  { id: 1, label: '潜伏前夜', sub: '1927—1937', color: 'rgba(139,115,85,0.05)' },
-  { id: 2, label: '烽火抗战', sub: '1938—1945', color: 'rgba(61,61,61,0.07)' },
-  { id: 3, label: '山城谍影', sub: '1946—1949', color: 'rgba(157,34,53,0.06)' },
-  { id: 4, label: '建国肃特', sub: '1950—1965', color: 'rgba(30,74,82,0.06)' },
-  { id: 5, label: '风雨归途', sub: '1966—1990', color: 'rgba(184,134,11,0.05)' },
+  { id: 1, label: '潜伏前夜', sub: '1927—1937', color: 'rgba(139,115,85,0.07)' },
+  { id: 2, label: '烽火抗战', sub: '1938—1945', color: 'rgba(61,61,61,0.09)' },
+  { id: 3, label: '山城谍影', sub: '1946—1949', color: 'rgba(157,34,53,0.08)' },
+  { id: 4, label: '建国肃特', sub: '1950—1965', color: 'rgba(30,74,82,0.08)' },
+  { id: 5, label: '风雨归途', sub: '1966—1990', color: 'rgba(184,134,11,0.07)' },
 ]
 const sectionOf = (date) => {
   const y = Number(date.slice(0, 4))
@@ -30,9 +31,12 @@ const sectionOf = (date) => {
   if (y <= 1965) return 4
   return 5
 }
-const nodes = computed(() => timeline.map((n) => ({ ...n, section: sectionOf(n.date) })))
 
-// 分区：给每个节点插一个 section header（每段开头）
+const INTRO_W = 560
+const HEADER_W = 200
+const NODE_W = 380
+
+const nodes = computed(() => timeline.map((n) => ({ ...n, section: sectionOf(n.date) })))
 const decorated = computed(() => {
   const out = []
   let lastSec = 0
@@ -46,8 +50,47 @@ const decorated = computed(() => {
   return out
 })
 
-function onNodeVisible(i) {
-  lit.value = new Set(lit.value).add(i)
+// 每个元素在轨道内的 left 偏移 + 分区起止
+const layout = computed(() => {
+  let x = INTRO_W
+  const items = []
+  const secs = SECTIONS.map((s) => ({ ...s, left: 0, width: 0 }))
+  decorated.value.forEach((it) => {
+    const w = it.type === 'header' ? HEADER_W : NODE_W
+    items.push({ ...it, left: x, width: w })
+    const sec = secs.find((s) => s.id === it.section)
+    if (sec) {
+      if (!sec.width) sec.left = x
+      sec.width += w
+    }
+    x += w
+  })
+  return { items, secs, trackWidth: x + 120 }
+})
+
+// 当前时期（由横向进度推算）
+const progress = ref(0)
+function computeActiveEra() {
+  const p = progress.value
+  const idx = Math.min(SECTIONS.length - 1, Math.max(0, Math.floor(p * SECTIONS.length)))
+  activeEra.value = SECTIONS[idx].id
+}
+
+// 节点逐个点亮 + 卡片浮现（手动驱动，避免容器内 ScrollTrigger 失效）
+const nodeDone = new Map()
+function updateNodes() {
+  const vw = window.innerWidth
+  layout.value.items.forEach((it, i) => {
+    if (it.type !== 'node' || nodeDone.has(i)) return
+    const el = document.querySelector(`[data-node="${i}"]`)
+    if (!el) return
+    const viewX = it.left - Math.abs(hTween.progress() * (layout.value.trackWidth - vw))
+    if (viewX < vw - 60) {
+      nodeDone.set(i, true)
+      lit.value = new Set(lit.value).add(i)
+      gsap.fromTo(el.querySelector('.tnode'), { opacity: 0, y: it.node.section % 2 ? -26 : 26 }, { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' })
+    }
+  })
 }
 
 onMounted(async () => {
@@ -57,9 +100,8 @@ onMounted(async () => {
   ctx.add({ isDesktop: '(min-width: 768px)', isMobile: '(max-width: 767px)' }, (c) => {
     const { isDesktop } = c.conditions
     if (isDesktop && trackRef.value && !prefersReduced) {
-      // 横向长卷轴：钉住滚动
       const getDist = () => Math.max(0, trackRef.value.scrollWidth - window.innerWidth)
-      gsap.to(trackRef.value, {
+      hTween = gsap.to(trackRef.value, {
         x: () => -getDist(),
         ease: 'none',
         scrollTrigger: {
@@ -70,9 +112,13 @@ onMounted(async () => {
           scrub: 1,
           invalidateOnRefresh: true,
           anticipatePin: 1,
+          onUpdate: (self) => {
+            progress.value = self.progress
+            computeActiveEra()
+            updateNodes()
+          },
         },
       })
-      // 主线从左到右逐渐画出
       gsap.fromTo(
         lineRef.value,
         { scaleX: 0 },
@@ -82,22 +128,7 @@ onMounted(async () => {
           scrollTrigger: { trigger: pinRef.value, start: 'top top', end: () => '+=' + getDist(), scrub: 1 },
         }
       )
-      // 分区高亮：当前区亮、其他区暗
-      SECTIONS.forEach((s) => {
-        const secEl = document.querySelector(`[data-sec="${s.id}"]`)
-        if (!secEl) return
-        gsap.fromTo(
-          secEl,
-          { opacity: 0.45 },
-          {
-            opacity: 1,
-            ease: 'none',
-            scrollTrigger: { trigger: secEl, start: 'left 75%', end: 'left 25%', scrub: true },
-          }
-        )
-      })
     } else {
-      // 移动端：纵向时间线 + 普通滚入
       document.querySelectorAll('.m-node').forEach((el) => {
         gsap.fromTo(el, { opacity: 0, y: 36 }, { opacity: 1, y: 0, duration: 0.7, scrollTrigger: { trigger: el, start: 'top 85%', once: true } })
       })
@@ -119,7 +150,7 @@ function initMiniChart() {
     yAxis: { type: 'value', splitLine: { lineStyle: { color: 'rgba(42,37,32,0.6)' } }, axisLabel: { color: '#555048' } },
     series: [
       { name: '剧情节点', type: 'bar', data: SECTIONS.map((s) => nodes.value.filter((n) => n.section === s.id && n.type === 'plot').length), itemStyle: { color: '#9d2235' }, barWidth: 18 },
-      { name: '真实历史', type: 'bar', data: SECTIONS.map((s) => nodes.value.filter((n) => n.section === s.id && n.type === 'history').length), itemStyle: { color: '#b8860b' }, barWidth: 18 },
+      { name: '真实历史', type: 'bar', data: SECTIONS.map((n) => nodes.value.filter((x) => x.section === n.id && x.type === 'history').length), itemStyle: { color: '#b8860b' }, barWidth: 18 },
     ],
   })
 }
@@ -133,68 +164,90 @@ onBeforeUnmount(() => {
 <template>
   <div class="page-wrap !pt-16 !max-w-none !px-0">
     <div class="px-5 md:px-8 mb-6 flex flex-wrap items-center gap-3">
-      <h2 class="serif-title text-3xl text-[#e8dcc8]" data-enter>全剧时间线</h2>
+      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>全剧时间线</h2>
       <span class="file-label" data-enter>1927—1980 · 史诗长卷</span>
-      <p class="w-full font-mono text-[11px] tracking-[0.25em] text-[#8a8275]" data-enter>横向滚动阅读 · 金色为真实历史节点 · 拖动页面即可</p>
+      <p class="w-full font-mono text-[11px] tracking-[0.25em] text-[#8a8275]" data-enter>上下滚动页面，时间线将横向展开 · 金色节点为真实历史</p>
     </div>
 
-    <!-- 桌面端：钉住横向滚动 -->
-    <div ref="pinRef" class="relative hidden md:block h-[80vh] overflow-hidden border-y border-[#2a2520]">
-      <div ref="trackRef" class="timeline-track absolute top-0 left-0 h-full flex will-change-transform">
-        <!-- 分区色带 + 竖排标题 -->
-        <template v-for="s in SECTIONS" :key="s.id">
-          <div class="h-full shrink-0" :data-sec="s.id" :style="{ width: '100vw', background: s.color }">
-            <div class="h-full flex items-center justify-center">
-              <div class="serif-title text-4xl tracking-[0.5em] text-[#e8dcc8]/60" style="writing-mode: vertical-rl;">
-                {{ s.label }}<span class="block mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]/70">{{ s.sub }}</span>
+    <!-- 桌面端：居中主线 + 钉住横向滚动 -->
+    <div ref="pinRef" class="relative hidden md:block h-[85vh] overflow-hidden border-y border-[#2a2520] bg-[#0a0a0a]">
+      <div ref="trackRef" class="absolute top-0 left-0 h-full flex will-change-transform" :style="{ width: layout.trackWidth + 'px' }">
+        <!-- 分区色带（绝对定位，覆盖各自区域） -->
+        <div
+          v-for="s in layout.secs"
+          :key="s.id"
+          class="absolute top-0 bottom-0 transition-opacity duration-500"
+          :style="{ left: s.left + 'px', width: s.width + 'px', background: s.color, opacity: activeEra === s.id ? 1 : 0.45 }"
+        ></div>
+
+        <!-- 主线：垂直居中 -->
+        <div ref="lineRef" class="absolute left-0 right-0 top-1/2 h-[2px] origin-left -translate-y-1/2 z-10" style="background: linear-gradient(90deg, transparent, #9d2235 15%, #b8860b 50%, #9d2235 85%, transparent); box-shadow: 0 0 16px rgba(157,34,53,0.45);"></div>
+
+        <!-- 序章 -->
+        <div class="relative z-10 h-full flex flex-col items-center justify-center text-center shrink-0" :style="{ width: INTRO_W + 'px' }">
+          <div class="serif-title text-6xl text-[#e8dcc8]/90" style="letter-spacing: 0.2em;">KITE</div>
+          <div class="gold-line w-40 mt-5"></div>
+          <div class="mt-4 font-mono text-[11px] tracking-[0.45em] text-[#8a8275]">1927 — 1980</div>
+          <div class="mt-10 font-mono text-[10px] tracking-[0.3em] text-[#555048]">↓ 向下滚动 · 横向展开</div>
+          <div class="mt-6 flex gap-5 font-mono text-[10px] tracking-[0.2em] text-[#8a8275]">
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#9d2235]"></span>剧情节点</span>
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#b8860b]"></span>真实历史</span>
+          </div>
+        </div>
+
+        <!-- 分区标题 + 节点 -->
+        <template v-for="(it, i) in layout.items" :key="i">
+          <div v-if="it.type === 'header'" class="relative z-10 h-full flex items-center justify-center shrink-0" :style="{ width: it.width + 'px' }">
+            <div class="text-center">
+              <div class="serif-title text-3xl tracking-[0.5em] text-[#e8dcc8]/70" style="writing-mode: vertical-rl;">
+                {{ SECTIONS[it.section - 1].label }}
               </div>
+              <div class="mt-4 font-mono text-[10px] tracking-[0.3em] text-[#8a8275]/70">{{ SECTIONS[it.section - 1].sub }}</div>
+            </div>
+          </div>
+          <div v-else :data-node="i" class="relative z-10 h-full shrink-0" :style="{ width: it.width + 'px' }">
+            <!-- 节点圆点（线上） -->
+            <span
+              class="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-[#0a0a0a] transition-all duration-500 z-10"
+              :style="{
+                top: '50%',
+                background: lit.has(i) ? (it.node.type === 'history' ? '#b8860b' : '#9d2235') : '#2a2520',
+                boxShadow: lit.has(i) ? '0 0 18px rgba(157,34,53,0.9)' : 'none',
+                transform: lit.has(i) ? 'translate(-50%,-50%) scale(1.25)' : 'translate(-50%,-50%)',
+              }"
+            ></span>
+            <!-- 卡片：交替在线上下，居中于主线 -->
+            <div class="absolute left-1/2 -translate-x-1/2 w-[340px]" :style="it.node.section % 2 ? { top: 'calc(50% - 226px)' } : { top: 'calc(50% + 34px)' }">
+              <TimelineNode :node="it.node" :index="i" :side="it.node.section % 2 ? 'top' : 'bottom'" manual />
             </div>
           </div>
         </template>
-        <!-- 节点内容区 -->
-        <div class="h-full shrink-0 relative" :style="{ width: (decorated.length * 380) + 'px' }">
-          <!-- 主线 -->
-          <div ref="lineRef" class="absolute left-0 right-0 top-1/2 h-[2px] origin-left" style="background: linear-gradient(90deg, transparent, #9d2235 20%, #b8860b 60%, transparent 100%); box-shadow: 0 0 14px rgba(157,34,53,0.5);"></div>
-          <div v-for="(item, i) in decorated" :key="i">
-            <template v-if="item.type === 'header'">
-              <div class="absolute w-px bg-[#9d2235]/50" :style="{ left: (i * 380 + 190) + 'px', top: 0, bottom: 0 }"></div>
-            </template>
-            <template v-else>
-              <div class="absolute" :style="{ left: (i * 380 + 60) + 'px', top: item.node.section % 2 ? '3%' : '52%' }">
-                <div
-                  class="timeline-dot absolute w-3.5 h-3.5 rounded-full border-2 border-[#080808] transition-all duration-500"
-                  :class="lit.has(i) ? 'scale-125' : ''"
-                  :style="{ background: lit.has(i) ? (item.node.type === 'history' ? '#b8860b' : '#9d2235') : '#2a2520', boxShadow: lit.has(i) ? '0 0 16px rgba(157,34,53,0.8)' : 'none', top: item.node.section % 2 ? '50%' : '-8px' }"
-                ></div>
-                <TimelineNode :node="item.node" :index="i" :side="item.node.section % 2 ? 'top' : 'bottom'" @visible="onNodeVisible" />
-              </div>
-            </template>
-          </div>
-        </div>
+        <div class="relative z-10 shrink-0" :style="{ width: '120px' }"></div>
       </div>
-      <!-- 图例 -->
-      <div class="absolute bottom-4 left-4 z-10 flex gap-4 font-mono text-[10px] tracking-[0.25em] text-[#8a8275] bg-black/50 px-3 py-1.5">
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#9d2235]"></span>剧情节点</span>
-        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#b8860b]"></span>真实历史</span>
+
+      <!-- 当前时期指示 -->
+      <div class="absolute top-4 right-5 z-20 font-mono text-[10px] tracking-[0.35em] text-[#8a8275] bg-black/50 px-3 py-1.5 border border-[#2a2520]">
+        ERA {{ activeEra }} · {{ SECTIONS[activeEra - 1].label }}
       </div>
     </div>
 
     <!-- 移动端：纵向时间线 -->
-    <div class="md:hidden relative pl-8">
+    <div class="md:hidden relative pl-9">
       <div class="absolute left-3 top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#9d2235] via-[#b8860b] to-transparent"></div>
-      <div v-for="(item, i) in decorated" :key="i" class="m-node relative mb-6">
-        <template v-if="item.type === 'header'">
-          <div class="serif-title text-xl tracking-[0.3em] text-[#e8dcc8] mb-4">{{ SECTIONS[item.section - 1].label }}</div>
-        </template>
-        <template v-else>
-          <span class="absolute -left-[21px] top-2 w-3 h-3 rounded-full border-2 border-[#080808]" :style="{ background: item.node.type === 'history' ? '#b8860b' : '#9d2235' }"></span>
-          <TimelineNode :node="item.node" :index="i" side="bottom" @visible="onNodeVisible" />
-        </template>
+      <div v-for="(it, i) in layout.items" :key="i">
+        <div v-if="it.type === 'header'" class="m-node relative mb-5">
+          <div class="serif-title text-xl tracking-[0.3em] text-[#e8dcc8]">{{ SECTIONS[it.section - 1].label }}</div>
+          <div class="font-mono text-[10px] tracking-[0.25em] text-[#8a8275]">{{ SECTIONS[it.section - 1].sub }}</div>
+        </div>
+        <div v-else class="m-node relative mb-6">
+          <span class="absolute -left-[23px] top-2 w-3 h-3 rounded-full border-2 border-[#080808]" :style="{ background: it.node.type === 'history' ? '#b8860b' : '#9d2235' }"></span>
+          <TimelineNode :node="it.node" :index="i" side="bottom" />
+        </div>
       </div>
     </div>
 
     <!-- ECharts 年代分布统计 -->
-    <div class="max-w-5xl mx-auto mt-10 px-5 md:px-8">
+    <div class="max-w-5xl mx-auto mt-12 px-5 md:px-8">
       <div class="file-label mb-4">年代分布统计（ECharts）</div>
       <div class="mini-chart h-64 border border-[#2a2520] bg-[#0b0b0b]"></div>
     </div>

@@ -32,12 +32,12 @@ onBeforeUnmount(() => panelTween?.kill())
 <template>
   <div class="cast-page page-wrap">
     <div class="mb-8">
-      <h2 class="serif-title text-3xl text-[#e8dcc8]" data-enter>演员阵容</h2>
+      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>演员阵容</h2>
       <div class="gold-line w-40 mt-3" data-enter></div>
       <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>16 位主演 · 照片悬停彩色化 · 点击查看详情</p>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
+    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-7">
       <article
         v-for="a in actors"
         :key="a.id"
@@ -54,8 +54,8 @@ onBeforeUnmount(() => panelTween?.kill())
             class="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-700"
           />
         </div>
-        <div class="p-4 relative">
-          <h3 class="serif-title text-[16px] text-[#e8dcc8]">{{ a.name }}</h3>
+        <div class="p-5 relative">
+          <h3 class="serif-title text-[17px] text-[#e8dcc8]">{{ a.name }}</h3>
           <p class="mt-1 text-[12px] tracking-[0.15em] text-[#b8860b] transition-all duration-300 group-hover:-translate-y-0.5">
             饰 {{ a.role }}
           </p>

@@ -60,10 +60,10 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
     <div class="absolute inset-0 overflow-hidden">
       <img
         ref="heroBg"
-        src="https://picsum.photos/seed/kite-hero/1920/1080"
-        alt="风筝 主视觉占位图"
+        src="/images/history/hist_chongqing_bombing.jpg"
+        alt="重庆 1940s 历史影像（公版照片）"
         class="w-full h-full object-cover"
-        style="filter: brightness(0.55) contrast(1.1) saturate(0.85)"
+        style="filter: brightness(0.5) contrast(1.15) saturate(0.7)"
       />
       <!-- 暗角 -->
       <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 30%, rgba(8,8,8,0.9) 100%)"></div>
@@ -79,7 +79,7 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
     <!-- 居中标题 -->
     <div class="relative z-10 min-h-screen flex flex-col items-center justify-center px-5 pt-20">
       <div ref="heroTitle" class="text-center">
-        <h1 class="serif-title text-[17vw] md:text-[9rem] leading-none text-[#e8dcc8]" style="letter-spacing: 0.42em; text-indent: 0.42em; text-shadow: 0 0 34px rgba(157,34,53,0.55), 0 2px 18px rgba(0,0,0,0.9);">
+        <h1 class="serif-title text-[17vw] md:text-[10rem] leading-none text-[#e8dcc8]" style="letter-spacing: 0.42em; text-indent: 0.42em; text-shadow: 0 0 34px rgba(157,34,53,0.55), 0 2px 18px rgba(0,0,0,0.9);">
           风 筝
         </h1>
       </div>
@@ -88,17 +88,17 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
       <p class="hero-sub mt-3 font-mono text-[10px] tracking-[0.4em] text-[#8a8275]">THE KITE · 2017 · 柳云龙 导演作品</p>
 
       <!-- 功能入口卡片 8 个 -->
-      <div class="hero-cards grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-14 w-full max-w-5xl">
+      <div class="hero-cards grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-16 w-full max-w-6xl">
         <router-link
           v-for="c in cards"
           :key="c.to"
           :to="c.to"
-          class="k-card archive-tape relative block p-4 md:p-5 group"
+          class="k-card relative block p-6 md:p-7 group"
         >
-          <component :is="c.icon" :size="20" class="hero-card-icon text-[#8a8275] group-hover:text-[#9d2235] group-hover:drop-shadow-[0_0_10px_rgba(157,34,53,0.8)] transition-all duration-300" />
-          <div class="serif-title text-[13px] md:text-[15px] mt-3 text-[#e8dcc8]">{{ c.title }}</div>
-          <div class="mt-1 text-[11px] md:text-[12px] text-[#8a8275] leading-5">{{ c.desc }}</div>
-          <span class="absolute top-2 right-3 font-mono text-[9px] tracking-[0.2em] opacity-0 group-hover:opacity-60 transition-opacity" :style="{ color: `var(--${c.faction})` }">FILE-{{ c.faction.toUpperCase() }}</span>
+          <component :is="c.icon" :size="24" class="hero-card-icon text-[#8a8275] group-hover:text-[#9d2235] group-hover:drop-shadow-[0_0_10px_rgba(157,34,53,0.8)] transition-all duration-300" />
+          <div class="serif-title text-[15px] md:text-[17px] mt-4 text-[#e8dcc8]">{{ c.title }}</div>
+          <div class="mt-1.5 text-[12px] md:text-[13px] text-[#8a8275] leading-6">{{ c.desc }}</div>
+          <span class="absolute top-3 right-4 font-mono text-[9px] tracking-[0.2em] opacity-0 group-hover:opacity-60 transition-opacity" :style="{ color: `var(--${c.faction})` }">FILE-{{ c.faction.toUpperCase() }}</span>
         </router-link>
       </div>
     </div>
@@ -107,10 +107,10 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
     <div class="hero-bottom absolute bottom-0 left-0 right-0 z-10 border-t border-[#2a2520]/70 bg-black/40 backdrop-blur-sm">
       <div class="max-w-[1400px] mx-auto px-5 md:px-8 py-4 flex flex-wrap items-center justify-between gap-3">
         <div class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">
-          46 EPISODES · 1946—1979 · 北京卫视 / 东方卫视
+          46 EPISODES · 1946—1979 · 信仰至上 半生潜伏
         </div>
         <div class="flex items-center gap-3">
-          <span class="hidden md:inline font-mono text-[10px] tracking-[0.3em] text-[#555048]">非官方粉丝资料站</span>
+          <span class="hidden md:inline font-mono text-[10px] tracking-[0.3em] text-[#555048]">内容整理自公开资料，仅供学习交流</span>
           <ShareButton title="风筝 The Kite · 信仰至上 半生潜伏" />
         </div>
       </div>

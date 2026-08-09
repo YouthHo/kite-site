@@ -41,7 +41,7 @@ onBeforeUnmount(() => crossTween?.kill())
 <template>
   <div class="scenes-page page-wrap">
     <div class="mb-8 flex flex-wrap items-center gap-6">
-      <h2 class="serif-title text-3xl text-[#e8dcc8]" data-enter>名场面与台词</h2>
+      <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>名场面与台词</h2>
       <!-- 标签切换 -->
       <div class="flex gap-1 border-b border-[#2a2520]" data-enter>
         <button
@@ -64,7 +64,7 @@ onBeforeUnmount(() => crossTween?.kill())
     </div>
 
     <!-- 名场面瀑布流 -->
-    <div v-if="tab === 'scenes'" class="columns-1 sm:columns-2 xl:columns-3 gap-4 [&>*]:mb-4">
+    <div v-if="tab === 'scenes'" class="columns-1 sm:columns-2 xl:columns-3 gap-5 [&>*]:mb-5">
       <figure
         v-for="s in scenes"
         :key="s.id"
@@ -84,7 +84,7 @@ onBeforeUnmount(() => crossTween?.kill())
     </div>
 
     <!-- 经典台词 -->
-    <div v-else class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+    <div v-else class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
       <div v-for="q in quotes" :key="q.id" class="scenes-item">
         <QuoteCard :quote="q" />
       </div>
