@@ -5,8 +5,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 // ECharts 按需引入：时间线统计图仅用 BarChart
 import * as echarts from 'echarts/core'
 import { BarChart } from 'echarts/charts'
+import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
-echarts.use([BarChart, CanvasRenderer])
+echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer])
 import timeline from '@/data/timeline.json'
 import SealStamp from '@/components/SealStamp.vue'
 import TimelineNode from '@/components/TimelineNode.vue'

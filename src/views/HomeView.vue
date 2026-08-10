@@ -3,6 +3,7 @@ import { onMounted, onBeforeUnmount, ref } from 'vue'
 import gsap from 'gsap'
 import ScanLine from '@/components/ScanLine.vue'
 import HeroField from '@/components/HeroField.vue'
+import SealStamp from '@/components/SealStamp.vue'
 import ShareButton from '@/components/ShareButton.vue'
 import { pageEnter, prefersReduced } from '@/utils/anim'
 
@@ -28,13 +29,17 @@ onMounted(() => {
   // Ken Burns：极缓慢放大 + 呼吸式明暗
   tweens.push(gsap.fromTo(bg, { scale: 1, filter: 'brightness(0.9)' }, { scale: 1.1, filter: 'brightness(1.02)', duration: 26, ease: 'none' }))
   tweens.push(gsap.to('.hero-breathe', { opacity: 0.5, duration: 6, repeat: -1, yoyo: true, ease: 'sine.inOut' }))
-  // 标题：模糊→清晰 + 大→小
+  // 标题：titleSweep 显影——模糊淡入 + 字距从宽收束（0.58em → 0.42em）
   tweens.push(
     gsap.fromTo(
       title,
-      { filter: 'blur(18px)', scale: 1.18, opacity: 0 },
-      { filter: 'blur(0px)', scale: 1, opacity: 1, duration: 1.8, ease: 'power3.out', delay: 0.15 }
+      { filter: 'blur(16px)', scale: 1.12, opacity: 0, letterSpacing: '0.58em' },
+      { filter: 'blur(0px)', scale: 1, opacity: 1, letterSpacing: '0.42em', duration: 1.6, ease: 'power3.out', delay: 0.15 }
     )
+  )
+  // 印章压印出现（快速旋转复位）
+  tweens.push(
+    gsap.fromTo('.hero-seal', { scale: 1.6, opacity: 0, rotation: -14 }, { scale: 1, opacity: 1, rotation: -10, duration: 0.5, ease: 'back.out(2.2)', delay: 1.1 })
   )
   // 金色细线从中间展开
   tweens.push(gsap.fromTo('.hero-goldline', { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: 'power2.inOut', delay: 1.5 }))
@@ -79,13 +84,17 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
 
     <!-- 居中标题 -->
     <div class="relative z-10 min-h-screen flex flex-col items-center justify-center px-5 pt-20">
-      <div ref="heroTitle" class="text-center">
+      <div ref="heroTitle" class="text-center relative">
         <h1 class="serif-title text-[17vw] md:text-[10rem] leading-none text-[#e8dcc8] on-media" style="letter-spacing: 0.42em; text-indent: 0.42em; text-shadow: 0 0 34px rgba(157,34,53,0.55), 0 2px 18px rgba(0,0,0,0.9);">
           风 筝
         </h1>
+        <!-- 档案印章：标题右侧压印（仅桌面，移动端避免溢出） -->
+        <div class="hero-seal hidden md:block absolute -right-24 top-1/2 -translate-y-1/2 opacity-0" style="transform: rotate(-10deg);">
+          <SealStamp text="绝密档案" :size="64" />
+        </div>
       </div>
       <div class="hero-goldline gold-line w-[280px] md:w-[420px] mt-6 origin-center"></div>
-      <p class="hero-sub mt-6 text-[13px] tracking-[0.4em] text-[#b8860b] on-media">信仰至上 · 半生潜伏</p>
+      <p class="hero-sub mt-6 text-[13px] tracking-[0.4em] text-[#d9a441] on-media" style="text-shadow: 0 0 18px rgba(184,134,11,0.35);">信仰至上 · 半生潜伏</p>
       <p class="hero-sub mt-3 text-[11px] tracking-[0.3em] text-[#8a8275] on-media">THE KITE · 2017 · 柳云龙 导演作品</p>
 
       <!-- 功能入口：编辑式索引（无边框盒，编号+细线+悬停变色） -->

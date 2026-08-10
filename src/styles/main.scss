@@ -24,6 +24,13 @@
   --dim: #555048;
   --line: #2a2520;
   --gold: #b8860b;
+  --gold-highlight: #d9a441; /* 高光金：悬停/强调文字 */
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --shadow-1: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --shadow-3: 0 18px 44px rgba(0, 0, 0, 0.6);
   --junton: #9d2235;
   --zhongtong: #7d3b52;
   --underground: #1e4a52;
@@ -89,7 +96,8 @@ body {
 /* 渐变分割线：中间亮两边暗 */
 .gold-line {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(184, 134, 11, 0.7), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold-highlight), transparent);
+  box-shadow: 0 0 12px rgba(184, 134, 11, 0.35);
 }
 .red-line {
   height: 1px;
@@ -100,7 +108,8 @@ body {
 .k-card {
   background: linear-gradient(160deg, var(--card2), var(--card));
   border: 1px solid var(--line);
-  box-shadow: inset 0 1px 0 rgba(232, 220, 200, 0.05), 0 10px 30px rgba(0, 0, 0, 0.45);
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 1px 0 rgba(232, 220, 200, 0.05), var(--shadow-2);
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s, box-shadow 0.35s;
 }
 .k-card:hover {
@@ -108,7 +117,7 @@ body {
   border-color: rgba(157, 34, 53, 0.55);
   box-shadow:
     inset 0 1px 0 rgba(232, 220, 200, 0.07),
-    0 18px 44px rgba(0, 0, 0, 0.6),
+    var(--shadow-3),
     0 0 22px rgba(157, 34, 53, 0.16);
 }
 

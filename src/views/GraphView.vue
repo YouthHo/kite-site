@@ -1,10 +1,11 @@
-<script setup>
+﻿<script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 // ECharts 按需引入：仅 GraphChart + CanvasRenderer，chunk 从 1MB 降到 ~300KB
 import * as echarts from 'echarts/core'
 import { GraphChart } from 'echarts/charts'
+import { GridComponent, TooltipComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
-echarts.use([GraphChart, CanvasRenderer])
+echarts.use([GraphChart, GridComponent, TooltipComponent, CanvasRenderer])
 import gsap from 'gsap'
 import { X, Search, ArrowRight, Info } from 'lucide-vue-next'
 import graph from '@/data/relationships.json'
@@ -378,7 +379,7 @@ onBeforeUnmount(() => {
             :class="activeFactions.has(k) ? 'text-[#e8dcc8]' : 'text-[#555048]'">
             <span class="w-3.5 h-3.5 border grid place-items-center transition-colors"
               :style="{ borderColor: v.color, background: activeFactions.has(k) ? v.color : 'transparent' }">
-              <span v-if="activeFactions.has(k)" class="text-[9px] text-white">✓</span>
+              <span v-if="activeFactions.has(k)" class="text-[9px] text-[#e8dcc8]">✓</span>
             </span>
             {{ v.label }}
             <input type="checkbox" class="hidden" :checked="activeFactions.has(k)" @change="toggleFaction(k)" />
@@ -417,7 +418,7 @@ onBeforeUnmount(() => {
               class="w-3.5 h-3.5 border grid place-items-center shrink-0 transition-colors"
               :style="{ borderColor: FACTION[n.faction].color, background: personSel.has(n.id) ? FACTION[n.faction].color : 'transparent' }"
             >
-              <span v-if="personSel.has(n.id)" class="text-[9px] text-white">✓</span>
+              <span v-if="personSel.has(n.id)" class="text-[9px] text-[#e8dcc8]">✓</span>
             </span>
             <span class="w-2 h-2 rounded-full shrink-0" :style="{ background: FACTION[n.faction].color }"></span>
             <span class="text-[#e8dcc8] truncate">{{ n.name }}</span>
@@ -465,3 +466,4 @@ onBeforeUnmount(() => {
     </Teleport>
   </div>
 </template>
+
