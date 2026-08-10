@@ -12,7 +12,7 @@ let tweens = []
 
 const cards = [
   { to: '/graph', icon: GitBranch, title: '人物关系图谱', desc: '谁是风筝 · 谁是影子', faction: 'junton' },
-  { to: '/characters', icon: FileText, title: '角色档案库', desc: '29 份绝密人物档案', faction: 'underground' },
+  { to: '/characters', icon: FileText, title: '角色档案库', desc: '30 份绝密人物档案', faction: 'underground' },
   { to: '/cast', icon: Clapperboard, title: '演员阵容', desc: '柳云龙 / 罗海琼 / 李小冉', faction: 'zhongtong' },
   { to: '/episodes', icon: Library, title: '分集剧情', desc: '46 集 · 完整剧情解密', faction: 'gongan' },
   { to: '/timeline', icon: Calendar, title: '全剧时间线', desc: '1927—1980 时代长卷', faction: 'junton' },

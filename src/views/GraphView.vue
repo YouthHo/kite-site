@@ -112,7 +112,7 @@ function buildOption({ center = false, pulse = 1 } = {}) {
       const c = charMap.value[n.id] || {}
       const span = c.episodes ? c.episodes[1] - c.episodes[0] : 5
       // 节点尺寸缩小一档（64/54/44），给关系标签留出可读空间；缩放由原生 roam 整体等比处理
-      const size = span > 30 ? 64 : span > 10 ? 54 : 44
+      const size = span > 30 ? 52 : span > 10 ? 42 : 34
       return {
         id: n.id,
         name: n.name,

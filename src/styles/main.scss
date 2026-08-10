@@ -273,9 +273,9 @@ body {
 
 /* ---------- 老式档案标题横条 ---------- */
 .file-label {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Noto Sans SC', system-ui, sans-serif;
   font-size: 11px;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.18em;
   color: var(--ink);
   border: 1px solid var(--line);
   border-left: 3px solid var(--blood);

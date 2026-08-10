@@ -77,7 +77,7 @@ onBeforeUnmount(() => panelTween?.kill())
         <div class="p-5 relative">
           <h3 class="serif-title text-[17px] text-[#e8dcc8]">{{ a.name }}</h3>
           <p class="mt-1 text-[12px] tracking-[0.15em] text-[#b8860b]">饰 {{ a.role }}</p>
-          <p class="mt-1.5 font-mono text-[10px] text-[#555048] leading-4">{{ a.roleNote }}</p>
+          <p class="mt-1.5 text-[10px] tracking-[0.1em] text-[#555048] leading-4">{{ a.roleNote }}</p>
         </div>
       </article>
     </div>
@@ -107,8 +107,7 @@ onBeforeUnmount(() => panelTween?.kill())
                   <div>
                     <div class="file-label mb-3">角色照</div>
                     <div class="w-full max-w-[220px] aspect-[3/4] overflow-hidden border border-[#2a2520] relative">
-                      <img :src="roleInfo(detail)?.image || detail.image" alt="角色照（占位）" class="absolute inset-0 w-full h-full object-cover k-img" />
-                      <span class="absolute top-2 left-2 font-mono text-[9px] tracking-[0.2em] text-white/80 bg-black/50 px-2 py-0.5">角色照（占位）</span>
+                      <img :src="roleInfo(detail)?.image || detail.image" alt="角色照" class="absolute inset-0 w-full h-full object-cover k-img" />
                     </div>
                     <p class="mt-2 text-[10px] text-[#555048]">图片为占位，替换为正式剧照</p>
                   </div>
