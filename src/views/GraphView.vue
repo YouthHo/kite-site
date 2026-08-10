@@ -25,11 +25,70 @@ const hoverNodeId = ref(null)
 const hoverSummary = ref('')
 const decryptedCount = ref(0)
 const secretFound = ref(0)
+const tour = ref(null) // { idx } 解密档案巡览
+const tourText = ref('')
+const liveText = ref('')
+const revealed = ref(false)
 const secretTotal = computed(() => g.links.filter((l) => l.secret).length)
+
+/* 解密档案巡览：沿图谱揭示 kite/shadow 双轴秘密 */
+const TOUR_STEPS = [
+  { id: 'zheng-yaoxian', text: '1946 年的重庆，他是军统王牌「六哥」。没有人知道，他的真实代号叫——风筝。' },
+  { id: 'han-bing', text: '她是最接近他的人，也是他的一生之敌。她的代号——影子。' },
+  { id: 'lu-hanqing', text: '上线陆汉卿，把最后一块银元吞进肚里，也不说出风筝的名字。' },
+  { id: 'cheng-zhener', text: '程真儿，他的恋人，也是同志。隔着餐厅玻璃，他看着她被车撞死，不能相认。' },
+  { id: 'zeng-moyi', text: '曾墨怡，他亲手送她上刑场——「送你上路的，是你的同志。」' },
+  { id: 'gong-shu', text: '徒弟宫庶，视他如父，最终却要亲手杀他。' },
+  { id: 'gao-junbao', text: '高君宝，恨了他一辈子，却不知杀父仇人另有其人。' },
+  { id: 'zhou-qiao', text: '周乔，他的女儿。父女相见，已是陌路。' },
+  { id: 'daili', text: '戴笠密令影子潜伏调查风筝——两大特工，互为镜像。' },
+  { id: 'jian-bing', text: '三十年后，简冰为风筝作证。身份被证实的那一刻，他依然选择沉默。' },
+]
+let tourType = null
+function startTour() {
+  tour.value = { idx: 0 }
+  playTourStep(0)
+}
+function playTourStep(i) {
+  const s = TOUR_STEPS[i]
+  engine?.setFocusClick(s.id)
+  engine?.centerOn(s.id, 750)
+  tourText.value = s.text
+  tourType?.kill?.()
+  if (tourEl.value && !prefersReduced) {
+    tourType = typewriter(tourEl.value, s.text, { speed: 22, caret: false })
+  } else if (tourEl.value) {
+    tourEl.value.textContent = s.text
+  }
+  liveText.value = `巡览第 ${i + 1} 幕：${g.charMap[s.id]?.name || ''}。${s.text}`
+}
+function nextTourStep() {
+  if (!tour.value) return
+  const i = (tour.value.idx + 1) % TOUR_STEPS.length
+  tour.value = { idx: i }
+  playTourStep(i)
+}
+function prevTourStep() {
+  if (!tour.value) return
+  const i = (tour.value.idx - 1 + TOUR_STEPS.length) % TOUR_STEPS.length
+  tour.value = { idx: i }
+  playTourStep(i)
+}
+function exitTour() {
+  tour.value = null
+  tourType?.kill?.()
+  engine?.setFocusClick(null)
+}
+
 function handleDecrypt() {
   decryptedCount.value = engine?.decrypted?.size || 0
   const dec = engine?.decrypted
   secretFound.value = dec ? g.links.filter((l) => l.secret && dec.has(l.source) && dec.has(l.target)).length : 0
+  if (dec && dec.size >= g.nodes.length && !revealed.value) {
+    // 揭示彩蛋：全部解密完成
+    revealed.value = true
+    liveText.value = '全部档案已解密：风筝与影子，同一根线。' + liveText.value
+  }
 }
 
 let engine = null
@@ -46,6 +105,11 @@ const SORTS = [
 /* ================= 交互 ================= */
 let hoverType = null
 function handleNodeClick(id) {
+  if (tour.value) {
+    // 巡览模式：点击画布 = 推进下一幕
+    nextTourStep()
+    return
+  }
   if (pathMode.value) {
     if (!pathStart.value) {
       pathStart.value = id
@@ -91,6 +155,9 @@ function handleHover(id) {
   } else if (hoverEl.value) {
     hoverEl.value.textContent = text
   }
+  // 屏幕阅读器播报
+  const deg = g.degree.value[id] || 0
+  liveText.value = `节点 ${n.name}，${n.role || g.factionLabel(n.faction)}，${key.trim()}，连接 ${deg} 条关系`
 }
 
 function onSearchEnter() {
@@ -258,6 +325,7 @@ watch(layoutMode, () => {})
 
 const briefEl = ref(null)
 const hoverEl = ref(null)
+const tourEl = ref(null)
 // 洞察面板：共同联系人 / 到风筝的最短链路
 const insight = computed(() => {
   if (!selected.value) return null
@@ -309,6 +377,13 @@ onBeforeUnmount(() => {
         <div class="absolute top-3 right-3 z-10 flex gap-1.5 flex-wrap justify-end max-w-[62%]">
           <button
             class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors"
+            :class="tour ? 'border-[#b8860b] text-[#b8860b] bg-[#b8860b]/15' : 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235]'"
+            @click="tour ? exitTour() : startTour()"
+          >
+            {{ tour ? `退出巡览 ${tour.idx + 1}/${TOUR_STEPS.length}` : '解密档案' }}
+          </button>
+          <button
+            class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors"
             :class="decryptMode ? 'border-[#9d2235] text-[#d8a0a8] bg-[#9d2235]/15' : 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235]'"
             @click="toggleDecrypt"
           >
@@ -358,6 +433,28 @@ onBeforeUnmount(() => {
           <span ref="hoverEl">{{ hoverSummary }}</span>
         </div>
 
+        <!-- 巡览旁白（打字机） -->
+        <div v-if="tour" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 max-w-[560px] w-[88%] bg-black/80 border border-[#b8860b]/50 px-4 py-3 pointer-events-none">
+          <div class="flex items-center justify-between mb-1.5 font-mono text-[9px] tracking-[0.3em] text-[#b8860b]">
+            <span>DECRYPT FILE · {{ String(tour.idx + 1).padStart(2, '0') }}/{{ TOUR_STEPS.length }}</span>
+            <span class="flex gap-3">
+              <button class="pointer-events-auto text-[#8a8275] hover:text-[#e8dcc8]" @click="prevTourStep">‹ 上一幕</button>
+              <button class="pointer-events-auto text-[#8a8275] hover:text-[#e8dcc8]" @click="nextTourStep">下一幕 ›</button>
+            </span>
+          </div>
+          <p ref="tourEl" class="text-[13px] leading-6 text-[#e8dcc8]">{{ tourText }}</p>
+        </div>
+
+        <!-- 揭示彩蛋 -->
+        <transition name="era-fade">
+          <div v-if="revealed" class="absolute inset-0 z-20 grid place-items-center pointer-events-none">
+            <div class="text-center px-6">
+              <div class="serif-title text-4xl md:text-5xl text-[#b8860b] tracking-[0.2em]" style="text-shadow: 0 0 40px rgba(184,134,11,0.6);">风筝与影子 · 同一根线</div>
+              <div class="mt-3 font-mono text-[10px] tracking-[0.4em] text-[#8a8275]">ALL FILES DECRYPTED · WHO IS KITE · WHO IS SHADOW</div>
+            </div>
+          </div>
+        </transition>
+
         <!-- 解密进度条 -->
         <div v-if="decryptMode" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#8a8275] bg-black/50 border border-[#2a2520] px-3 py-1.5">
           已解密 {{ decryptedCount }}/30 · 秘密线索 {{ secretFound }}/{{ secretTotal }}
@@ -401,6 +498,8 @@ onBeforeUnmount(() => {
           />
           <span class="font-mono text-[10px] tracking-[0.15em] text-[#8a8275] w-[74px]">EP {{ String(g.ep.value).padStart(2, '0') }}/46</span>
         </div>
+        <!-- 屏幕阅读器 live region -->
+        <div class="sr-only" aria-live="polite" role="status">{{ liveText }}</div>
       </div>
       <!-- 侧边栏 -->
       <aside class="lg:w-[300px] glass border-t lg:border-t-0 lg:border-l border-[#2a2520] p-5 overflow-y-auto shrink-0">
@@ -526,3 +625,14 @@ onBeforeUnmount(() => {
     </Teleport>
   </div>
 </template>
+
+<style scoped>
+.era-fade-enter-active,
+.era-fade-leave-active {
+  transition: opacity 0.6s ease;
+}
+.era-fade-enter-from,
+.era-fade-leave-to {
+  opacity: 0;
+}
+</style>

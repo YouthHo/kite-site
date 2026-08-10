@@ -46,11 +46,13 @@ export class GraphEngine {
 
     this._onPointerDown = (e) => this._pointerDown(e)
     this._onPointerMove = (e) => this._pointerMove(e)
-    this._onPointerUp = () => this._pointerUp()
+    this._onPointerUp = (e) => this._pointerUp(e)
     this._onWheel = (e) => this._wheel(e)
     this._onLeave = () => {
       if (!this.pan && !this.drag) this._setHover(null)
     }
+    this.pointers = new Map() // pointerId -> {x,y}（双指捏合跟踪）
+    this.pinch = null // {dist, midX, midY, scale0, camX0, camY0}
     canvas.addEventListener('pointerdown', this._onPointerDown)
     canvas.addEventListener('pointermove', this._onPointerMove)
     window.addEventListener('pointermove', this._onPointerMove)
@@ -228,6 +230,22 @@ export class GraphEngine {
     const rect = this.canvas.getBoundingClientRect()
     const px = e.clientX - rect.left
     const py = e.clientY - rect.top
+    this.pointers.set(e.pointerId, { x: px, y: py })
+    if (this.pointers.size >= 2) {
+      // 进入双指捏合：记录初始距离/中点/相机
+      const [a, b] = [...this.pointers.values()]
+      this.pinch = {
+        dist: Math.hypot(a.x - b.x, a.y - b.y) || 1,
+        midX: (a.x + b.x) / 2,
+        midY: (a.y + b.y) / 2,
+        scale0: this.cam.scale,
+        camX0: this.cam.x,
+        camY0: this.cam.y,
+      }
+      this.drag = null
+      this.pan = null
+      return
+    }
     const hit = this._hitNode(px, py)
     if (hit) {
       const d = this.getData()
@@ -244,6 +262,23 @@ export class GraphEngine {
     const rect = this.canvas.getBoundingClientRect()
     const px = e.clientX - rect.left
     const py = e.clientY - rect.top
+    if (this.pointers.has(e.pointerId)) this.pointers.set(e.pointerId, { x: px, y: py })
+    if (this.pinch && this.pointers.size >= 2) {
+      const [a, b] = [...this.pointers.values()]
+      const dist = Math.hypot(a.x - b.x, a.y - b.y) || 1
+      const midX = (a.x + b.x) / 2
+      const midY = (a.y + b.y) / 2
+      const ns = Math.min(60, Math.max(1.2, (this.pinch.scale0 * dist) / this.pinch.dist))
+      // 缩放锚定初始中点处的世界点，位移随当前中点自然叠加
+      const w0x = (this.pinch.midX - this._w / 2) / this.pinch.scale0 + this.pinch.camX0
+      const w0y = (this.pinch.midY - this._h / 2) / this.pinch.scale0 + this.pinch.camY0
+      this.cam.scale = ns
+      this.cam.x = w0x - (midX - this._w / 2) / ns
+      this.cam.y = w0y - (midY - this._h / 2) / ns
+      this.camTarget = null
+      this.requestRender()
+      return
+    }
     if (this.drag) {
       const w = this.screenToWorld(px, py)
       const target = { x: w.x + this.drag.ox, y: w.y + this.drag.oy }
@@ -280,7 +315,14 @@ export class GraphEngine {
     this._setHover(hit)
   }
 
-  _pointerUp() {
+  _pointerUp(e) {
+    this.pointers.delete(e.pointerId)
+    if (this.pinch && this.pointers.size < 2) {
+      this.pinch = null
+      // 单指抬起后转为平移模式
+      const [p] = [...this.pointers.values()]
+      if (p) this.pan = { sx: p.x, sy: p.y, cx: this.cam.x, cy: this.cam.y }
+    }
     if (this.drag) {
       const cur = this.nodePos.get(this.drag.id)
       const moved = cur ? Math.hypot(cur.x - this.drag.startX, cur.y - this.drag.startY) : 0
