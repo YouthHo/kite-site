@@ -7,7 +7,19 @@
       "code": "风筝",
       "faction": "underground",
       "x": 50,
-      "y": 50
+      "y": 50,
+      "role": "中共卧底 · 军统王牌特工",
+      "key": "kite",
+      "aliases": [
+        "周志乾",
+        "鬼子六",
+        "金默然"
+      ],
+      "episodes": [
+        1,
+        46
+      ],
+      "centrality": 15.5
     },
     {
       "id": "han-bing",
@@ -15,7 +27,17 @@
       "code": "影子",
       "faction": "junton",
       "x": 68,
-      "y": 34
+      "y": 34,
+      "role": "军统潜伏特工「影子」",
+      "key": "shadow",
+      "aliases": [
+        "影子"
+      ],
+      "episodes": [
+        6,
+        46
+      ],
+      "centrality": 5.2
     },
     {
       "id": "lin-tao",
@@ -23,7 +45,17 @@
       "code": "剃刀",
       "faction": "zhongtong",
       "x": 34,
-      "y": 34
+      "y": 34,
+      "role": "郑耀先之妻 · 地下党",
+      "aliases": [
+        "小凤仙",
+        "林云燕"
+      ],
+      "episodes": [
+        18,
+        26
+      ],
+      "centrality": 1.5
     },
     {
       "id": "gong-shu",
@@ -31,7 +63,16 @@
       "code": null,
       "faction": "junton",
       "x": 76,
-      "y": 62
+      "y": 62,
+      "role": "军统行动处长 · 郑耀先徒弟",
+      "aliases": [
+        "陶卫"
+      ],
+      "episodes": [
+        3,
+        42
+      ],
+      "centrality": 3.7
     },
     {
       "id": "ma-xiaowu",
@@ -39,7 +80,13 @@
       "code": null,
       "faction": "gongan",
       "x": 58,
-      "y": 80
+      "y": 80,
+      "role": "军统特工 · 郑耀先徒弟",
+      "episodes": [
+        6,
+        46
+      ],
+      "centrality": 3.3
     },
     {
       "id": "lu-hanqing",
@@ -47,7 +94,16 @@
       "code": null,
       "faction": "underground",
       "x": 30,
-      "y": 66
+      "y": 66,
+      "role": "地下党联络人 · 郑耀先上线",
+      "aliases": [
+        "老陆"
+      ],
+      "episodes": [
+        2,
+        15
+      ],
+      "centrality": 1.5
     },
     {
       "id": "yuan-nong",
@@ -55,7 +111,13 @@
       "code": null,
       "faction": "underground",
       "x": 44,
-      "y": 84
+      "y": 84,
+      "role": "军统特工 · 曾墨怡未婚夫",
+      "episodes": [
+        2,
+        45
+      ],
+      "centrality": 2
     },
     {
       "id": "cheng-zhener",
@@ -63,7 +125,13 @@
       "code": null,
       "faction": "underground",
       "x": 22,
-      "y": 40
+      "y": 40,
+      "role": "地下党 · 郑耀先恋人",
+      "episodes": [
+        1,
+        5
+      ],
+      "centrality": 1.5
     },
     {
       "id": "zeng-moyi",
@@ -71,7 +139,13 @@
       "code": null,
       "faction": "underground",
       "x": 16,
-      "y": 26
+      "y": 26,
+      "role": "地下党 · 被郑耀先送上刑场",
+      "episodes": [
+        1,
+        1
+      ],
+      "centrality": 1.5
     },
     {
       "id": "jiang-xin",
@@ -79,7 +153,13 @@
       "code": null,
       "faction": "underground",
       "x": 28,
-      "y": 18
+      "y": 18,
+      "role": "中共特工 · 韩冰战友",
+      "episodes": [
+        4,
+        13
+      ],
+      "centrality": 2
     },
     {
       "id": "xu-baichuan",
@@ -87,7 +167,16 @@
       "code": null,
       "faction": "junton",
       "x": 66,
-      "y": 88
+      "y": 88,
+      "role": "军统要员 · 郑耀先结义兄弟",
+      "aliases": [
+        "四哥"
+      ],
+      "episodes": [
+        1,
+        30
+      ],
+      "centrality": 1
     },
     {
       "id": "zhao-jianzhi",
@@ -95,7 +184,13 @@
       "code": null,
       "faction": "junton",
       "x": 80,
-      "y": 90
+      "y": 90,
+      "role": "军统特工 · 郑耀先兄弟",
+      "episodes": [
+        2,
+        22
+      ],
+      "centrality": 1
     },
     {
       "id": "song-xiaoan",
@@ -103,7 +198,13 @@
       "code": null,
       "faction": "junton",
       "x": 90,
-      "y": 78
+      "y": 78,
+      "role": "军统特工 · 郑耀先兄弟",
+      "episodes": [
+        3,
+        34
+      ],
+      "centrality": 1.5
     },
     {
       "id": "gao-zhanlong",
@@ -111,7 +212,13 @@
       "code": null,
       "faction": "zhongtong",
       "x": 12,
-      "y": 10
+      "y": 10,
+      "role": "军统重庆站站长",
+      "episodes": [
+        1,
+        4
+      ],
+      "centrality": 2
     },
     {
       "id": "tian-hu",
@@ -119,7 +226,13 @@
       "code": null,
       "faction": "zhongtong",
       "x": 10,
-      "y": 30
+      "y": 30,
+      "role": "中统局长 · 郑耀先死敌",
+      "episodes": [
+        2,
+        22
+      ],
+      "centrality": 4.9
     },
     {
       "id": "yan-e",
@@ -127,7 +240,16 @@
       "code": "曹依非",
       "faction": "zhongtong",
       "x": 22,
-      "y": 80
+      "y": 80,
+      "role": "中统特工 · 林桃",
+      "aliases": [
+        "曹依非"
+      ],
+      "episodes": [
+        8,
+        42
+      ],
+      "centrality": 2.6
     },
     {
       "id": "gao-junbao",
@@ -135,7 +257,13 @@
       "code": null,
       "faction": "junton",
       "x": 88,
-      "y": 42
+      "y": 42,
+      "role": "军统特工 · 韩冰之子",
+      "episodes": [
+        4,
+        46
+      ],
+      "centrality": 4.4
     },
     {
       "id": "zhou-qiao",
@@ -143,7 +271,16 @@
       "code": null,
       "faction": "civilian",
       "x": 46,
-      "y": 14
+      "y": 14,
+      "role": "郑耀先之女 · 周乔",
+      "aliases": [
+        "乔儿"
+      ],
+      "episodes": [
+        22,
+        46
+      ],
+      "centrality": 2.1
     },
     {
       "id": "qiu-he",
@@ -151,7 +288,13 @@
       "code": null,
       "faction": "civilian",
       "x": 38,
-      "y": 92
+      "y": 92,
+      "role": "郑耀先妻子（后）· 秋荷",
+      "episodes": [
+        22,
+        45
+      ],
+      "centrality": 1
     },
     {
       "id": "jiang-wanchao",
@@ -159,7 +302,16 @@
       "code": "冒牌影子",
       "faction": "zhongtong",
       "x": 14,
-      "y": 50
+      "y": 50,
+      "role": "中统特工 · 冒充影子",
+      "aliases": [
+        "江副主任"
+      ],
+      "episodes": [
+        6,
+        31
+      ],
+      "centrality": 2
     },
     {
       "id": "chen-guohua",
@@ -167,7 +319,13 @@
       "code": null,
       "faction": "gongan",
       "x": 56,
-      "y": 94
+      "y": 94,
+      "role": "公安干部 · 郑耀先同志",
+      "episodes": [
+        11,
+        46
+      ],
+      "centrality": 1.5
     },
     {
       "id": "leng-meishan",
@@ -175,7 +333,13 @@
       "code": null,
       "faction": "civilian",
       "x": 74,
-      "y": 94
+      "y": 94,
+      "role": "郑耀先妻子（后）· 冷眉珊",
+      "episodes": [
+        16,
+        46
+      ],
+      "centrality": 0.5
     },
     {
       "id": "daili",
@@ -183,7 +347,17 @@
       "code": null,
       "faction": "junton",
       "x": 94,
-      "y": 12
+      "y": 12,
+      "role": "军统局长 戴笠",
+      "aliases": [
+        "戴雨农",
+        "戴老板"
+      ],
+      "episodes": [
+        1,
+        13
+      ],
+      "centrality": 2
     },
     {
       "id": "mao-renfeng",
@@ -191,7 +365,13 @@
       "code": null,
       "faction": "junton",
       "x": 94,
-      "y": 28
+      "y": 28,
+      "role": "军统继任 毛人凤",
+      "episodes": [
+        4,
+        22
+      ],
+      "centrality": 2
     },
     {
       "id": "qian-zhongwen",
@@ -199,7 +379,16 @@
       "code": null,
       "faction": "gongan",
       "x": 52,
-      "y": 70
+      "y": 70,
+      "role": "地下党上级",
+      "aliases": [
+        "钱副部长"
+      ],
+      "episodes": [
+        33,
+        46
+      ],
+      "centrality": 0.5
     },
     {
       "id": "jian-bing",
@@ -207,7 +396,13 @@
       "code": null,
       "faction": "underground",
       "x": 18,
-      "y": 58
+      "y": 58,
+      "role": "地下党 · 郑耀先生死同志",
+      "episodes": [
+        14,
+        22
+      ],
+      "centrality": 1
     },
     {
       "id": "zhao-changlin",
@@ -215,7 +410,13 @@
       "code": null,
       "faction": "zhongtong",
       "x": 6,
-      "y": 42
+      "y": 42,
+      "role": "中统特工 · 田湖爪牙",
+      "episodes": [
+        8,
+        12
+      ],
+      "centrality": 1
     },
     {
       "id": "peng-xiong",
@@ -223,7 +424,16 @@
       "code": null,
       "faction": "zhongtong",
       "x": 4,
-      "y": 56
+      "y": 56,
+      "role": "军统特工 · 叛徒",
+      "aliases": [
+        "庞队长"
+      ],
+      "episodes": [
+        14,
+        14
+      ],
+      "centrality": 1
     },
     {
       "id": "lao-chang",
@@ -231,7 +441,16 @@
       "code": "刘福贵",
       "faction": "junton",
       "x": 24,
-      "y": 6
+      "y": 6,
+      "role": "地下党联络人",
+      "aliases": [
+        "刘福贵"
+      ],
+      "episodes": [
+        13,
+        13
+      ],
+      "centrality": 1
     },
     {
       "id": "jiang-jieshi",
@@ -239,7 +458,13 @@
       "code": null,
       "faction": "junton",
       "x": 96,
-      "y": 4
+      "y": 4,
+      "role": "国民政府主席 蒋介石",
+      "episodes": [
+        16,
+        46
+      ],
+      "centrality": 1
     }
   ],
   "links": [
@@ -249,7 +474,14 @@
       "label": "一生之敌 · 晚年伴侣",
       "type": "enemy",
       "strength": 5,
-      "tone": -1
+      "tone": -1,
+      "directed": false,
+      "secret": true,
+      "evidence": "晚年真相揭晓：影子与风筝相互确认身份",
+      "activeEra": [
+        6,
+        46
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -257,7 +489,14 @@
       "label": "夫妻",
       "type": "family",
       "strength": 5,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": true,
+      "evidence": "林桃为掩护郑耀先身份牺牲",
+      "activeEra": [
+        20,
+        34
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -265,7 +504,14 @@
       "label": "师徒 · 对手",
       "type": "enemy",
       "strength": 4,
-      "tone": -1
+      "tone": -1,
+      "directed": true,
+      "secret": false,
+      "evidence": "宫庶视郑耀先为师父，终成死敌",
+      "activeEra": [
+        3,
+        42
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -273,7 +519,14 @@
       "label": "师徒",
       "type": "superior",
       "strength": 4,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "马小五受郑耀先调教，亦步亦趋",
+      "activeEra": [
+        1,
+        30
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -281,7 +534,14 @@
       "label": "上线",
       "type": "superior",
       "strength": 5,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": true,
+      "evidence": "陆汉卿为护郑耀先吞银元自尽",
+      "activeEra": [
+        10,
+        33
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -289,7 +549,14 @@
       "label": "恋人",
       "type": "love",
       "strength": 5,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": true,
+      "evidence": "程真儿在餐厅外被车撞身亡",
+      "activeEra": [
+        6,
+        26
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -297,7 +564,14 @@
       "label": "同志",
       "type": "comrade",
       "strength": 4,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": true,
+      "evidence": "郑耀先亲送曾墨怡上刑场",
+      "activeEra": [
+        1,
+        2
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -305,7 +579,14 @@
       "label": "对手 · 同志",
       "type": "enemy",
       "strength": 4,
-      "tone": -1
+      "tone": -1,
+      "directed": false,
+      "secret": false,
+      "evidence": "江心与郑耀先亦敌亦友，延安相识",
+      "activeEra": [
+        4,
+        13
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -313,7 +594,14 @@
       "label": "结义兄弟",
       "type": "family",
       "strength": 4,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "结义兄弟，徐百川终身兄弟情",
+      "activeEra": [
+        1,
+        30
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -321,7 +609,14 @@
       "label": "兄弟",
       "type": "family",
       "strength": 3,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "赵简之追随郑耀先至死",
+      "activeEra": [
+        1,
+        39
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -329,7 +624,14 @@
       "label": "兄弟",
       "type": "family",
       "strength": 3,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "宋孝安为郑耀先挡枪而亡",
+      "activeEra": [
+        1,
+        39
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -337,7 +639,14 @@
       "label": "仇杀",
       "type": "enemy",
       "strength": 4,
-      "tone": -1
+      "tone": -1,
+      "directed": true,
+      "secret": false,
+      "evidence": "高占龙设局刺杀，反被宫庶击毙",
+      "activeEra": [
+        1,
+        4
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -345,7 +654,14 @@
       "label": "死敌 · 木马计划",
       "type": "enemy",
       "strength": 5,
-      "tone": -1
+      "tone": -1,
+      "directed": true,
+      "secret": false,
+      "evidence": "田湖布木马计划欲置郑耀先于死地",
+      "activeEra": [
+        2,
+        22
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -353,7 +669,14 @@
       "label": "杀父仇人",
       "type": "enemy",
       "strength": 5,
-      "tone": -1
+      "tone": -1,
+      "directed": true,
+      "secret": false,
+      "evidence": "高君宝认定郑耀先杀父，终生复仇",
+      "activeEra": [
+        4,
+        46
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -361,7 +684,14 @@
       "label": "父女",
       "type": "family",
       "strength": 4,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "周乔为父所累，半生飘零",
+      "activeEra": [
+        22,
+        46
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -369,7 +699,14 @@
       "label": "怀疑对象",
       "type": "enemy",
       "strength": 2,
-      "tone": -1
+      "tone": -1,
+      "directed": false,
+      "secret": false,
+      "evidence": "江万潮曾冒充影子，被郑耀先识破",
+      "activeEra": [
+        6,
+        31
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -377,7 +714,14 @@
       "label": "仇人（误解）",
       "type": "enemy",
       "strength": 3,
-      "tone": -1
+      "tone": -1,
+      "directed": false,
+      "secret": false,
+      "evidence": "袁农误认郑耀先为杀妻仇人",
+      "activeEra": [
+        2,
+        30
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -385,7 +729,14 @@
       "label": "上级",
       "type": "superior",
       "strength": 4,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": true,
+      "evidence": "钱重文为郑耀先唯一直接上级",
+      "activeEra": [
+        33,
+        46
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -393,7 +744,14 @@
       "label": "生死同志 · 证人",
       "type": "comrade",
       "strength": 5,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": true,
+      "evidence": "简冰为郑耀先作证洗清身份",
+      "activeEra": [
+        33,
+        46
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -401,7 +759,14 @@
       "label": "反杀",
       "type": "enemy",
       "strength": 4,
-      "tone": -1
+      "tone": -1,
+      "directed": true,
+      "secret": false,
+      "evidence": "彭雄出卖同志，被郑耀先反杀",
+      "activeEra": [
+        14,
+        14
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -409,7 +774,14 @@
       "label": "交接 · 掩护",
       "type": "partner",
       "strength": 4,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": true,
+      "evidence": "老常是郑耀先解放后的接头人",
+      "activeEra": [
+        13,
+        13
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -417,7 +789,14 @@
       "label": "上下级 · 猜忌",
       "type": "superior",
       "strength": 4,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "戴笠对郑耀先既重用又猜忌",
+      "activeEra": [
+        1,
+        22
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -425,7 +804,14 @@
       "label": "上下级 · 猜忌",
       "type": "superior",
       "strength": 4,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "毛人凤继任后持续试探郑耀先",
+      "activeEra": [
+        22,
+        46
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -433,7 +819,14 @@
       "label": "钦点启用",
       "type": "superior",
       "strength": 4,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "蒋介石钦点郑耀先执行特殊任务",
+      "activeEra": [
+        1,
+        6
+      ]
     },
     {
       "source": "zheng-yaoxian",
@@ -441,7 +834,14 @@
       "label": "同志",
       "type": "comrade",
       "strength": 3,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": true,
+      "evidence": "陈国华后期确认郑耀先身份并相助",
+      "activeEra": [
+        30,
+        46
+      ]
     },
     {
       "source": "han-bing",
@@ -449,7 +849,14 @@
       "label": "母子",
       "type": "family",
       "strength": 5,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "韩冰与高君宝是母子",
+      "activeEra": [
+        6,
+        46
+      ]
     },
     {
       "source": "han-bing",
@@ -457,7 +864,14 @@
       "label": "老领导",
       "type": "superior",
       "strength": 3,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "马小五视韩冰为老领导",
+      "activeEra": [
+        6,
+        46
+      ]
     },
     {
       "source": "han-bing",
@@ -465,7 +879,14 @@
       "label": "前夫妻",
       "type": "family",
       "strength": 3,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "韩冰与袁农曾为夫妻后离异",
+      "activeEra": [
+        6,
+        45
+      ]
     },
     {
       "source": "han-bing",
@@ -473,7 +894,14 @@
       "label": "上下级",
       "type": "superior",
       "strength": 3,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "韩冰在公安系统受陈国华领导",
+      "activeEra": [
+        11,
+        46
+      ]
     },
     {
       "source": "han-bing",
@@ -481,7 +909,14 @@
       "label": "战友",
       "type": "comrade",
       "strength": 4,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "韩冰与江心延安结下战友情",
+      "activeEra": [
+        6,
+        46
+      ]
     },
     {
       "source": "han-bing",
@@ -489,7 +924,14 @@
       "label": "影子属下",
       "type": "superior",
       "strength": 4,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": true,
+      "evidence": "老常是影子在解放后的下线",
+      "activeEra": [
+        22,
+        46
+      ]
     },
     {
       "source": "han-bing",
@@ -497,7 +939,14 @@
       "label": "掩护与被掩护",
       "type": "partner",
       "strength": 3,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "江万潮掩护过韩冰的潜伏",
+      "activeEra": [
+        6,
+        31
+      ]
     },
     {
       "source": "han-bing",
@@ -505,7 +954,14 @@
       "label": "密令 · 影子",
       "type": "superior",
       "strength": 4,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": true,
+      "evidence": "戴笠密令韩冰潜伏调查风筝",
+      "activeEra": [
+        1,
+        22
+      ]
     },
     {
       "source": "lin-tao",
@@ -513,7 +969,14 @@
       "label": "母女",
       "type": "family",
       "strength": 5,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "林桃与周乔是母女",
+      "activeEra": [
+        22,
+        26
+      ]
     },
     {
       "source": "lin-tao",
@@ -521,7 +984,14 @@
       "label": "中统上下级",
       "type": "superior",
       "strength": 3,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "林桃为执行中统任务接近郑耀先",
+      "activeEra": [
+        20,
+        34
+      ]
     },
     {
       "source": "gao-zhanlong",
@@ -529,7 +999,14 @@
       "label": "父子",
       "type": "family",
       "strength": 5,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "高占龙是高君宝之父",
+      "activeEra": [
+        1,
+        4
+      ]
     },
     {
       "source": "gao-zhanlong",
@@ -537,7 +1014,14 @@
       "label": "门生",
       "type": "superior",
       "strength": 3,
-      "tone": 0
+      "tone": 0,
+      "directed": false,
+      "secret": false,
+      "evidence": "田湖是高占龙门生",
+      "activeEra": [
+        1,
+        4
+      ]
     },
     {
       "source": "gao-zhanlong",
@@ -545,7 +1029,14 @@
       "label": "仇人",
       "type": "enemy",
       "strength": 3,
-      "tone": -1
+      "tone": -1,
+      "directed": true,
+      "secret": false,
+      "evidence": "高占龙设计杀害程真儿",
+      "activeEra": [
+        6,
+        26
+      ]
     },
     {
       "source": "tian-hu",
@@ -553,7 +1044,14 @@
       "label": "上下级",
       "type": "superior",
       "strength": 3,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "林桃受田湖指派潜伏",
+      "activeEra": [
+        20,
+        34
+      ]
     },
     {
       "source": "tian-hu",
@@ -561,7 +1059,14 @@
       "label": "识破",
       "type": "enemy",
       "strength": 2,
-      "tone": -1
+      "tone": -1,
+      "directed": false,
+      "secret": false,
+      "evidence": "田湖识破简冰身份",
+      "activeEra": [
+        14,
+        22
+      ]
     },
     {
       "source": "tian-hu",
@@ -569,7 +1074,14 @@
       "label": "抓捕者",
       "type": "enemy",
       "strength": 3,
-      "tone": -1
+      "tone": -1,
+      "directed": true,
+      "secret": false,
+      "evidence": "田湖抓捕陆汉卿逼供",
+      "activeEra": [
+        10,
+        33
+      ]
     },
     {
       "source": "tian-hu",
@@ -577,7 +1089,14 @@
       "label": "雇佣",
       "type": "superior",
       "strength": 2,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "赵常林受雇于田湖",
+      "activeEra": [
+        8,
+        12
+      ]
     },
     {
       "source": "tian-hu",
@@ -585,7 +1104,14 @@
       "label": "上下级",
       "type": "superior",
       "strength": 3,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "彭雄是田湖安插的内线",
+      "activeEra": [
+        14,
+        14
+      ]
     },
     {
       "source": "tian-hu",
@@ -593,7 +1119,14 @@
       "label": "游街之辱",
       "type": "enemy",
       "strength": 2,
-      "tone": -1
+      "tone": -1,
+      "directed": true,
+      "secret": false,
+      "evidence": "田湖借游街之辱挑动高君宝",
+      "activeEra": [
+        4,
+        22
+      ]
     },
     {
       "source": "yan-e",
@@ -601,7 +1134,14 @@
       "label": "恋人",
       "type": "love",
       "strength": 5,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "林桃与宫庶有情感纠葛",
+      "activeEra": [
+        20,
+        34
+      ]
     },
     {
       "source": "yan-e",
@@ -609,7 +1149,14 @@
       "label": "同袍",
       "type": "comrade",
       "strength": 2,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "林桃与赵常林同袍",
+      "activeEra": [
+        8,
+        12
+      ]
     },
     {
       "source": "yan-e",
@@ -617,7 +1164,14 @@
       "label": "入伙 · 上下级",
       "type": "superior",
       "strength": 3,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "林桃入伙后受高君宝指挥",
+      "activeEra": [
+        8,
+        42
+      ]
     },
     {
       "source": "gong-shu",
@@ -625,7 +1179,14 @@
       "label": "死敌",
       "type": "enemy",
       "strength": 4,
-      "tone": -1
+      "tone": -1,
+      "directed": true,
+      "secret": false,
+      "evidence": "宫庶与马小五互为死敌",
+      "activeEra": [
+        6,
+        42
+      ]
     },
     {
       "source": "gong-shu",
@@ -633,7 +1194,14 @@
       "label": "同僚",
       "type": "comrade",
       "strength": 2,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "宫庶与宋孝安同为军统同僚",
+      "activeEra": [
+        3,
+        34
+      ]
     },
     {
       "source": "gong-shu",
@@ -641,7 +1209,14 @@
       "label": "同僚",
       "type": "comrade",
       "strength": 2,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "宫庶与赵简之同为军统同僚",
+      "activeEra": [
+        3,
+        22
+      ]
     },
     {
       "source": "gong-shu",
@@ -649,7 +1224,14 @@
       "label": "上下级",
       "type": "superior",
       "strength": 3,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "宫庶受毛人凤节制",
+      "activeEra": [
+        22,
+        46
+      ]
     },
     {
       "source": "gong-shu",
@@ -657,7 +1239,14 @@
       "label": "密令 · 监视",
       "type": "superior",
       "strength": 3,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "宫庶奉戴笠密令监视",
+      "activeEra": [
+        1,
+        22
+      ]
     },
     {
       "source": "song-xiaoan",
@@ -665,7 +1254,14 @@
       "label": "救命 · 相伴",
       "type": "love",
       "strength": 4,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "宋孝安曾救林桃并相伴",
+      "activeEra": [
+        8,
+        34
+      ]
     },
     {
       "source": "lu-hanqing",
@@ -673,7 +1269,14 @@
       "label": "同志",
       "type": "comrade",
       "strength": 4,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": true,
+      "evidence": "陆汉卿与程真儿同为地下党",
+      "activeEra": [
+        6,
+        26
+      ]
     },
     {
       "source": "jiang-xin",
@@ -681,7 +1284,14 @@
       "label": "双娇",
       "type": "family",
       "strength": 3,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "江心与曾墨怡并称双娇",
+      "activeEra": [
+        1,
+        6
+      ]
     },
     {
       "source": "jiang-xin",
@@ -689,7 +1299,14 @@
       "label": "父女",
       "type": "family",
       "strength": 5,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "江心是江万潮之女",
+      "activeEra": [
+        6,
+        13
+      ]
     },
     {
       "source": "yuan-nong",
@@ -697,7 +1314,14 @@
       "label": "未婚夫妻",
       "type": "family",
       "strength": 4,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "袁农与曾墨怡未婚夫妻",
+      "activeEra": [
+        1,
+        6
+      ]
     },
     {
       "source": "yuan-nong",
@@ -705,7 +1329,14 @@
       "label": "同僚",
       "type": "comrade",
       "strength": 2,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "袁农与江万潮同僚",
+      "activeEra": [
+        6,
+        31
+      ]
     },
     {
       "source": "xu-baichuan",
@@ -713,7 +1344,14 @@
       "label": "审讯者",
       "type": "enemy",
       "strength": 3,
-      "tone": -1
+      "tone": -1,
+      "directed": true,
+      "secret": false,
+      "evidence": "徐百川曾审讯韩冰",
+      "activeEra": [
+        6,
+        30
+      ]
     },
     {
       "source": "gao-junbao",
@@ -721,7 +1359,14 @@
       "label": "青梅竹马",
       "type": "love",
       "strength": 3,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "高君宝与周乔青梅竹马",
+      "activeEra": [
+        22,
+        46
+      ]
     },
     {
       "source": "gao-junbao",
@@ -729,7 +1374,14 @@
       "label": "交手",
       "type": "enemy",
       "strength": 3,
-      "tone": -1
+      "tone": -1,
+      "directed": true,
+      "secret": false,
+      "evidence": "高君宝与马小五数次交手",
+      "activeEra": [
+        6,
+        46
+      ]
     },
     {
       "source": "qiu-he",
@@ -737,7 +1389,14 @@
       "label": "养母子",
       "type": "family",
       "strength": 4,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "秋荷收养高君宝",
+      "activeEra": [
+        22,
+        45
+      ]
     },
     {
       "source": "qiu-he",
@@ -745,7 +1404,14 @@
       "label": "养母女",
       "type": "family",
       "strength": 4,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "秋荷收养周乔",
+      "activeEra": [
+        22,
+        45
+      ]
     },
     {
       "source": "chen-guohua",
@@ -753,7 +1419,14 @@
       "label": "上下级",
       "type": "superior",
       "strength": 3,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "马小五受陈国华领导",
+      "activeEra": [
+        11,
+        46
+      ]
     },
     {
       "source": "ma-xiaowu",
@@ -761,7 +1434,14 @@
       "label": "夫妻",
       "type": "family",
       "strength": 5,
-      "tone": 1
+      "tone": 1,
+      "directed": false,
+      "secret": false,
+      "evidence": "马小五与冷眉珊夫妻",
+      "activeEra": [
+        16,
+        46
+      ]
     },
     {
       "source": "daili",
@@ -769,7 +1449,14 @@
       "label": "继任",
       "type": "superior",
       "strength": 3,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "毛人凤接替戴笠执掌军统",
+      "activeEra": [
+        22,
+        46
+      ]
     },
     {
       "source": "mao-renfeng",
@@ -777,7 +1464,14 @@
       "label": "最高指令",
       "type": "superior",
       "strength": 4,
-      "tone": 0
+      "tone": 0,
+      "directed": true,
+      "secret": false,
+      "evidence": "毛人凤奉最高指令行事",
+      "activeEra": [
+        22,
+        46
+      ]
     }
   ]
 }
