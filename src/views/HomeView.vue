@@ -2,6 +2,7 @@
 import { onMounted, onBeforeUnmount, ref } from 'vue'
 import gsap from 'gsap'
 import ScanLine from '@/components/ScanLine.vue'
+import HeroField from '@/components/HeroField.vue'
 import ShareButton from '@/components/ShareButton.vue'
 import { pageEnter, prefersReduced } from '@/utils/anim'
 
@@ -67,6 +68,8 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
       <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 35%, rgba(8,8,8,0.85) 100%)"></div>
       <!-- 呼吸层 -->
       <div class="hero-breathe absolute inset-0" style="background: radial-gradient(ellipse at 50% 40%, rgba(30,74,82,0.10), transparent 70%)"></div>
+      <!-- 余烬粒子质感层 -->
+      <HeroField />
     </div>
     <ScanLine />
 

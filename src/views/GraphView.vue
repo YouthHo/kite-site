@@ -13,7 +13,7 @@ import NameBadge from '@/components/NameBadge.vue'
 import SealStamp from '@/components/SealStamp.vue'
 import { FACTION, factionLabel } from '@/utils/factions'
 import { theme } from '@/store/app'
-import { prefersReduced } from '@/utils/anim'
+import { prefersReduced, typewriter } from '@/utils/anim'
 
 const chartEl = ref(null)
 const panelEl = ref(null)
@@ -301,11 +301,20 @@ function resetView() {
   chart.setOption(buildOption(), true)
 }
 
+const briefEl = ref(null)
+let briefType = null
 function openPanel(id) {
   const c = charMap.value[id]
   if (!c) return
   selected.value = c
-  gsap.fromTo(panelEl.value, { x: 420, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out' })
+  gsap.fromTo(panelEl.value, { x: 420, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' })
+  // 签名细节：简介打字机逐字浮现（电报母题）
+  briefType?.kill?.()
+  if (briefEl.value && !prefersReduced) {
+    briefType = typewriter(briefEl.value, c.brief, { speed: 9 })
+  } else if (briefEl.value) {
+    briefEl.value.textContent = c.brief
+  }
 }
 function closePanel() {
   panelTween = gsap.to(panelEl.value, { x: 420, opacity: 0, duration: 0.35, ease: 'power2.in', onComplete: () => (selected.value = null) })
@@ -339,7 +348,7 @@ onBeforeUnmount(() => {
     </div>
     <div class="flex-1 flex flex-col lg:flex-row gap-0 min-h-0">
       <!-- 图谱区域：谍战网格背景 -->
-      <div class="flex-1 relative min-h-[420px] border border-[#2a2520] bg-[#0b0b0b]" style="background: radial-gradient(ellipse 70% 55% at 50% 38%, rgba(157,34,53,0.07), transparent 62%), radial-gradient(ellipse 55% 45% at 82% 88%, rgba(30,74,82,0.06), transparent 60%);">
+      <div class="flex-1 relative min-h-[420px] border border-[#2a2520] bg-[#0b0b0b]" role="application" aria-label="人物关系图谱：滚轮缩放，拖拽平移，点击节点查看档案；也可使用右侧人物列表键盘操作" style="background: radial-gradient(ellipse 70% 55% at 50% 38%, rgba(157,34,53,0.07), transparent 62%), radial-gradient(ellipse 55% 45% at 82% 88%, rgba(30,74,82,0.06), transparent 60%);">
         <div ref="chartEl" class="absolute inset-0" style="touch-action: none;"></div>
         <div class="absolute top-3 left-3 font-mono text-[10px] tracking-[0.25em] text-[#555048] pointer-events-none">KITE-MAP · 滚轮/双指局部缩放 · 拖拽平移 · 点击节点查看档案</div>
         <!-- 视图重置 -->
@@ -444,7 +453,7 @@ onBeforeUnmount(() => {
               <span class="badge-faction" :class="`f-${selected.faction}`">{{ factionLabel(selected.faction) }}</span>
               <span v-if="selected.actor" class="badge-faction f-civilian">{{ selected.actor }}</span>
             </div>
-            <p class="mt-5 text-[13px] leading-7 text-[#8a8275]">{{ selected.brief }}</p>
+            <p ref="briefEl" class="mt-5 text-[13px] leading-7 text-[#8a8275]"></p>
             <p class="mt-3 text-[12px] leading-6 text-[#555048]">出场：第 {{ selected.episodes[0] }}—{{ selected.episodes[1] }} 集</p>
             <router-link :to="`/characters?q=${selected.id}`"
               class="mt-6 flex items-center gap-2 justify-center border border-[#9d2235] py-2.5 text-[12px] tracking-[0.25em] text-[#e8dcc8] hover:bg-[#9d2235]/15 transition-colors group">

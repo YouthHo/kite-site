@@ -82,23 +82,32 @@ export function typewriter(el, text, { speed = 90, caret = true, onDone } = {}) 
   if (prefersReduced) {
     el.textContent = text
     onDone?.()
-    return
+    return { kill: () => {} }
   }
   el.textContent = ''
   const span = document.createElement('span')
   span.className = 'tw-caret'
   let i = 0
+  let handle = null
+  let dead = false
   const tick = () => {
+    if (dead) return
     if (i <= text.length) {
       el.textContent = text.slice(0, i)
       if (caret) el.appendChild(span)
       i++
-      gsap.delayedCall(speed / 1000, tick)
+      handle = gsap.delayedCall(speed / 1000, tick)
     } else {
       onDone?.()
     }
   }
   tick()
+  return {
+    kill: () => {
+      dead = true
+      handle?.kill()
+    },
+  }
 }
 
 /** 视差：元素随滚动轻微位移（scrollTrigger scrub） */

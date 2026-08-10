@@ -254,6 +254,18 @@ onBeforeUnmount(() => {
       <div class="absolute top-4 right-5 z-20 font-mono text-[10px] tracking-[0.35em] text-[#8a8275] on-media bg-black/50 px-3 py-1.5 border border-[#2a2520]">
         ERA {{ activeEra }} · {{ SECTIONS[activeEra - 1].label }}
       </div>
+
+      <!-- 章节大字幕（随滚动淡入淡出） -->
+      <transition name="era-fade">
+        <div :key="activeEra" class="absolute inset-0 z-10 grid place-items-center pointer-events-none">
+          <div class="serif-title text-7xl tracking-[0.35em] text-[#e8dcc8]/20 select-none">{{ SECTIONS[activeEra - 1].label }}</div>
+        </div>
+      </transition>
+
+      <!-- 横向进度条 -->
+      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-64 h-[2px] bg-[#2a2520]/60 overflow-hidden">
+        <div class="h-full origin-left" :style="{ transform: 'scaleX(' + progress + ')', background: 'linear-gradient(90deg,#9d2235,#b8860b)' }"></div>
+      </div>
     </div>
 
     <!-- 移动端：纵向时间线 -->
@@ -278,3 +290,14 @@ onBeforeUnmount(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.era-fade-enter-active,
+.era-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.era-fade-enter-from,
+.era-fade-leave-to {
+  opacity: 0;
+}
+</style>
