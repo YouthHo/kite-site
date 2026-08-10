@@ -31,8 +31,8 @@ async function copy() {
     <blockquote class="serif-title !font-medium text-[14px] leading-8 text-[#e8dcc8] mt-4 pr-2">
       “{{ quote.text }}”
     </blockquote>
-    <footer class="mt-4 flex items-center justify-between">
-      <span class="text-[11px] tracking-[0.2em] text-[#b8860b]">—— {{ quote.speaker }}</span>
+    <footer class="mt-4 flex items-center justify-between gap-3 flex-nowrap">
+      <span class="text-[11px] tracking-[0.15em] text-[#b8860b] whitespace-nowrap truncate">—— {{ quote.speaker }}</span>
       <button
         class="opacity-0 group-hover:opacity-100 transition-opacity text-[#8a8275] hover:text-[#e8dcc8]"
         :aria-label="copied ? '已复制' : '复制台词'"

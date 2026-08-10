@@ -102,7 +102,17 @@ function visibleNodeIds() {
   })
 }
 
-/** 完整构建 option（全量重建；节点统一为“完整名字”徽章） */
+/** 颜色提亮（用于节点径向渐变高光） */
+function lightenHex(hex, amt) {
+  const m = hex.replace('#', '')
+  const n = parseInt(m.length === 3 ? m.split('').map((x) => x + x).join('') : m, 16)
+  const r = Math.min(255, ((n >> 16) & 255) + Math.round(255 * amt))
+  const g = Math.min(255, ((n >> 8) & 255) + Math.round(255 * amt))
+  const b = Math.min(255, (n & 255) + Math.round(255 * amt))
+  return `rgb(${r},${g},${b})`
+}
+
+/** 完整构建 option（全量重建；国际顶尖图谱视觉：净背景/细线/标签悬停浮现） */
 function buildOption({ center = false, pulse = 1 } = {}) {
   const light = theme.value === 'light'
   const ids = new Set(visibleNodeIds().map((n) => n.id))
@@ -111,8 +121,8 @@ function buildOption({ center = false, pulse = 1 } = {}) {
     .map((n) => {
       const c = charMap.value[n.id] || {}
       const span = c.episodes ? c.episodes[1] - c.episodes[0] : 5
-      // 节点尺寸缩小一档（64/54/44），给关系标签留出可读空间；缩放由原生 roam 整体等比处理
-      const size = span > 30 ? 52 : span > 10 ? 42 : 34
+      const size = span > 30 ? 50 : span > 10 ? 40 : 32
+      const color = FACTION[n.faction]?.color || '#555048'
       return {
         id: n.id,
         name: n.name,
@@ -122,52 +132,48 @@ function buildOption({ center = false, pulse = 1 } = {}) {
         symbol: 'circle',
         category: n.faction,
         itemStyle: {
-          color: FACTION[n.faction]?.color || '#555048',
-          borderColor: light ? 'rgba(47,43,35,0.25)' : 'rgba(232,220,200,0.4)',
-          borderWidth: 1.5,
-          shadowBlur: 26,
-          shadowColor: (FACTION[n.faction]?.color || '#555048') + (light ? '66' : 'aa'),
+          // 径向渐变：左上亮、右下深，高级质感
+          color: {
+            type: 'radial',
+            x: 0.35,
+            y: 0.3,
+            r: 0.9,
+            colorStops: [{ offset: 0, color: lightenHex(color, 0.35) }, { offset: 1, color: color }],
+          },
+          borderColor: light ? 'rgba(60,52,40,0.3)' : 'rgba(255,255,255,0.2)',
+          borderWidth: 1.2,
+          shadowBlur: 14,
+          shadowColor: color + (light ? '33' : '44'),
         },
         label: {
           show: true,
-          position: 'inside',
+          position: 'bottom',
+          distance: 6,
           formatter: n.name,
-          color: '#f5f2e9',
-          fontSize: n.name.length > 2 ? 12 : 13,
-          fontFamily: '"Noto Serif SC", serif',
-          letterSpacing: 1,
-          textShadowColor: 'rgba(0,0,0,0.5)',
-          textShadowBlur: 4,
+          color: light ? 'rgba(60,52,40,0.95)' : 'rgba(235,225,205,0.95)',
+          fontSize: 11,
+          fontFamily: '"Noto Sans SC", sans-serif',
+          fontWeight: 500,
+          textShadowColor: light ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.7)',
+          textShadowBlur: 3,
         },
       }
     })
-  // 节点半径映射（用于标签避让计算）
+  // 节点半径映射（用于标签避让计算，悬停态展示用）
   const radiusOf = {}
   nodes.forEach((n) => (radiusOf[n.id] = n.symbolSize / 2))
   const links = graph.links
     .filter((l) => ids.has(l.source) && ids.has(l.target))
-    .map((l) => {
-      const s = graph.nodes.find((n) => n.id === l.source)
-      const t = graph.nodes.find((n) => n.id === l.target)
-      // 标签避让：中点落入任一节点半径范围（+余量）则隐藏该标签，避免叠在圆圈上
-      const mx = (s.x + t.x) / 2
-      const my = (s.y + t.y) / 2
-      const overlap = graph.nodes.some((n) => {
-        const r = (radiusOf[n.id] || 17) / 8.5 + 1.8
-        return Math.hypot(mx - n.x, my - n.y) < r
-      })
-      return {
-        source: l.source,
-        target: l.target,
-        label: l.label,
-        label: { show: !overlap },
-        lineStyle: {
-          color: light ? 'rgba(110,103,90,0.3)' : 'rgba(190,180,160,0.25)',
-          width: 1,
-          curveness: 0.05,
-        },
-      }
-    })
+    .map((l) => ({
+      source: l.source,
+      target: l.target,
+      label: l.label,
+      lineStyle: {
+        color: light ? 'rgba(110,103,90,0.24)' : 'rgba(190,180,160,0.2)',
+        width: 1,
+        curveness: 0.05,
+      },
+    }))
   return {
     backgroundColor: 'transparent',
     grid: { left: 8, right: 8, top: 8, bottom: 8 },
@@ -186,28 +192,30 @@ function buildOption({ center = false, pulse = 1 } = {}) {
         animationEasingUpdate: 'cubicOut',
         edgeSymbol: ['none', 'circle'],
         edgeSymbolSize: [0, 3],
+        // 关系标签默认隐藏：默认视图 = 干净网络；悬停节点/连线时浮现（全球顶尖网络图标准，彻底消除重叠）
         edgeLabel: {
-          show: true,
+          show: false,
           formatter: (p) => p.data.label || '',
-          color: light ? 'rgba(60,52,40,0.92)' : 'rgba(235,225,205,0.92)',
-          fontSize: 10,
+          color: light ? 'rgba(60,52,40,0.95)' : 'rgba(235,225,205,0.95)',
+          fontSize: 10.5,
           fontFamily: '"Noto Sans SC", sans-serif',
-          backgroundColor: light ? 'rgba(250,244,231,0.85)' : 'rgba(12,12,12,0.78)',
-          borderColor: light ? 'rgba(60,52,40,0.15)' : 'rgba(255,255,255,0.1)',
+          backgroundColor: light ? 'rgba(250,244,231,0.9)' : 'rgba(12,12,12,0.82)',
+          borderColor: light ? 'rgba(60,52,40,0.15)' : 'rgba(255,255,255,0.12)',
           borderWidth: 1,
           borderRadius: 10,
-          padding: [2, 7],
+          padding: [3, 8],
           distance: 8,
         },
         emphasis: {
           focus: 'adjacency',
           blurScope: 'coordinateSystem',
-          itemStyle: { shadowBlur: 26, shadowColor: '#9d2235' },
+          scale: 1.12,
+          itemStyle: { shadowBlur: 24, shadowColor: '#9d2235' },
           lineStyle: { width: 1.8, color: '#b8860b', opacity: 0.9 },
           edgeLabel: { show: true, color: '#b8860b', fontSize: 11 },
-          label: { color: '#ffffff', fontSize: 13 },
+          label: { color: '#ffffff', fontSize: 12 },
         },
-        lineStyle: { color: light ? 'rgba(110,103,90,0.28)' : 'rgba(190,180,160,0.22)', width: 1 },
+        lineStyle: { color: light ? 'rgba(110,103,90,0.22)' : 'rgba(190,180,160,0.18)', width: 1 },
         label: { show: true },
       },
     ],
