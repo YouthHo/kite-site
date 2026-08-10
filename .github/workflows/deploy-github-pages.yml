@@ -1,0 +1,69 @@
+name: Deploy · GitHub Pages
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+# GitHub Pages 官方部署所需权限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只保留一个部署，新的推送取消排队中的旧任务
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 计算 base 路径
+        id: base
+        run: |
+          REPO="${{ github.event.repository.name }}"
+          OWNER="${{ github.repository_owner }}"
+          # 用户/组织站点（<owner>.github.io）走根路径，项目站点走 /<repo>/
+          if [ "$(echo "$REPO" | tr '[:upper:]' '[:lower:]')" = "$(echo "$OWNER" | tr '[:upper:]' '[:lower:]').github.io" ]; then
+            echo "value=/" >> $GITHUB_OUTPUT
+          else
+            echo "value=/$REPO/" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 构建
+        env:
+          VITE_BASE: ${{ steps.base.outputs.value }}
+        run: |
+          echo "使用 base = $VITE_BASE"
+          npm run build
+
+      - name: 配置 Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: 上传构建产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: 部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

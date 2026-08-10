@@ -1,0 +1,58 @@
+name: Deploy · Vercel
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 检查凭据是否已配置
+        id: guard
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "::notice::未配置 Vercel Secrets（VERCEL_TOKEN / VERCEL_ORG_ID / VERCEL_PROJECT_ID），跳过本次部署。"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 安装 Node
+        if: steps.guard.outputs.skip == 'false'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 安装 Vercel CLI
+        if: steps.guard.outputs.skip == 'false'
+        run: npm i -g vercel@latest
+
+      - name: 拉取 Vercel 生产环境配置
+        if: steps.guard.outputs.skip == 'false'
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: 构建（Vercel 走根路径 base=/）
+        if: steps.guard.outputs.skip == 'false'
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+
+      - name: 部署到生产环境
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          URL=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          echo "部署地址：$URL"
+          echo "### Vercel 部署成功 :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "$URL" >> $GITHUB_STEP_SUMMARY
