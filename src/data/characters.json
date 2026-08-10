@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "id": "zheng-yaoxian",
     "name": "郑耀先",
@@ -23,7 +23,7 @@
       { "id": "cheng-zhener", "rel": "恋人" }
     ],
     "episodes": [1, 46],
-    "image": "https://picsum.photos/seed/kite-zyx/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "han-bing",
@@ -47,7 +47,7 @@
       { "id": "ma-xiaowu", "rel": "旧部" }
     ],
     "episodes": [6, 46],
-    "image": "https://picsum.photos/seed/kite-hb/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "lin-tao",
@@ -93,7 +93,7 @@
       { "id": "ma-xiaowu", "rel": "死敌" }
     ],
     "episodes": [3, 42],
-    "image": "https://picsum.photos/seed/kite-gs/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "ma-xiaowu",
@@ -117,7 +117,7 @@
       { "id": "leng-meishan", "rel": "妻子" }
     ],
     "episodes": [6, 46],
-    "image": "https://picsum.photos/seed/kite-mxw/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "lu-hanqing",
@@ -140,7 +140,7 @@
       { "id": "tian-hu", "rel": "抓捕者" }
     ],
     "episodes": [2, 15],
-    "image": "https://picsum.photos/seed/kite-lhq/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "yuan-nong",
@@ -163,7 +163,7 @@
       { "id": "zeng-moyi", "rel": "未婚妻" }
     ],
     "episodes": [2, 45],
-    "image": "https://picsum.photos/seed/kite-yn/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "cheng-zhener",
@@ -208,7 +208,7 @@
       { "id": "zheng-yaoxian", "rel": "同志" }
     ],
     "episodes": [1, 1],
-    "image": "https://picsum.photos/seed/kite-zmy/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "jiang-xin",
@@ -231,7 +231,7 @@
       { "id": "han-bing", "rel": "战友" }
     ],
     "episodes": [4, 13],
-    "image": "https://picsum.photos/seed/kite-jx/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "xu-baichuan",
@@ -253,7 +253,7 @@
       { "id": "han-bing", "rel": "审讯者" }
     ],
     "episodes": [1, 30],
-    "image": "https://picsum.photos/seed/kite-xbc/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "zhao-jianzhi",
@@ -275,7 +275,7 @@
       { "id": "gong-shu", "rel": "同僚" }
     ],
     "episodes": [2, 22],
-    "image": "https://picsum.photos/seed/kite-zjz/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "song-xiaoan",
@@ -297,7 +297,7 @@
       { "id": "gong-shu", "rel": "同僚" }
     ],
     "episodes": [3, 34],
-    "image": "https://picsum.photos/seed/kite-sxa/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "gao-zhanlong",
@@ -319,7 +319,7 @@
       { "id": "zheng-yaoxian", "rel": "仇敌" }
     ],
     "episodes": [1, 4],
-    "image": "https://picsum.photos/seed/kite-gzl/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "tian-hu",
@@ -342,7 +342,7 @@
       { "id": "jian-bing", "rel": "对手" }
     ],
     "episodes": [2, 22],
-    "image": "https://picsum.photos/seed/kite-th/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "yan-e",
@@ -364,7 +364,7 @@
       { "id": "tian-hu", "rel": "上级" }
     ],
     "episodes": [8, 42],
-    "image": "https://picsum.photos/seed/kite-ye/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "gao-junbao",
@@ -389,7 +389,7 @@
       { "id": "zheng-yaoxian", "rel": "杀父仇人" }
     ],
     "episodes": [4, 46],
-    "image": "https://picsum.photos/seed/kite-gjb/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "zhou-qiao",
@@ -413,7 +413,7 @@
       { "id": "gao-junbao", "rel": "青梅竹马" }
     ],
     "episodes": [22, 46],
-    "image": "https://picsum.photos/seed/kite-zq/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "qiu-he",
@@ -435,7 +435,7 @@
       { "id": "zhou-qiao", "rel": "养女" }
     ],
     "episodes": [22, 45],
-    "image": "https://picsum.photos/seed/kite-qh/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "jiang-wanchao",
@@ -457,7 +457,7 @@
       { "id": "han-bing", "rel": "掩护对象" }
     ],
     "episodes": [6, 31],
-    "image": "https://picsum.photos/seed/kite-jwc/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "chen-guohua",
@@ -480,7 +480,7 @@
       { "id": "han-bing", "rel": "部下" }
     ],
     "episodes": [11, 46],
-    "image": "https://picsum.photos/seed/kite-cgh/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "daili",
@@ -543,7 +543,7 @@
     "fate": "文革后平反，与陈国华一同见证郑耀先的晚年。",
     "related": [{ "id": "zheng-yaoxian", "rel": "上级" }],
     "episodes": [33, 46],
-    "image": "https://picsum.photos/seed/kite-qzw/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "jian-bing",
@@ -562,7 +562,7 @@
     "fate": "被田湖当面挑明身份后，咬舌自尽，宁死不出卖组织。",
     "related": [{ "id": "tian-hu", "rel": "识破者" }],
     "episodes": [14, 22],
-    "image": "https://picsum.photos/seed/kite-jb/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "leng-meishan",
@@ -581,7 +581,7 @@
     "fate": "精神疾病反复发作，马小五始终不离不弃。",
     "related": [{ "id": "ma-xiaowu", "rel": "丈夫" }],
     "episodes": [16, 46],
-    "image": "https://picsum.photos/seed/kite-lms/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "zhao-changlin",
@@ -600,7 +600,7 @@
     "fate": "界河边为掩护延娥，冲进雷区以身趟路，被炸身亡。临死前把笔记本交给延娥，让她回山城找田湖讨要许诺的三千美金。",
     "related": [{ "id": "yan-e", "rel": "同袍" }],
     "episodes": [8, 12],
-    "image": "https://picsum.photos/seed/kite-zcl/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "peng-xiong",
@@ -618,7 +618,7 @@
     "fate": "被郑耀先反杀，枪口抵头后仍被一枪击毙，成了郑耀先震慑田湖的“杀一儆百”。",
     "related": [{ "id": "tian-hu", "rel": "上级" }],
     "episodes": [14, 14],
-    "image": "https://picsum.photos/seed/kite-px/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "lao-chang",
@@ -637,7 +637,7 @@
     "fate": "为掩护郑耀先撤退，负伤后爬进雷区，以身引爆地雷挡住追兵。",
     "related": [{ "id": "han-bing", "rel": "影子（真实身份）" }],
     "episodes": [13, 13],
-    "image": "https://picsum.photos/seed/kite-lc/600/800"
+    "image": "/images/placeholders/character.svg"
   },
   {
     "id": "jiang-jieshi",
@@ -656,6 +656,7 @@
     "fate": "1975年4月5日病逝于台北士林官邸。",
     "related": [{ "id": "zheng-yaoxian", "rel": "钦点启用" }],
     "episodes": [16, 46],
-    "image": "https://picsum.photos/seed/kite-jjs/600/800"
+    "image": "/images/placeholders/character.svg"
   }
 ]
+
