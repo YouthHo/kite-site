@@ -7,12 +7,13 @@ import { TYPE_META, lightenHex } from './useGraphData'
  *       风筝线边（悬链+摆动+电报脉冲）/ 印章节点 / 力导向模拟 / 演化出生动画
  */
 export class GraphEngine {
-  constructor(canvas, { getData, onNodeClick, onNodeHover, prefersReduced = false }) {
+  constructor(canvas, { getData, onNodeClick, onNodeHover, onDecrypt, prefersReduced = false }) {
     this.canvas = canvas
     this.ctx = canvas.getContext('2d')
     this.getData = getData // () => useGraphData 返回值（含响应式 .value）
     this.onNodeClick = onNodeClick
     this.onNodeHover = onNodeHover
+    this.onDecrypt = onDecrypt
     this.reduced = prefersReduced
     this.dpr = Math.min(window.devicePixelRatio || 1, 2)
 
@@ -26,7 +27,14 @@ export class GraphEngine {
     this.pinch = null // {d0, c0x, c0y, s0}
     this.pathResult = null
     this.focusNodeId = null
+    this.focusClick = null // 点击聚焦：隔离自我网络
+    this.decryptMode = false // 解密模式：初始遮蔽
+    this.decrypted = new Set() // 已揭开节点
     this.appear = new Map() // id -> 出现时间戳
+    this.vanish = new Map() // id -> 消失时间戳（残影淡出）
+    this.lastIds = null // 上一帧可见节点集（diff 出消散）
+    this.miniOn = true // mini-map 总览
+    this.dragFollow = new Map() // 拖拽邻居跟随位移
     this.forceOn = false
     this.forceStep = 0
     this.raf = 0
@@ -137,6 +145,19 @@ export class GraphEngine {
     this.pathResult = result
     this.requestRender()
   }
+  setDecrypt(on) {
+    this.decryptMode = on
+    if (!on) this.decrypted.clear()
+    this.requestRender()
+  }
+  decryptNode(id) {
+    this.decrypted.add(id)
+    this.requestRender()
+  }
+  setFocusClick(id) {
+    this.focusClick = id
+    this.requestRender()
+  }
   setForce(on) {
     this.forceOn = on
     if (on) this.forceStep = 0
@@ -225,7 +246,23 @@ export class GraphEngine {
     const py = e.clientY - rect.top
     if (this.drag) {
       const w = this.screenToWorld(px, py)
-      this.nodePos.set(this.drag.id, { x: w.x + this.drag.ox, y: w.y + this.drag.oy })
+      const target = { x: w.x + this.drag.ox, y: w.y + this.drag.oy }
+      const prev = this.nodePos.get(this.drag.id) || { x: w.x + this.drag.ox, y: w.y + this.drag.oy }
+      this.nodePos.set(this.drag.id, target)
+      // 拖拽邻居跟随：相邻节点随动 12%（风筝线牵动感）
+      const d = this.getData()
+      const dx = target.x - prev.x
+      const dy = target.y - prev.y
+      if (Math.hypot(dx, dy) > 0.02) {
+        for (const l of d.links) {
+          let nb = null
+          if (l.source === this.drag.id) nb = l.target
+          else if (l.target === this.drag.id) nb = l.source
+          if (!nb) continue
+          const cur = this.nodePos.get(nb) || { x: d.byId[nb].x, y: d.byId[nb].y }
+          this.nodePos.set(nb, { x: cur.x + dx * 0.12, y: cur.y + dy * 0.12 })
+        }
+      }
       this._setHover(this.drag.id)
       this.requestRender()
       return
@@ -249,7 +286,13 @@ export class GraphEngine {
       const moved = cur ? Math.hypot(cur.x - this.drag.startX, cur.y - this.drag.startY) : 0
       if (moved < 6 / this.cam.scale) {
         // 位移小于阈值 = 点击（而非拖拽）
-        this.onNodeClick?.(this.drag.id)
+        if (this.decryptMode && !this.decrypted.has(this.drag.id)) {
+          // 解密模式：首次点击=揭开
+          this.decryptNode(this.drag.id)
+          this.onDecrypt?.(this.drag.id)
+        } else {
+          this.onNodeClick?.(this.drag.id)
+        }
       }
     }
     this.drag = null
@@ -377,8 +420,29 @@ export class GraphEngine {
     const links = visibleLinks.value
     if (!nodes.length) return
 
+    // 消散残影：上一帧存在、本帧消失的节点淡出 320ms
+    const curIds = new Set(nodes.map((n) => n.id))
+    if (this.lastIds) {
+      for (const id of this.lastIds) {
+        if (!curIds.has(id) && !this.vanish.has(id)) this.vanish.set(id, now)
+      }
+    }
+    this.lastIds = curIds
+    for (const [id, t] of this.vanish) {
+      if (now - t > 320) this.vanish.delete(id)
+    }
+
     const hoverNode = this.hover
     const focusId = this.focusNodeId
+    const fc = this.focusClick
+    const fcNeighbors = fc ? new Set() : null
+    if (fcNeighbors) {
+      for (const l of links) {
+        if (l.source === fc) fcNeighbors.add(l.target)
+        if (l.target === fc) fcNeighbors.add(l.source)
+      }
+      fcNeighbors.add(fc)
+    }
     const pathIds = this.pathResult ? new Set(this.pathResult.ids) : null
     const pathPairs = this.pathResult ? new Set(this.pathResult.pairs) : null
     const hoverNeighbors = hoverNode ? new Set() : null
@@ -400,9 +464,11 @@ export class GraphEngine {
       const p = this.nodePos.get(id) || { x: n.x, y: n.y }
       return this.worldToScreen(p.x, p.y)
     }
-    const dimAll = pathIds || (hoverNode && !this.drag)
+    const dimAll = pathIds || hoverNode || fc
 
     for (const l of links) {
+      // 解密模式：secret 边两端未全解密则隐藏（保持神秘）
+      if (this.decryptMode && l.secret && (!this.decrypted.has(l.source) || !this.decrypted.has(l.target))) continue
       const a = posOf(l.source)
       const b = posOf(l.target)
       if (!a || !b) continue
@@ -410,10 +476,13 @@ export class GraphEngine {
       const onPath = pathPairs?.has(l.source + '>' + l.target) || pathPairs?.has(l.target + '>' + l.source)
       const isHoverEdge = hoverNode && (l.source === hoverNode || l.target === hoverNode)
       const isFocusEdge = focusId && (l.source === focusId || l.target === focusId)
+      const isFcEdge = fc && (l.source === fc || l.target === fc)
 
       let opacity = 1
       if (pathIds && !onPath) opacity = 0.1
       else if (hoverNode && !isHoverEdge && !this.drag) opacity = 0.08
+      else if (fc && !isFcEdge && !this.drag) opacity = 0.12
+      else if (fc && isFcEdge) opacity = 1
 
       const width = (0.7 + l.strength * 0.4) * ui * (onPath ? 2.4 : 1)
       const midX = (a.x + b.x) / 2
@@ -451,8 +520,8 @@ export class GraphEngine {
         ctx.closePath()
         ctx.fill()
       }
-      // 电报脉冲：悬停边（或悬停节点的邻边）上光点行进
-      if (isHoverEdge && !this.reduced && opacity > 0.5) {
+      // 电报脉冲：悬停边、聚焦边或路径边上光点行进
+      if (!this.reduced && opacity > 0.5 && (isHoverEdge || isFcEdge || onPath)) {
         const tt = (now / 1300) % 1
         const qx = (1 - tt) * (1 - tt) * a.x + 2 * (1 - tt) * tt * midX + tt * tt * b.x
         const qy = (1 - tt) * (1 - tt) * a.y + 2 * (1 - tt) * tt * cy + tt * tt * b.y
@@ -480,10 +549,36 @@ export class GraphEngine {
       const onPath = pathIds?.has(n.id)
       const isHover = hoverNode === n.id
       const isFocus = focusId === n.id
-      const dimmed = pathIds ? !onPath : hoverNode && !isHover && !this.drag
+      const isDecrypted = !this.decryptMode || this.decrypted.has(n.id)
+      const dimmed = pathIds ? !onPath : hoverNode && !isHover && !this.drag ? true : fc && !fcNeighbors.has(n.id) && !this.drag
 
       ctx.save()
       ctx.globalAlpha = dimmed ? T.dimOpacity : 1
+      if (this.decryptMode && !isDecrypted) {
+        // 解密模式遮蔽：灰化节点 + 「机密」红条遮罩名字
+        ctx.fillStyle = 'rgba(90,86,78,0.9)'
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.strokeStyle = 'rgba(60,56,50,0.8)'
+        ctx.lineWidth = 1 * ui
+        ctx.stroke()
+        if (r > 10) {
+          const bw = r * 1.15
+          const bh = Math.max(6, r * 0.34)
+          ctx.fillStyle = 'rgba(157,34,53,0.78)'
+          ctx.beginPath()
+          ctx.roundRect(p.x - bw / 2, p.y + r * 0.45, bw, bh, 2)
+          ctx.fill()
+          ctx.fillStyle = 'rgba(240,230,210,0.9)'
+          ctx.font = `500 ${Math.max(6, bh * 0.52)}px "Noto Sans SC", sans-serif`
+          ctx.textAlign = 'center'
+          ctx.textBaseline = 'middle'
+          ctx.fillText('机密', p.x, p.y + r * 0.45 + bh / 2)
+        }
+        ctx.restore()
+        continue
+      }
       // 印章节点（kite / shadow）
       if (n.key) {
         const seal = n.key === 'kite' ? T.sealKite : T.sealShadow
@@ -579,6 +674,63 @@ export class GraphEngine {
         ctx.textBaseline = 'middle'
         ctx.fillText(text, lx, ly + lh / 2)
       }
+    }
+
+    // ---- 消散残影 ----
+    if (!this.reduced && this.vanish.size) {
+      const d2 = this.getData()
+      for (const [id, t] of this.vanish) {
+        const n = d2.byId[id]
+        if (!n) continue
+        const p = this.worldToScreen(n.x, n.y)
+        const a = 1 - (now - t) / 320
+        if (a <= 0) continue
+        const rv = nodeRadius(n) * ui
+        ctx.save()
+        ctx.globalAlpha = a * 0.5
+        ctx.fillStyle = d2.FACTION[n.faction]?.color || '#555048'
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, rv, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.restore()
+      }
+    }
+
+    // ---- mini-map 总览（右下角） ----
+    if (this.miniOn && !this.reduced) {
+      const mw = Math.min(132, w * 0.22)
+      const mh = mw * 0.62
+      const mx = w - mw - 10
+      const my = h - mh - 10
+      ctx.save()
+      ctx.globalAlpha = 0.75
+      ctx.fillStyle = T.light ? 'rgba(250,244,231,0.7)' : 'rgba(10,10,10,0.66)'
+      ctx.strokeStyle = T.labelBorder
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.roundRect(mx, my, mw, mh, 4)
+      ctx.fill()
+      ctx.stroke()
+      // 节点小点（世界坐标 → 迷你图）
+      const sx = (wx) => mx + (wx / 100) * mw
+      const sy = (wy) => my + (wy / 100) * mh
+      for (const n of nodes) {
+        const p = this.nodePos.get(n.id) || { x: n.x, y: n.y }
+        const col = this.decryptMode && !this.decrypted.has(n.id) ? '#6a655c' : d.FACTION[n.faction]?.color || '#888'
+        ctx.fillStyle = col
+        ctx.beginPath()
+        ctx.arc(sx(p.x), sy(p.y), n.key ? 3 : 2, 0, Math.PI * 2)
+        ctx.fill()
+      }
+      // 视口框
+      const vx0 = sx(this.cam.x)
+      const vy0 = sy(this.cam.y)
+      const vw = (w / this.cam.scale / 100) * mw
+      const vh = (h / this.cam.scale / 100) * mh
+      ctx.strokeStyle = T.light ? 'rgba(60,52,40,0.8)' : 'rgba(240,220,190,0.85)'
+      ctx.lineWidth = 1
+      ctx.strokeRect(vx0, vy0, Math.max(6, vw), Math.max(5, vh))
+      ctx.restore()
     }
   }
 

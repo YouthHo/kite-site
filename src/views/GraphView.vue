@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import gsap from 'gsap'
 import { X, Search, ArrowRight, Info, Play, Pause } from 'lucide-vue-next'
 import { GraphEngine } from '@/graph/GraphEngine'
@@ -20,6 +20,17 @@ const pathResult = ref(null)
 const kbIndex = ref(0)
 const focusNodeId = ref(null)
 const layoutMode = ref('none')
+const decryptMode = ref(false)
+const hoverNodeId = ref(null)
+const hoverSummary = ref('')
+const decryptedCount = ref(0)
+const secretFound = ref(0)
+const secretTotal = computed(() => g.links.filter((l) => l.secret).length)
+function handleDecrypt() {
+  decryptedCount.value = engine?.decrypted?.size || 0
+  const dec = engine?.decrypted
+  secretFound.value = dec ? g.links.filter((l) => l.secret && dec.has(l.source) && dec.has(l.target)).length : 0
+}
 
 let engine = null
 let briefType = null
@@ -33,6 +44,7 @@ const SORTS = [
 ]
 
 /* ================= 交互 ================= */
+let hoverType = null
 function handleNodeClick(id) {
   if (pathMode.value) {
     if (!pathStart.value) {
@@ -44,7 +56,51 @@ function handleNodeClick(id) {
     }
     return
   }
+  // 聚焦隔离 + 打开档案（Esc 释放）
+  engine?.setFocusClick(id)
+  engine?.centerOn(id, 420)
   openPanel(id)
+}
+
+function toggleDecrypt() {
+  decryptMode.value = !decryptMode.value
+  engine?.setDecrypt(decryptMode.value)
+  handleDecrypt()
+}
+
+function handleHover(id) {
+  hoverNodeId.value = id
+  hoverType?.kill?.()
+  if (!id) {
+    hoverSummary.value = ''
+    return
+  }
+  const n = g.byId[id]
+  if (!n) return
+  // 悬停电报条：打字机逐字浮现核心关系摘要
+  const rels = g.visibleLinks.value
+    .filter((l) => l.source === id || l.target === id)
+    .map((l) => l.label)
+    .slice(0, 4)
+    .join(' · ')
+  const key = n.key ? (n.key === 'kite' ? ' [风筝轴]' : ' [影子轴]') : ''
+  const text = `接入 ${n.name}${key} · ${n.code ? '代号「' + n.code + '」· ' : ''}${rels || '孤悬于网'}`
+  hoverSummary.value = text
+  if (hoverEl.value && !prefersReduced) {
+    hoverType = typewriter(hoverEl.value, text, { speed: 14, caret: false })
+  } else if (hoverEl.value) {
+    hoverEl.value.textContent = text
+  }
+}
+
+function onSearchEnter() {
+  const kw = g.keyword.value.trim()
+  if (!kw || !engine) return
+  const hit = g.sortedList.value[0]
+  if (hit) {
+    engine.setFocusClick(hit.id)
+    engine.centerOn(hit.id, 500)
+  }
 }
 
 function computePath(a, b) {
@@ -158,6 +214,8 @@ function onKey(e) {
     else if (focusNodeId.value) {
       focusNodeId.value = null
       engine?.setFocus(null)
+    } else if (engine?.focusClick) {
+      engine?.setFocusClick(null)
     }
     return
   } else {
@@ -175,7 +233,8 @@ onMounted(async () => {
   engine = new GraphEngine(chartEl.value, {
     getData: () => g,
     onNodeClick: handleNodeClick,
-    onNodeHover: () => {},
+    onNodeHover: handleHover,
+    onDecrypt: handleDecrypt,
     prefersReduced,
   })
   engine.setTheme(theme.value === 'light')
@@ -198,6 +257,19 @@ watch(theme, (v) => engine?.setTheme(v === 'light'))
 watch(layoutMode, () => {})
 
 const briefEl = ref(null)
+const hoverEl = ref(null)
+// 洞察面板：共同联系人 / 到风筝的最短链路
+const insight = computed(() => {
+  if (!selected.value) return null
+  const id = selected.value.id
+  const kiteId = g.nodes.find((n) => n.key === 'kite')?.id
+  const shadowId = g.nodes.find((n) => n.key === 'shadow')?.id
+  const toKite = id === kiteId ? null : g.shortestPath(id, kiteId)
+  const toShadow = id === shadowId ? null : g.shortestPath(id, shadowId)
+  const common = id === kiteId || id === shadowId ? [] : g.commonNeighbors(id, kiteId).slice(0, 4)
+  const spread = g.factionSpread()
+  return { toKite, toShadow, common, spread }
+})
 
 onBeforeUnmount(() => {
   g.stopEraPlay()
@@ -237,6 +309,13 @@ onBeforeUnmount(() => {
         <div class="absolute top-3 right-3 z-10 flex gap-1.5 flex-wrap justify-end max-w-[62%]">
           <button
             class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors"
+            :class="decryptMode ? 'border-[#9d2235] text-[#d8a0a8] bg-[#9d2235]/15' : 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235]'"
+            @click="toggleDecrypt"
+          >
+            解密模式{{ decryptMode ? ` ${decryptedCount}/30` : '' }}
+          </button>
+          <button
+            class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors"
             :class="pathMode ? 'border-[#b8860b] text-[#b8860b] bg-[#b8860b]/10' : 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235]'"
             @click="togglePathMode"
           >
@@ -272,6 +351,16 @@ onBeforeUnmount(() => {
           class="absolute top-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#d8a0a8] bg-[#0e0e0e]/90 text-[#d8a0a8] whitespace-nowrap"
         >
           起点：{{ g.charMap[pathStart]?.name }} — 请点击终点
+        </div>
+
+        <!-- 悬停电报条（打字机） -->
+        <div v-if="hoverNodeId" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.2em] text-[#d8a0a8] bg-black/60 border border-[#9d2235]/40 px-4 py-1.5 whitespace-nowrap max-w-[90%] overflow-hidden text-ellipsis pointer-events-none">
+          <span ref="hoverEl">{{ hoverSummary }}</span>
+        </div>
+
+        <!-- 解密进度条 -->
+        <div v-if="decryptMode" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#8a8275] bg-black/50 border border-[#2a2520] px-3 py-1.5">
+          已解密 {{ decryptedCount }}/30 · 秘密线索 {{ secretFound }}/{{ secretTotal }}
         </div>
 
         <!-- 底部图例：阵营 + 关系类型（类型可点击筛选） -->
@@ -317,7 +406,7 @@ onBeforeUnmount(() => {
       <aside class="lg:w-[300px] glass border-t lg:border-t-0 lg:border-l border-[#2a2520] p-5 overflow-y-auto shrink-0">
         <div class="relative mb-5">
           <Search :size="14" class="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8275]" />
-          <input v-model="g.keyword.value" class="k-input w-full !pl-9" placeholder="搜索人物 / 代号……" />
+          <input v-model="g.keyword.value" class="k-input w-full !pl-9" placeholder="搜索人物 / 代号……（回车跳转）" @keydown.enter="onSearchEnter" />
         </div>
         <div class="mb-2 font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">阵营筛选</div>
         <div class="grid grid-cols-2 gap-1.5 mb-6">
@@ -401,6 +490,32 @@ onBeforeUnmount(() => {
             </div>
             <p ref="briefEl" class="mt-5 text-[13px] leading-7 text-[#8a8275]"></p>
             <p class="mt-3 text-[12px] leading-6 text-[#555048]">出场：第 {{ selected.episodes[0] }}—{{ selected.episodes[1] }} 集</p>
+
+            <!-- 关系网络洞察 -->
+            <div v-if="insight" class="mt-6 border border-[#2a2520] bg-[#0b0b0b] p-4">
+              <div class="font-mono text-[10px] tracking-[0.3em] text-[#b8860b]">关系网络 · INSIGHT</div>
+              <div class="mt-3 space-y-2.5 text-[12px] leading-5">
+                <div v-if="insight.toKite" class="text-[#8a8275]">
+                  至「风筝」最短链路：
+                  <span class="text-[#b8860b]">{{ insight.toKite.ids.map((x) => g.charMap[x]?.name || x).join(' → ') }}</span>
+                  <span class="text-[#555048]">（{{ insight.toKite.hops }} 跳）</span>
+                </div>
+                <div v-if="insight.toShadow" class="text-[#8a8275]">
+                  至「影子」最短链路：
+                  <span class="text-[#d8a0a8]">{{ insight.toShadow.ids.map((x) => g.charMap[x]?.name || x).join(' → ') }}</span>
+                  <span class="text-[#555048]">（{{ insight.toShadow.hops }} 跳）</span>
+                </div>
+                <div v-if="insight.common.length" class="text-[#8a8275]">
+                  与风筝的共同联系人：<span class="text-[#e8dcc8]">{{ insight.common.map((x) => g.charMap[x]?.name || x).join('、') }}</span>
+                </div>
+                <div class="text-[#8a8275]">
+                  阵营分布：
+                  <span v-for="(cnt, f) in insight.spread" :key="f" class="mr-2 inline-flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full" :style="{ background: FACTION[f].color }"></span>{{ FACTION[f].label }} {{ cnt }}
+                  </span>
+                </div>
+              </div>
+            </div>
             <router-link :to="`/characters?q=${selected.id}`"
               class="mt-6 flex items-center gap-2 justify-center border border-[#9d2235] py-2.5 text-[12px] tracking-[0.25em] text-[#e8dcc8] hover:bg-[#9d2235]/15 transition-colors group">
               查看完整档案 <ArrowRight :size="14" class="group-hover:translate-x-1 transition-transform" />
