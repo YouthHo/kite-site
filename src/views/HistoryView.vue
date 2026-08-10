@@ -20,7 +20,7 @@ function switchTab(id) {
     if (prefersReduced) return
     crossTween?.kill()
     // 三张卡一起丝滑浮现：无先后、无明暗差
-    crossTween = gsap.fromTo('.hist-card', { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' })
+    crossTween = gsap.fromTo('.hist-card', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' })
   })
 }
 

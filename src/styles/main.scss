@@ -209,6 +209,15 @@ body {
   50%, 100% { opacity: 0; }
 }
 
+/* 全局字体策略：font-mono 统一改为无衬线（仅电报码/打字机保留等宽） */
+.font-mono {
+  font-family: 'Noto Sans SC', system-ui, 'Microsoft YaHei', sans-serif !important;
+}
+.telegraph, .telegraph *,
+.tw-caret {
+  font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+}
+
 /* ---------- 导航链接：下划线从中间展开 ---------- */
 .nav-link {
   position: relative;

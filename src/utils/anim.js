@@ -19,7 +19,7 @@ export function pageEnter(scope = document.body, vars = {}) {
   }
   const els = scope.querySelectorAll('[data-enter]')
   if (!els.length) return
-  const { stagger = 0.06, y = 24, duration = 0.55, delay = 0.05 } = vars
+  const { stagger = 0.02, y = 12, duration = 0.35, delay = 0.01 } = vars
   // 仅 opacity + 位移，不用 blur（性能更快、切换更跟手）
   gsap.fromTo(
     els,
