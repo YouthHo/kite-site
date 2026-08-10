@@ -124,3 +124,5 @@
 [data-theme='light'] .group:hover .group-hover\:text-\[\#b8860b\] { color: #8a6a2f !important; }
 [data-theme='light'] .border-\[\#b8860b\] { border-color: #8a6a2f !important; }
 
+/* 确保 .on-media 在浅色映射之后依然生效（同级 !important 靠书写顺序覆盖） */
+[data-theme='light'] .on-media { color: #e8dcc8 !important; }

@@ -50,6 +50,8 @@ for k, v in TX_MAP.items():
     lines.append(f"[data-theme='light'] .group:hover .group-hover\\:text-{e} {{ color: {v} !important; }}")
     lines.append(f"[data-theme='light'] .border-{e} {{ border-color: {v} !important; }}")
 lines.append("")
+lines.append("/* 确保 .on-media 在浅色映射之后依然生效（同级 !important 靠书写顺序覆盖） */")
+lines.append("[data-theme='light'] .on-media { color: #e8dcc8 !important; }")
 lines.append("")
 
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
