@@ -137,26 +137,10 @@ body {
   opacity: 1;
 }
 
-/* ---------- 档案袋封口条纹（克制版：细、低透明，仅作质感） ---------- */
+/* ---------- 档案袋封口（注意：封口条纹装饰已移除——用户十次以上反馈名场面卡加载时呈"棕色横线条纹"，根因即此处的 repeating-linear-gradient 斜纹带。archive-tape 类保留 position/overflow 语义） ---------- */
 .archive-tape {
   position: relative;
   overflow: hidden;
-}
-.archive-tape::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(157, 34, 53, 0.28) 0 10px,
-    transparent 10px 20px,
-    rgba(184, 134, 11, 0.14) 20px 26px,
-    transparent 26px 36px
-  );
-  opacity: 0.55;
 }
 
 /* ---------- 邮票齿孔边框 ---------- */
