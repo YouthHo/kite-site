@@ -34,9 +34,8 @@ onMounted(() => {
         <div>
           <div class="file-label mb-5">关于本站</div>
           <p class="text-[13px] leading-7 text-[#555048]">
-            本为非官方同人致敬网站，与《风筝》剧集制作方无关。剧照与海报版权归原出品方所有。<br />
-            内容整理自公开资料，仅供学习交流，不用于商业用途。<br />
-            © {{ year }} Kite Files · 非官方同人站
+            内容整理自公开资料，仅供学习交流。<br />
+            © {{ year }} Kite Files.
           </p>
         </div>
       </div>

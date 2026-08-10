@@ -1,13 +1,13 @@
-﻿<script setup>
+<script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
-// ECharts 按需引入：仅 GraphChart + CanvasRenderer，chunk 从 1MB 降到 ~300KB
+// ECharts 按需引入：仅 GraphChart + CanvasRenderer
 import * as echarts from 'echarts/core'
 import { GraphChart } from 'echarts/charts'
 import { GridComponent, TooltipComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 echarts.use([GraphChart, GridComponent, TooltipComponent, CanvasRenderer])
 import gsap from 'gsap'
-import { X, Search, ArrowRight, Info } from 'lucide-vue-next'
+import { X, Search, ArrowRight, Info, Play, Pause } from 'lucide-vue-next'
 import graph from '@/data/relationships.json'
 import characters from '@/data/characters.json'
 import NameBadge from '@/components/NameBadge.vue'
@@ -45,6 +45,166 @@ const SORTS = [
   { id: 'span', label: '出场' },
 ]
 
+/* ================= 关系类型系统（数据已按剧情语义标注 type/tone/strength） ================= */
+const TYPE_META = {
+  enemy: { label: '敌对', color: '#9d2235', dash: true },
+  superior: { label: '上下级', color: '#1e4a52', dash: false },
+  family: { label: '亲情', color: '#b8860b', dash: false },
+  love: { label: '爱情', color: '#c96f7f', dash: false },
+  comrade: { label: '同志', color: '#2f8f7f', dash: false },
+  partner: { label: '接头', color: '#8b7355', dash: false },
+}
+const activeTypes = ref(new Set(Object.keys(TYPE_META)))
+function toggleType(k) {
+  const s = new Set(activeTypes.value)
+  if (s.has(k)) s.delete(k)
+  else s.add(k)
+  activeTypes.value = s
+  chart?.setOption(buildOption(), false) // merge：保留当前视图
+}
+
+/* ================= 集数演化（时间轴 1-46，数据来自角色出场集数范围，零编造） ================= */
+const ep = ref(46)
+const epPlaying = ref(false)
+let eraTimer = null
+function toggleEraPlay() {
+  if (epPlaying.value) {
+    epPlaying.value = false
+    clearInterval(eraTimer)
+    return
+  }
+  if (ep.value >= 46) ep.value = 1
+  epPlaying.value = true
+  eraTimer = setInterval(() => {
+    if (ep.value >= 46) {
+      epPlaying.value = false
+      clearInterval(eraTimer)
+      return
+    }
+    ep.value++
+  }, 700)
+}
+watch(ep, () => {
+  if (chart) chart.setOption(buildOption(), false) // merge：演化不打断用户视角
+})
+
+/* ================= 布局模式 + 物理参数（力导向实时调节） ================= */
+const layoutMode = ref('none') // none=手绘坐标（默认王牌视图） / force=力导向模拟
+const repulsion = ref(220)
+const edgeLen = ref(100)
+watch(layoutMode, () => {
+  if (chart) chart.setOption(buildOption(), true)
+})
+watch([repulsion, edgeLen], () => {
+  if (layoutMode.value === 'force' && chart) chart.setOption(buildOption(), false)
+})
+
+/* ================= 最短路径（BFS）+ 键盘导航 ================= */
+const pathMode = ref(false)
+const pathStart = ref(null)
+const pathResult = ref(null)
+const kbIndex = ref(0)
+const focusNodeId = ref(null)
+
+function togglePathMode() {
+  pathMode.value = !pathMode.value
+  pathStart.value = null
+  pathResult.value = null
+  if (chart) chart.setOption(buildOption(), false)
+}
+function computePath(a, b) {
+  // BFS 无权图最短路径（基于当前可见图）
+  const ids = new Set(visibleNodeIds().map((n) => n.id))
+  const adj = {}
+  graph.links.forEach((l) => {
+    if (!ids.has(l.source) || !ids.has(l.target)) return
+    if (!activeTypes.value.has(l.type)) return
+    ;(adj[l.source] = adj[l.source] || []).push(l.target)
+    ;(adj[l.target] = adj[l.target] || []).push(l.source)
+  })
+  const prev = {}
+  const seen = new Set([a])
+  const q = [a]
+  let found = false
+  while (q.length && !found) {
+    const cur = q.shift()
+    for (const nb of adj[cur] || []) {
+      if (seen.has(nb)) continue
+      seen.add(nb)
+      prev[nb] = cur
+      if (nb === b) {
+        found = true
+        break
+      }
+      q.push(nb)
+    }
+  }
+  if (!found) {
+    pathResult.value = { ids: [a, b], hops: -1, pairs: [] }
+    chart?.setOption(buildOption(), false)
+    return
+  }
+  const idsPath = [b]
+  let cur = b
+  while (cur !== a) {
+    cur = prev[cur]
+    idsPath.unshift(cur)
+  }
+  const pairs = []
+  for (let i = 0; i < idsPath.length - 1; i++) pairs.push(idsPath[i] + '>' + idsPath[i + 1])
+  pathResult.value = { ids: idsPath, hops: idsPath.length - 1, pairs }
+  chart?.setOption(buildOption(), false)
+}
+function onKey(e) {
+  const list = sortedList.value
+  if (!list.length) return
+  let i = kbIndex.value
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+    i = (i + 1) % list.length
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    i = (i - 1 + list.length) % list.length
+  } else if (e.key === 'Enter') {
+    if (focusNodeId.value) openPanel(focusNodeId.value)
+    return
+  } else if (e.key === 'Escape') {
+    if (pathMode.value) togglePathMode()
+    else if (selected.value) closePanel()
+    else if (focusNodeId.value) {
+      focusNodeId.value = null
+      chart?.setOption(buildOption(), false)
+    }
+    return
+  } else {
+    return
+  }
+  e.preventDefault()
+  kbIndex.value = i
+  focusNodeId.value = list[i].id
+  chart?.setOption(buildOption(), false)
+}
+
+/* ================= 统计 ================= */
+const stats = computed(() => {
+  const ids = new Set(visibleNodeIds().map((n) => n.id))
+  const deg = {}
+  let edges = 0
+  const factions = new Set()
+  visibleNodeIds().forEach((n) => factions.add(n.faction))
+  graph.links.forEach((l) => {
+    if (!ids.has(l.source) || !ids.has(l.target)) return
+    if (!activeTypes.value.has(l.type)) return
+    edges++
+    deg[l.source] = (deg[l.source] || 0) + 1
+    deg[l.target] = (deg[l.target] || 0) + 1
+  })
+  const top = Object.entries(deg)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([id, d]) => `${charMap.value[id]?.name || id} ${d}`)
+    .join(' · ')
+  return { nodes: ids.size, edges, factions: factions.size, top }
+})
+
 const charMap = computed(() => {
   const m = {}
   characters.forEach((c) => (m[c.id] = c))
@@ -52,7 +212,6 @@ const charMap = computed(() => {
 })
 
 const sortedList = computed(() => {
-  // 列表只按阵营筛选 + 搜索过滤：人物勾选状态不影响名字显示（随时可反悔重新勾选）
   const ids = new Set(
     graph.nodes
       .filter((n) => activeFactions.value.has(n.faction))
@@ -87,6 +246,20 @@ function togglePerson(id) {
   personSel.value = s
   chart?.setOption(buildOption(), true)
 }
+// 行点击：路径模式 = 选择起点/终点；普通模式 = 勾选切换
+function onRowClick(n) {
+  if (pathMode.value) {
+    if (!pathStart.value) {
+      pathStart.value = n.id
+      chart?.setOption(buildOption(), false)
+    } else {
+      computePath(pathStart.value, n.id)
+      pathStart.value = null
+    }
+    return
+  }
+  togglePerson(n.id)
+}
 function selectAllPeople() {
   personSel.value = new Set(graph.nodes.map((n) => n.id))
   chart?.setOption(buildOption(), true)
@@ -101,8 +274,9 @@ function visibleNodeIds() {
   return graph.nodes.filter((n) => {
     if (!activeFactions.value.has(n.faction)) return false
     if (!personSel.value.has(n.id)) return false
-    if (!kw) return true
     const c = charMap.value[n.id]
+    if (!c?.episodes || c.episodes[0] > ep.value) return false // 集数演化：未出场角色不显示
+    if (!kw) return true
     return (n.name + (n.code || '') + (c?.identity || '')).toLowerCase().includes(kw)
   })
 }
@@ -117,10 +291,12 @@ function lightenHex(hex, amt) {
   return `rgb(${r},${g},${b})`
 }
 
-/** 完整构建 option（全量重建；国际顶尖图谱视觉：净背景/细线/标签悬停浮现） */
-function buildOption({ center = false, pulse = 1 } = {}) {
+/** 完整构建 option（全量重建或 merge 增量；国际顶尖图谱视觉） */
+function buildOption({ center = false } = {}) {
   const light = theme.value === 'light'
   const ids = new Set(visibleNodeIds().map((n) => n.id))
+  const pathIds = pathResult.value?.ids ? new Set(pathResult.value.ids) : null
+  const pathPairs = pathResult.value?.pairs ? new Set(pathResult.value.pairs) : null
   const nodes = graph.nodes
     .filter((n) => ids.has(n.id))
     .map((n) => {
@@ -128,6 +304,37 @@ function buildOption({ center = false, pulse = 1 } = {}) {
       const span = c.episodes ? c.episodes[1] - c.episodes[0] : 5
       const size = span > 30 ? 50 : span > 10 ? 40 : 32
       const color = FACTION[n.faction]?.color || '#555048'
+      const onPath = pathIds?.has(n.id)
+      const isFocus = focusNodeId.value === n.id
+      const isStart = pathMode.value && pathStart.value === n.id
+      const item = {
+        color: {
+          type: 'radial',
+          x: 0.35,
+          y: 0.3,
+          r: 0.9,
+          colorStops: [{ offset: 0, color: lightenHex(color, 0.35) }, { offset: 1, color }],
+        },
+        borderColor: light ? 'rgba(60,52,40,0.3)' : 'rgba(255,255,255,0.2)',
+        borderWidth: 1.2,
+        shadowBlur: 14,
+        shadowColor: color + (light ? '33' : '44'),
+        opacity: onPath ? 1 : pathIds ? 0.2 : 1,
+      }
+      if (onPath) {
+        item.borderColor = '#b8860b'
+        item.borderWidth = 2.5
+        item.shadowColor = 'rgba(184,134,11,0.85)'
+        item.shadowBlur = 22
+      } else if (isFocus) {
+        item.borderColor = '#b8860b'
+        item.borderWidth = 2
+        item.shadowColor = 'rgba(184,134,11,0.6)'
+        item.shadowBlur = 18
+      } else if (isStart) {
+        item.borderColor = '#d8a0a8'
+        item.borderWidth = 2
+      }
       return {
         id: n.id,
         name: n.name,
@@ -136,20 +343,7 @@ function buildOption({ center = false, pulse = 1 } = {}) {
         symbolSize: size,
         symbol: 'circle',
         category: n.faction,
-        itemStyle: {
-          // 径向渐变：左上亮、右下深，高级质感
-          color: {
-            type: 'radial',
-            x: 0.35,
-            y: 0.3,
-            r: 0.9,
-            colorStops: [{ offset: 0, color: lightenHex(color, 0.35) }, { offset: 1, color: color }],
-          },
-          borderColor: light ? 'rgba(60,52,40,0.3)' : 'rgba(255,255,255,0.2)',
-          borderWidth: 1.2,
-          shadowBlur: 14,
-          shadowColor: color + (light ? '33' : '44'),
-        },
+        itemStyle: item,
         label: {
           show: true,
           position: 'bottom',
@@ -161,69 +355,83 @@ function buildOption({ center = false, pulse = 1 } = {}) {
           fontWeight: 500,
           textShadowColor: light ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.7)',
           textShadowBlur: 3,
+          opacity: onPath ? 1 : pathIds ? 0.25 : 1,
         },
       }
     })
-  // 节点半径映射（用于标签避让计算，悬停态展示用）
-  const radiusOf = {}
-  nodes.forEach((n) => (radiusOf[n.id] = n.symbolSize / 2))
   const links = graph.links
     .filter((l) => ids.has(l.source) && ids.has(l.target))
-    .map((l) => ({
-      source: l.source,
-      target: l.target,
-      label: l.label,
-      lineStyle: {
-        color: light ? 'rgba(110,103,90,0.24)' : 'rgba(190,180,160,0.2)',
-        width: 1,
-        curveness: 0.05,
-      },
-    }))
+    .filter((l) => activeTypes.value.has(l.type))
+    .map((l) => {
+      const meta = TYPE_META[l.type] || TYPE_META.enemy
+      const onPath = pathPairs?.has(l.source + '>' + l.target) || pathPairs?.has(l.target + '>' + l.source)
+      const dim = pathIds ? (onPath ? 1 : 0.12) : 1
+      return {
+        id: l.source + '>' + l.target,
+        source: l.source,
+        target: l.target,
+        label: l.label,
+        lineStyle: {
+          color: meta.color,
+          width: (0.8 + (l.strength || 2) * 0.35) * (onPath ? 2.2 : 1),
+          opacity: (light ? 0.5 : 0.55) * dim,
+          curveness: 0.05,
+          type: meta.dash ? 'dashed' : 'solid',
+        },
+      }
+    })
+  const series = {
+    type: 'graph',
+    layout: layoutMode.value,
+    // 原生 roam：滚轮以光标为中心缩放、双指捏合、节点拖拽平移
+    roam: true,
+    data: nodes,
+    links,
+    animationDurationUpdate: 300,
+    animationEasingUpdate: 'cubicOut',
+    edgeSymbol: ['none', 'circle'],
+    edgeSymbolSize: [0, 3],
+    edgeLabel: {
+      show: false,
+      formatter: (p) => p.data.label || '',
+      color: light ? 'rgba(60,52,40,0.95)' : 'rgba(235,225,205,0.95)',
+      fontSize: 10.5,
+      fontFamily: '"Noto Sans SC", sans-serif',
+      backgroundColor: light ? 'rgba(250,244,231,0.9)' : 'rgba(12,12,12,0.82)',
+      borderColor: light ? 'rgba(60,52,40,0.15)' : 'rgba(255,255,255,0.12)',
+      borderWidth: 1,
+      borderRadius: 10,
+      padding: [3, 8],
+      distance: 8,
+    },
+    emphasis: {
+      focus: 'adjacency',
+      blurScope: 'coordinateSystem',
+      scale: 1.12,
+      itemStyle: { shadowBlur: 24, shadowColor: '#9d2235' },
+      lineStyle: { width: 1.8, color: '#b8860b', opacity: 0.9 },
+      edgeLabel: { show: true, color: '#b8860b', fontSize: 11 },
+      label: { color: '#ffffff', fontSize: 12 },
+    },
+    lineStyle: { width: 1 },
+    label: { show: true },
+  }
+  if (layoutMode.value === 'force') {
+    series.force = {
+      repulsion: repulsion.value,
+      edgeLength: edgeLen.value,
+      gravity: 0.08,
+      friction: 0.6,
+      layoutAnimation: true,
+    }
+  }
   return {
     backgroundColor: 'transparent',
     grid: { left: 8, right: 8, top: 8, bottom: 8 },
     xAxis: { type: 'value', min: 0, max: 100, show: false },
     yAxis: { type: 'value', min: 0, max: 100, show: false },
     tooltip: { show: false },
-    series: [
-      {
-        type: 'graph',
-        layout: 'none',
-        // 原生 roam：滚轮以光标为中心缩放、双指捏合、节点拖拽平移（顶级工具手感）
-        roam: true,
-        data: nodes,
-        links,
-        animationDurationUpdate: 300,
-        animationEasingUpdate: 'cubicOut',
-        edgeSymbol: ['none', 'circle'],
-        edgeSymbolSize: [0, 3],
-        // 关系标签默认隐藏：默认视图 = 干净网络；悬停节点/连线时浮现（全球顶尖网络图标准，彻底消除重叠）
-        edgeLabel: {
-          show: false,
-          formatter: (p) => p.data.label || '',
-          color: light ? 'rgba(60,52,40,0.95)' : 'rgba(235,225,205,0.95)',
-          fontSize: 10.5,
-          fontFamily: '"Noto Sans SC", sans-serif',
-          backgroundColor: light ? 'rgba(250,244,231,0.9)' : 'rgba(12,12,12,0.82)',
-          borderColor: light ? 'rgba(60,52,40,0.15)' : 'rgba(255,255,255,0.12)',
-          borderWidth: 1,
-          borderRadius: 10,
-          padding: [3, 8],
-          distance: 8,
-        },
-        emphasis: {
-          focus: 'adjacency',
-          blurScope: 'coordinateSystem',
-          scale: 1.12,
-          itemStyle: { shadowBlur: 24, shadowColor: '#9d2235' },
-          lineStyle: { width: 1.8, color: '#b8860b', opacity: 0.9 },
-          edgeLabel: { show: true, color: '#b8860b', fontSize: 11 },
-          label: { color: '#ffffff', fontSize: 12 },
-        },
-        lineStyle: { color: light ? 'rgba(110,103,90,0.22)' : 'rgba(190,180,160,0.18)', width: 1 },
-        label: { show: true },
-      },
-    ],
+    series: [series],
   }
 }
 
@@ -234,13 +442,23 @@ onMounted(async () => {
   chart.setOption(buildOption({ center: true }), true)
   setTimeout(() => chart.setOption(buildOption(), true), 120)
   chart.on('click', (p) => {
-    if (p.dataType === 'node') openPanel(p.data.id)
+    if (p.dataType !== 'node') return
+    if (pathMode.value) {
+      if (!pathStart.value) {
+        pathStart.value = p.data.id
+        chart?.setOption(buildOption(), false)
+      } else {
+        computePath(pathStart.value, p.data.id)
+        pathStart.value = null
+      }
+      return
+    }
+    openPanel(p.data.id)
   })
-  // 窗口尺寸变化自适应（防止画布被 CSS 非等比拉伸导致圆形变椭圆）
+  // 窗口尺寸变化自适应
   resizeObs = new ResizeObserver(() => chart && chart.resize())
   resizeObs.observe(chartEl.value)
   window.addEventListener('resize', onWinResize)
-  // 加载屏消失、布局稳定后各补一次 resize（兜底非等比拉伸）
   resizeTimer = setTimeout(() => chart?.resize(), 3500)
   resizeTimer2 = setTimeout(() => chart?.resize(), 6000)
 
@@ -252,7 +470,6 @@ onMounted(async () => {
 
   const pxPerUnit = () => {
     const rect = el.getBoundingClientRect()
-    // grid 左右各留 8%，坐标 0-100 映射到 grid 宽度
     return (rect.width * 0.84) / 100
   }
   const onPointerDown = (e) => {
@@ -261,7 +478,6 @@ onMounted(async () => {
     const coord = chart?.convertFromPixel({ seriesIndex: 0 }, [e.clientX - rect.left, e.clientY - rect.top])
     let hitNode = false
     if (coord && Number.isFinite(coord[0])) {
-      // 命中检测：节点半径 + 余量（数据坐标系单位）
       const thr = (64 / 2 + 6) / pxPerUnit()
       hitNode = graph.nodes.some((n) => Math.hypot(coord[0] - n.x, coord[1] - n.y) < thr)
     }
@@ -296,7 +512,7 @@ watch(theme, () => {
   if (chart) chart.setOption(buildOption(), true)
 })
 
-// 重置视图：恢复初始缩放与位置（notMerge 清空 roam 变换）
+// 重置视图：恢复初始缩放与位置
 function resetView() {
   if (!chart) return
   chart.setOption(buildOption(), true)
@@ -309,7 +525,6 @@ function openPanel(id) {
   if (!c) return
   selected.value = c
   gsap.fromTo(panelEl.value, { x: 420, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' })
-  // 签名细节：简介打字机逐字浮现（电报母题）
   briefType?.kill?.()
   if (briefEl.value && !prefersReduced) {
     briefType = typewriter(briefEl.value, c.brief, { speed: 9 })
@@ -332,6 +547,7 @@ function toggleFaction(f) {
 onBeforeUnmount(() => {
   clearTimeout(resizeTimer)
   clearTimeout(resizeTimer2)
+  clearInterval(eraTimer)
   window.removeEventListener('resize', onWinResize)
   roamCleanup?.()
   resizeObs?.disconnect()
@@ -342,29 +558,121 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="page-wrap !pt-16 !pb-0 h-screen flex flex-col">
-    <div class="flex items-center gap-4 mb-4">
+    <div class="flex items-center gap-4 mb-4 flex-wrap">
       <SealStamp text="关系图谱" />
       <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]">人物关系图谱</h2>
       <span class="file-label">WHO IS KITE · WHO IS SHADOW</span>
     </div>
     <div class="flex-1 flex flex-col lg:flex-row gap-0 min-h-0">
-      <!-- 图谱区域：谍战网格背景 -->
-      <div class="flex-1 relative min-h-[420px] border border-[#2a2520] bg-[#0b0b0b]" role="application" aria-label="人物关系图谱：滚轮缩放，拖拽平移，点击节点查看档案；也可使用右侧人物列表键盘操作" style="background: radial-gradient(ellipse 70% 55% at 50% 38%, rgba(157,34,53,0.07), transparent 62%), radial-gradient(ellipse 55% 45% at 82% 88%, rgba(30,74,82,0.06), transparent 60%);">
-        <div ref="chartEl" class="absolute inset-0" style="touch-action: none;"></div>
-        <div class="absolute top-3 left-3 font-mono text-[10px] tracking-[0.25em] text-[#555048] pointer-events-none">KITE-MAP · 滚轮/双指局部缩放 · 拖拽平移 · 点击节点查看档案</div>
-        <!-- 视图重置 -->
-        <div class="absolute top-3 right-3 z-10">
+      <!-- 图谱区域 -->
+      <div class="flex-1 relative min-h-[420px] border border-[#2a2520] bg-[#0b0b0b]" style="background: radial-gradient(ellipse 70% 55% at 50% 38%, rgba(157,34,53,0.07), transparent 62%), radial-gradient(ellipse 55% 45% at 82% 88%, rgba(30,74,82,0.06), transparent 60%);">
+        <div
+          ref="chartEl"
+          class="absolute inset-0"
+          style="touch-action: none;"
+          tabindex="0"
+          role="application"
+          aria-label="人物关系图谱：滚轮缩放，拖拽平移，方向键移动焦点，回车查看档案，点击节点查看档案；也可使用右侧人物列表"
+          @keydown="onKey"
+        ></div>
+        <div class="absolute top-3 left-3 font-mono text-[10px] tracking-[0.25em] text-[#555048] pointer-events-none">KITE-MAP · 滚轮/双指缩放 · 拖拽平移 · 点击节点查看档案</div>
+
+        <!-- 统计条 -->
+        <div class="absolute top-3 left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[0.15em] text-[#8a8275] pointer-events-none bg-black/40 border border-[#2a2520] px-3 py-1 hidden md:block">
+          {{ stats.nodes }} 节点 · {{ stats.edges }} 连线 · {{ stats.factions }} 阵营 · 核心：{{ stats.top }}
+        </div>
+
+        <!-- 顶部工具条 -->
+        <div class="absolute top-3 right-3 z-10 flex gap-1.5 flex-wrap justify-end max-w-[62%]">
           <button
-            class="px-3 py-1.5 border border-[#2a2520] bg-[#0e0e0e]/85 backdrop-blur font-mono text-[11px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] transition-colors"
+            class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors"
+            :class="pathMode ? 'border-[#b8860b] text-[#b8860b] bg-[#b8860b]/10' : 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235]'"
+            @click="togglePathMode"
+          >
+            路径模式
+          </button>
+          <button
+            class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors"
+            :class="layoutMode === 'force' ? 'border-[#b8860b] text-[#b8860b] bg-[#b8860b]/10' : 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235]'"
+            @click="layoutMode = layoutMode === 'force' ? 'none' : 'force'"
+          >
+            力导向
+          </button>
+          <button
+            class="px-2.5 py-1.5 border border-[#2a2520] bg-[#0e0e0e]/85 backdrop-blur font-mono text-[10px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] transition-colors"
             @click="resetView"
           >
             重置视图
           </button>
         </div>
-        <div class="absolute bottom-3 left-3 flex gap-4 font-mono text-[10px] tracking-[0.15em] text-[#8a8275] pointer-events-none">
-          <span v-for="(v, k) in FACTION" :key="k" class="flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full" :style="{ background: v.color }"></span>{{ v.label }}
-          </span>
+
+        <!-- 路径信息条 -->
+        <div
+          v-if="pathResult"
+          class="absolute top-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#b8860b] bg-[#0e0e0e]/90 text-[#b8860b] whitespace-nowrap"
+        >
+          <template v-if="pathResult.hops >= 0">
+            最短路径：{{ pathResult.ids.map((id) => charMap[id]?.name || id).join(' → ') }} · {{ pathResult.hops }} 跳
+          </template>
+          <template v-else>两节点在当前图谱中不连通</template>
+        </div>
+        <div
+          v-if="pathMode && pathStart"
+          class="absolute top-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#d8a0a8] bg-[#0e0e0e]/90 text-[#d8a0a8] whitespace-nowrap"
+        >
+          起点：{{ charMap[pathStart]?.name }} — 请点击终点
+        </div>
+
+        <!-- 底部图例：阵营 + 关系类型（类型可点击筛选） -->
+        <div class="absolute bottom-3 left-3 z-10 flex flex-col gap-1.5 max-w-[48%]">
+          <div class="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] tracking-[0.15em] text-[#8a8275] pointer-events-none">
+            <span v-for="(v, k) in FACTION" :key="k" class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full" :style="{ background: v.color }"></span>{{ v.label }}
+            </span>
+          </div>
+          <div class="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] tracking-[0.1em]">
+            <button
+              v-for="(m, k) in TYPE_META"
+              :key="k"
+              class="flex items-center gap-1.5 transition-colors"
+              :class="activeTypes.has(k) ? 'text-[#8a8275]' : 'text-[#3a352c]'"
+              @click="toggleType(k)"
+            >
+              <span class="w-3.5 h-[2px]" :style="{ background: m.color, opacity: activeTypes.has(k) ? 1 : 0.25 }"></span>
+              {{ m.label }}
+            </button>
+          </div>
+        </div>
+
+        <!-- 时间轴：集数演化 -->
+        <div class="absolute bottom-3 right-3 z-10 flex items-center gap-2.5 bg-[#0e0e0e]/85 border border-[#2a2520] px-3 py-1.5">
+          <button class="text-[#8a8275] hover:text-[#e8dcc8] transition-colors" :aria-label="epPlaying ? '暂停演化' : '播放演化'" @click="toggleEraPlay">
+            <Pause v-if="epPlaying" :size="13" />
+            <Play v-else :size="13" />
+          </button>
+          <input
+            type="range"
+            min="1"
+            max="46"
+            step="1"
+            v-model.number="ep"
+            class="w-32 md:w-44 accent-[#9d2235]"
+            :aria-label="`剧情集数 ${ep}`"
+          />
+          <span class="font-mono text-[10px] tracking-[0.15em] text-[#8a8275] w-[74px]">EP {{ String(ep).padStart(2, '0') }}/46</span>
+        </div>
+
+        <!-- 物理参数（力导向模式） -->
+        <div
+          v-if="layoutMode === 'force'"
+          class="absolute bottom-12 right-3 z-10 flex items-center gap-4 bg-[#0e0e0e]/90 border border-[#2a2520] px-3 py-2 font-mono text-[10px] tracking-[0.1em] text-[#8a8275]"
+        >
+          <label class="flex items-center gap-2">斥力
+            <input type="range" min="60" max="400" step="10" v-model.number="repulsion" class="w-20 md:w-28 accent-[#9d2235]" />
+          </label>
+          <label class="flex items-center gap-2">连线
+            <input type="range" min="40" max="220" step="10" v-model.number="edgeLen" class="w-20 md:w-28 accent-[#9d2235]" />
+          </label>
         </div>
       </div>
       <!-- 侧边栏：玻璃拟态 -->
@@ -404,15 +712,14 @@ onBeforeUnmount(() => {
             <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectNonePeople">全不选</button>
           </div>
         </div>
-        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#555048]">点击名字行 = 勾选/取消（控制图谱显示）· 点击右侧详情图标查看档案</div>
+        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#555048]">{{ pathMode ? '路径模式：点击人物行选择起点 → 终点' : '点击名字行 = 勾选/取消（控制图谱显示）· 点击右侧详情图标查看档案' }}</div>
         <div class="space-y-0.5">
-          <!-- 行点击 = 勾选切换；详情为独立按钮 -->
           <div
-            v-for="n in sortedList"
+            v-for="(n, i) in sortedList"
             :key="n.id"
             class="w-full flex items-center gap-2.5 px-2.5 py-2 text-[12px] border-l-2 cursor-pointer select-none transition-colors"
-            :class="selected?.id === n.id ? 'border-[#9d2235] bg-[#161616]' : 'border-transparent hover:bg-[#161616]'"
-            @click="togglePerson(n.id)"
+            :class="selected?.id === n.id ? 'border-[#9d2235] bg-[#161616]' : i === kbIndex && focusNodeId === n.id ? 'border-[#b8860b] bg-[#161616]' : pathMode && pathStart === n.id ? 'border-[#d8a0a8] bg-[#161616]' : 'border-transparent hover:bg-[#161616]'"
+            @click="onRowClick(n)"
           >
             <span
               class="w-3.5 h-3.5 border grid place-items-center shrink-0 transition-colors"
@@ -466,4 +773,3 @@ onBeforeUnmount(() => {
     </Teleport>
   </div>
 </template>
-
