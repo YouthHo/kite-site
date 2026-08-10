@@ -7,6 +7,12 @@
    ============================================================ */
 
 :root {
+  /* 设计令牌：动效节奏统一 */
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 400ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
   --bg: #080808;
   --card: #121212;
   --card2: #161616;
@@ -62,12 +68,22 @@ body {
   background: #9d2235;
 }
 
-/* ---------- 宋体标题基础 ---------- */
+/* ---------- 宋体标题基础（仅用于 ≥20px 的展示级标题） ---------- */
 .serif-title {
   font-family: 'Noto Serif SC', 'Songti SC', SimSun, serif;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-shadow: 0 1px 12px rgba(0, 0, 0, 0.8);
+}
+
+/* 小字号（≤16px）一律使用无衬线，避免宋体小字发虚 */
+.serif-title {
+  font-size: inherit;
+}
+.title-sans {
+  font-family: 'Noto Sans SC', system-ui, 'Microsoft YaHei', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 /* 渐变分割线：中间亮两边暗 */

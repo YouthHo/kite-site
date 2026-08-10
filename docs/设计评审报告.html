@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>风筝专题站 · 国际评审视角设计自检报告</title>
+<style>
+  :root{--bg:#080808;--card:#121212;--blood:#9d2235;--gold:#b8860b;--paper:#e8dcc8;--ink:#8a8275;--dim:#555048;--line:#2a2520}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--paper);font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.8}
+  .wrap{max-width:960px;margin:0 auto;padding:48px 24px 80px}
+  h1{font-family:"Noto Serif SC",serif;letter-spacing:.2em;font-size:26px;text-align:center}
+  .goldline{width:220px;height:1px;margin:18px auto 8px;background:linear-gradient(90deg,transparent,rgba(184,134,11,.8),transparent)}
+  .sub{text-align:center;color:var(--ink);font-family:monospace;font-size:11px;letter-spacing:.3em}
+  h2{font-size:18px;margin:40px 0 12px;display:flex;align-items:center;gap:10px}
+  h2::before{content:"";width:20px;height:2px;background:var(--blood)}
+  p{color:var(--ink);font-size:14px;margin-bottom:10px}
+  .card{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--blood);padding:16px 18px;margin-bottom:12px;border-radius:3px}
+  .card.ok{border-left-color:var(--gold)}
+  .card h3{font-size:15px;color:var(--paper);margin-bottom:6px}
+  code{background:#0c0c0c;border:1px solid var(--line);padding:1px 7px;font-size:12.5px;color:#d8a0a8;font-family:Consolas,monospace}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0 18px}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;color:var(--ink)}
+  th{color:var(--paper);background:#0e0e0e;font-weight:500;letter-spacing:.08em}
+  .verdict{background:#1a1010;border:1px solid #9d2235;padding:18px;margin:20px 0}
+  .foot{text-align:center;color:var(--dim);font-size:10px;letter-spacing:.3em;font-family:monospace;margin-top:48px;border-top:1px solid var(--line);padding-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>国际评审视角 · 设计自检报告</h1>
+  <div class="goldline"></div>
+  <div class="sub">2026-08-10 · 以第三方评审委员会身份审查 · 本轮整改已执行</div>
+
+  <div class="verdict">
+    <h3 style="color:#e8dcc8">总体结论</h3>
+    <p style="color:#d8a0a8">视觉完成度：B+ → A-。系统性问题已清除（字体分层、字号散乱、等宽滥用、动效拖沓），结构性短板仍有三项（真实素材、移动端走查、交互深度），达到国际顶尖（Awwwards 级）仍需素材与实测闭环。</p>
+  </div>
+
+  <h2>评审发现与整改对照</h2>
+
+  <h3>① 字体系统（严重）</h3>
+  <div class="card">
+    <p>评审意见：小字号（≤16px）误用宋体导致发虚；全站 137 处零散字号；50+ 处等宽字体滥用，破坏现代感。</p>
+    <table>
+      <tr><th>整改</th><th>结果</th></tr>
+      <tr><td>新增 <code>.title-sans</code> 无衬线标题类，小标题全部去宋体</td><td>✅ 4 处修正</td></tr>
+      <tr><td><code>.font-mono</code> 全局覆盖为无衬线（仅电报码/光标保留等宽）</td><td>✅ 50+ 处生效</td></tr>
+      <tr><td>建立字号分层原则：宋体仅用于 ≥20px 展示标题</td><td>✅ 已写入 MEMORY.md</td></tr>
+    </table>
+  </div>
+
+  <h3>② 首页构图（严重）</h3>
+  <div class="card">
+    <p>评审意见：8 个带边框的图标卡片像管理后台门户，不像电影官网；图标旋转入场动画廉价。</p>
+    <table>
+      <tr><th>整改</th><th>结果</th></tr>
+      <tr><td>卡片改为编辑式索引：编号 01-08 + 细线分隔 + 悬停标题变色 + 箭头浮现</td><td>✅ 已上线</td></tr>
+      <tr><td>删除图标与旋转入场动画，改用统一错落淡入</td><td>✅ 已上线</td></tr>
+    </table>
+  </div>
+
+  <h3>③ 动效节奏（中等）</h3>
+  <div class="card">
+    <p>评审意见：入场动画累计时长过长、stagger 过大，与顶尖网站的"快而稳"不符。</p>
+    <table>
+      <tr><th>整改</th><th>结果</th></tr>
+      <tr><td>全局 pageEnter 0.55s/24px → 0.35s/12px，stagger 减半</td><td>✅</td></tr>
+      <tr><td>历史页切换 0.6s+stagger → 0.35s 无 stagger</td><td>✅</td></tr>
+      <tr><td>详情面板、图片模糊入场提速</td><td>✅</td></tr>
+    </table>
+  </div>
+
+  <h3>④ 一致性（中等）</h3>
+  <div class="card">
+    <p>评审意见：颜色、间距、圆角存在随机漂移；装饰元素（条纹/胶片孔/印章/电报码）密度不均。</p>
+    <table>
+      <tr><th>整改</th><th>结果</th></tr>
+      <tr><td>新增设计令牌（--dur-fast/base/slow、--ease-out/inout）</td><td>✅</td></tr>
+      <tr><td>档案条纹透明度收敛，装饰密度下降</td><td>✅</td></tr>
+    </table>
+  </div>
+
+  <h3>⑤ 浅色主题与可读性（严重，已修复）</h3>
+  <div class="card ok">
+    <p>on-media 与浅色映射的 !important 冲突曾导致多处文字隐形（首页副标题、名场面角标、EP 标签）。已通过"去掉冲突色类 + 生成器末位兜底"根治。</p>
+  </div>
+
+  <h2>遗留短板（需素材与实测）</h2>
+  <table>
+    <tr><th>短板</th><th>影响</th><th>下一步</th></tr>
+    <tr><td>剧照/演员写真为占位图</td><td>艺术完成度天花板受限</td><td>用户提供授权素材，按 README 对照表替换</td></tr>
+    <tr><td>移动端未做真机走查</td><td>潜在触控/排版问题</td><td>提供一台手机访问线上地址，逐页反馈</td></tr>
+    <tr><td>Google 字体在国内不稳定</td><td>国内字体回退到系统宋体</td><td>自托管字体文件（方案已备）</td></tr>
+    <tr><td>交互深度（收藏/评论/搜索热词）</td><td>信息站可玩性</td><td>需引入后端/第三方服务</td></tr>
+  </table>
+
+  <div class="foot">KITE FILES · 设计自检 · 2026</div>
+</div>
+</body>
+</html>

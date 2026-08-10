@@ -124,7 +124,7 @@ onBeforeUnmount(() => {
                 }"
               >
                 <div class="text-center px-2">
-                  <div class="serif-title text-[13px] leading-5 text-[#e8dcc8]">{{ node.name }}</div>
+                  <div class="title-sans text-[13px] leading-5 text-[#e8dcc8]">{{ node.name }}</div>
                   <div class="mt-0.5 font-mono text-[9px] tracking-[0.1em] text-[#8a8275]">{{ node.role }}</div>
                 </div>
                 <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-[#080808]" :style="{ background: node.level === 0 ? '#b8860b' : currentOrg.color }"></span>

@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted, onBeforeUnmount, ref } from 'vue'
 import gsap from 'gsap'
-import { Share2, GitBranch, FileText, Clapperboard, Calendar, Landmark, Library, Quote } from 'lucide-vue-next'
 import ScanLine from '@/components/ScanLine.vue'
 import ShareButton from '@/components/ShareButton.vue'
 import { pageEnter, prefersReduced } from '@/utils/anim'
@@ -11,14 +10,14 @@ const heroTitle = ref(null)
 let tweens = []
 
 const cards = [
-  { to: '/graph', icon: GitBranch, title: '人物关系图谱', desc: '谁是风筝 · 谁是影子', faction: 'junton' },
-  { to: '/characters', icon: FileText, title: '角色档案库', desc: '30 份绝密人物档案', faction: 'underground' },
-  { to: '/cast', icon: Clapperboard, title: '演员阵容', desc: '柳云龙 / 罗海琼 / 李小冉', faction: 'zhongtong' },
-  { to: '/episodes', icon: Library, title: '分集剧情', desc: '46 集 · 完整剧情解密', faction: 'gongan' },
-  { to: '/timeline', icon: Calendar, title: '全剧时间线', desc: '1927—1980 时代长卷', faction: 'junton' },
-  { to: '/architecture', icon: Landmark, title: '势力架构', desc: '军统 / 中统 / 中共战线', faction: 'underground' },
-  { to: '/history', icon: Library, title: '历史背景', desc: '真实历史 · 四类档案', faction: 'civilian' },
-  { to: '/scenes', icon: Quote, title: '名场面·台词', desc: '37 个名场面 · 57 句台词', faction: 'zhongtong' },
+  { to: '/graph', title: '人物关系图谱', desc: '谁是风筝 · 谁是影子' },
+  { to: '/characters', title: '角色档案库', desc: '30 份绝密人物档案' },
+  { to: '/cast', title: '演员阵容', desc: '柳云龙 / 罗海琼 / 李小冉' },
+  { to: '/episodes', title: '分集剧情', desc: '46 集 · 完整剧情解密' },
+  { to: '/timeline', title: '全剧时间线', desc: '1927—1980 时代长卷' },
+  { to: '/architecture', title: '势力架构', desc: '军统 / 中统 / 中共战线' },
+  { to: '/history', title: '历史背景', desc: '真实历史 · 四类档案' },
+  { to: '/scenes', title: '名场面·台词', desc: '37 个名场面 · 57 句台词' },
 ]
 
 onMounted(() => {
@@ -44,9 +43,8 @@ onMounted(() => {
   tweens.push(
     gsap.to('.telegraph', { opacity: 0.08, duration: 0.4, repeat: -1, yoyo: true, stagger: 0.3, ease: 'sine.inOut', delay: 3 })
   )
-  // 入口卡片错落入场（含图标旋转）
-  pageEnter(document.querySelector('.hero-cards'), { stagger: 0.08, y: 34, delay: 2.3 })
-  gsap.fromTo('.hero-card-icon', { rotate: -140, scale: 0 }, { rotate: 0, scale: 1, duration: 0.7, stagger: 0.08, delay: 2.5, ease: 'back.out(1.8)' })
+  // 入口索引错落入场
+  pageEnter(document.querySelector('.hero-cards'), { stagger: 0.04, y: 14, delay: 2.2 })
 })
 
 onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
@@ -85,18 +83,18 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
       <p class="hero-sub mt-6 text-[13px] tracking-[0.4em] text-[#b8860b] on-media">信仰至上 · 半生潜伏</p>
       <p class="hero-sub mt-3 text-[11px] tracking-[0.3em] text-[#8a8275] on-media">THE KITE · 2017 · 柳云龙 导演作品</p>
 
-      <!-- 功能入口卡片 8 个 -->
-      <div class="hero-cards grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-16 w-full max-w-6xl">
+      <!-- 功能入口：编辑式索引（无边框盒，编号+细线+悬停变色） -->
+      <div class="hero-cards grid grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-12 mt-24 w-full max-w-6xl">
         <router-link
-          v-for="c in cards"
+          v-for="(c, i) in cards"
           :key="c.to"
           :to="c.to"
-          class="k-card relative block p-6 md:p-7 group"
+          class="group block border-t border-[#2a2520] pt-5 relative transition-colors duration-300 hover:border-[#9d2235]"
         >
-          <component :is="c.icon" :size="24" class="hero-card-icon text-[#8a8275] group-hover:text-[#9d2235] group-hover:drop-shadow-[0_0_10px_rgba(157,34,53,0.8)] transition-all duration-300" />
-          <div class="serif-title text-[15px] md:text-[17px] mt-4 text-[#e8dcc8]">{{ c.title }}</div>
-          <div class="mt-1.5 text-[12px] md:text-[13px] text-[#8a8275] leading-6">{{ c.desc }}</div>
-          <span class="absolute top-3 right-4 font-mono text-[9px] tracking-[0.2em] opacity-0 group-hover:opacity-60 transition-opacity" :style="{ color: `var(--${c.faction})` }">FILE-{{ c.faction.toUpperCase() }}</span>
+          <div class="text-[11px] tracking-[0.3em] text-[#555048] group-hover:text-[#9d2235] transition-colors duration-200">{{ String(i + 1).padStart(2, '0') }}</div>
+          <div class="title-sans text-[17px] mt-3 text-[#e8dcc8] group-hover:text-[#f0e6d2] transition-colors duration-200">{{ c.title }}</div>
+          <div class="mt-1.5 text-[12px] leading-5 text-[#8a8275]">{{ c.desc }}</div>
+          <span class="absolute right-0 top-5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-[#9d2235] text-[15px]">→</span>
         </router-link>
       </div>
     </div>
