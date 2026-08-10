@@ -2,7 +2,11 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import * as echarts from 'echarts'
+// ECharts 按需引入：时间线统计图仅用 BarChart
+import * as echarts from 'echarts/core'
+import { BarChart } from 'echarts/charts'
+import { CanvasRenderer } from 'echarts/renderers'
+echarts.use([BarChart, CanvasRenderer])
 import timeline from '@/data/timeline.json'
 import SealStamp from '@/components/SealStamp.vue'
 import TimelineNode from '@/components/TimelineNode.vue'

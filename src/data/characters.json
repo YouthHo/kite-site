@@ -70,7 +70,7 @@
       { "id": "tian-hu", "rel": "中统上级" }
     ],
     "episodes": [18, 26],
-    "image": "/images/actors/actor_li_xiaoran.jpg"
+    "image": "/images/actors/actor_li_xiaoran.webp"
   },
   {
     "id": "gong-shu",
@@ -186,7 +186,7 @@
       { "id": "gao-zhanlong", "rel": "仇人" }
     ],
     "episodes": [1, 5],
-    "image": "/images/actors/actor_zhang_meng.jpg"
+    "image": "/images/actors/actor_zhang_meng.webp"
   },
   {
     "id": "zeng-moyi",
@@ -503,7 +503,7 @@
       { "id": "mao-renfeng", "rel": "继任者" }
     ],
     "episodes": [1, 13],
-    "image": "/images/history/hist_戴笠.jpg"
+    "image": "/images/history/hist_戴笠.webp"
   },
   {
     "id": "mao-renfeng",
@@ -525,7 +525,7 @@
       { "id": "daili", "rel": "前任" }
     ],
     "episodes": [4, 22],
-    "image": "/images/history/hist_mao_renfeng.jpg"
+    "image": "/images/history/hist_mao_renfeng.webp"
   },
   {
     "id": "qian-zhongwen",
@@ -659,4 +659,5 @@
     "image": "/images/placeholders/character.svg"
   }
 ]
+
 

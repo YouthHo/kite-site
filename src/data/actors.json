@@ -24,7 +24,7 @@
     "roleNote": "从奉命色诱郑耀先的中统“剃刀”，到割腕毁容以死护夫的痴情妻子，全剧最虐心的角色之一。",
     "bio": "中国内地女演员，毕业于北京舞蹈学院，曾跳九年民族舞。凭《像雾像雨又像风》《别了，温哥华》等剧成名，是业内公认的“民国剧女神”。",
     "works": ["像雾像雨又像风", "别了，温哥华", "凤穿牡丹", "风筝"],
-    "image": "/images/actors/actor_li_xiaoran.jpg"
+    "image": "/images/actors/actor_li_xiaoran.webp"
   },
   {
     "id": "qi-huan",
@@ -60,7 +60,7 @@
     "roleNote": "郑耀先的初恋，潜伏中统电讯处的女地下党员，出场不多却让人意难平。",
     "bio": "中国内地女演员，毕业于北京电影学院。因《美人心计》《夏家三千金》等剧为观众熟知。",
     "works": ["美人心计", "夏家三千金", "古剑奇谭", "风筝"],
-    "image": "/images/actors/actor_zhang_meng.jpg"
+    "image": "/images/actors/actor_zhang_meng.webp"
   },
   {
     "id": "lei-han",
@@ -144,4 +144,5 @@
     "image": "/images/placeholders/character.svg"
   }
 ]
+
 

@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { onMounted, onBeforeUnmount, ref } from 'vue'
 import gsap from 'gsap'
 import ScanLine from '@/components/ScanLine.vue'
@@ -56,7 +56,7 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
     <div class="absolute inset-0 overflow-hidden">
       <img
         ref="heroBg"
-        src="/images/history/hist_chongqing_bombing.jpg"
+        src="/images/history/hist_chongqing_bombing.webp"
         alt="重庆 1940s 历史影像（公版照片）"
         class="w-full h-full object-cover opacity-25"
         style="filter: blur(2px) saturate(0.6)"
@@ -107,3 +107,4 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
     </div>
   </div>
 </template>
+

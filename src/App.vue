@@ -8,6 +8,7 @@ import SearchModal from '@/components/SearchModal.vue'
 import ProgressSetting from '@/components/ProgressSetting.vue'
 import BackToTop from '@/components/BackToTop.vue'
 import FilmGrain from '@/components/FilmGrain.vue'
+import CustomCursor from '@/components/CustomCursor.vue'
 import LoadingScreen from '@/components/LoadingScreen.vue'
 import PageTransition from '@/components/PageTransition.vue'
 import { refreshTriggers } from '@/utils/anim'
@@ -71,6 +72,7 @@ onBeforeUnmount(() => {
 
 <template>
   <LoadingScreen v-if="loading" @done="onLoaded" />
+  <CustomCursor />
   <FilmGrain />
 
   <!-- 路由切换进度条 -->
