@@ -79,7 +79,7 @@ onBeforeUnmount(() => crossTween?.kill())
           <div class="text-[11px] leading-5 on-media opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-1" style="text-shadow: 0 1px 6px rgba(0,0,0,0.9);">{{ s.desc }}</div>
         </figcaption>
         <!-- 胶片角标 -->
-        <span class="absolute top-3 left-3 font-mono text-[9px] tracking-[0.25em] text-[#e8dcc8]/50 border border-[#e8dcc8]/20 px-1.5 py-0.5">SCENE-{{ s.id.toUpperCase() }}</span>
+        <span class="absolute top-3 left-3 text-[10px] tracking-[0.2em] on-media opacity-50 border border-[#e8dcc8]/20 px-1.5 py-0.5">SCENE-{{ s.id.toUpperCase() }}</span>
       </figure>
     </div>
 

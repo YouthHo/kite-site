@@ -47,7 +47,7 @@ onBeforeUnmount(() => crossTween?.kill())
       <div>
         <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>历史背景</h2>
         <div class="gold-line w-40 mt-3" data-enter></div>
-        <p class="mt-3 font-mono text-[11px] tracking-[0.3em] text-[#8a8275]" data-enter>真实历史档案 · 四类分类 · 点击卡片展开</p>
+        <p class="mt-3 text-[12px] tracking-[0.2em] text-[#8a8275]" data-enter>真实历史档案 · 四类分类 · 点击卡片展开</p>
       </div>
     </div>
 

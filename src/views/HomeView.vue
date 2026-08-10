@@ -82,8 +82,8 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
         </h1>
       </div>
       <div class="hero-goldline gold-line w-[280px] md:w-[420px] mt-6 origin-center"></div>
-      <p class="hero-sub mt-6 font-mono text-[12px] md:text-sm tracking-[0.5em] text-[#b8860b] on-media">信仰至上 · 半生潜伏</p>
-      <p class="hero-sub mt-3 font-mono text-[10px] tracking-[0.4em] text-[#8a8275] on-media">THE KITE · 2017 · 柳云龙 导演作品</p>
+      <p class="hero-sub mt-6 text-[13px] tracking-[0.4em] text-[#b8860b] on-media">信仰至上 · 半生潜伏</p>
+      <p class="hero-sub mt-3 text-[11px] tracking-[0.3em] text-[#8a8275] on-media">THE KITE · 2017 · 柳云龙 导演作品</p>
 
       <!-- 功能入口卡片 8 个 -->
       <div class="hero-cards grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-16 w-full max-w-6xl">
