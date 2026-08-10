@@ -52,17 +52,19 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
 
 <template>
   <div class="relative min-h-screen overflow-hidden">
-    <!-- 全屏背景：占位图（替换：public/hero.jpg 或改为正式剧照） -->
+    <!-- 背景：历史影像低透明度铺底 + 深色渐变保证文字永远可读 -->
     <div class="absolute inset-0 overflow-hidden">
       <img
         ref="heroBg"
         src="/images/history/hist_chongqing_bombing.jpg"
         alt="重庆 1940s 历史影像（公版照片）"
-        class="w-full h-full object-cover"
-        style="filter: brightness(0.5) contrast(1.15) saturate(0.7)"
+        class="w-full h-full object-cover opacity-25"
+        style="filter: blur(2px) saturate(0.6)"
       />
+      <!-- 深色渐变层：文字可读性的根基 -->
+      <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(8,8,8,0.88) 0%, rgba(8,8,8,0.6) 38%, rgba(8,8,8,0.9) 100%), radial-gradient(ellipse at 50% 40%, rgba(157,34,53,0.10), transparent 65%)"></div>
       <!-- 暗角 -->
-      <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 30%, rgba(8,8,8,0.9) 100%)"></div>
+      <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 35%, rgba(8,8,8,0.85) 100%)"></div>
       <!-- 呼吸层 -->
       <div class="hero-breathe absolute inset-0" style="background: radial-gradient(ellipse at 50% 40%, rgba(30,74,82,0.10), transparent 70%)"></div>
     </div>
@@ -91,9 +93,9 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
           :to="c.to"
           class="group block border-t border-[#2a2520] pt-5 relative transition-colors duration-300 hover:border-[#9d2235]"
         >
-          <div class="text-[11px] tracking-[0.3em] text-[#555048] group-hover:text-[#9d2235] transition-colors duration-200">{{ String(i + 1).padStart(2, '0') }}</div>
-          <div class="title-sans text-[17px] mt-3 text-[#e8dcc8] group-hover:text-[#f0e6d2] transition-colors duration-200">{{ c.title }}</div>
-          <div class="mt-1.5 text-[12px] leading-5 text-[#8a8275]">{{ c.desc }}</div>
+          <div class="text-[11px] tracking-[0.3em] text-[#8a8275] on-media group-hover:text-[#9d2235] transition-colors duration-200">{{ String(i + 1).padStart(2, '0') }}</div>
+          <div class="title-sans text-[17px] mt-3 text-[#e8dcc8] on-media group-hover:text-[#f0e6d2] transition-colors duration-200">{{ c.title }}</div>
+          <div class="mt-1.5 text-[12px] leading-5 text-[#a89f8e] on-media">{{ c.desc }}</div>
           <span class="absolute right-0 top-5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-[#9d2235] text-[15px]">→</span>
         </router-link>
       </div>

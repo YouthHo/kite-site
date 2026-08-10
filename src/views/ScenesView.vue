@@ -42,23 +42,22 @@ onBeforeUnmount(() => crossTween?.kill())
         <SealStamp :text="'名场\n面录'" />
         <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>名场面与台词</h2>
       </div>
-      <!-- 标签切换 -->
-      <div class="flex gap-1 border-b border-[#2a2520]" data-enter>
+      <!-- 标签切换：单根指示条平滑滑动（国际标准） -->
+      <div class="flex relative border-b border-[#2a2520]" data-enter>
+        <div class="absolute bottom-[-1px] left-0 w-1/2 h-[2px] bg-[#9d2235] shadow-[0_0_10px_rgba(157,34,53,0.7)] transition-transform duration-300 ease-out" :style="{ transform: tab === 'scenes' ? 'translateX(0)' : 'translateX(100%)' }"></div>
         <button
-          class="relative px-5 py-2.5 text-[13px] tracking-[0.2em] transition-colors"
+          class="relative flex-1 px-5 py-2.5 text-[13px] tracking-[0.2em] transition-colors duration-200"
           :class="tab === 'scenes' ? 'text-[#e8dcc8]' : 'text-[#555048] hover:text-[#8a8275]'"
           @click="switchTab('scenes')"
         >
           名场面
-          <span v-if="tab === 'scenes'" class="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#9d2235] shadow-[0_0_10px_rgba(157,34,53,0.7)]"></span>
         </button>
         <button
-          class="relative px-5 py-2.5 text-[13px] tracking-[0.2em] transition-colors"
+          class="relative flex-1 px-5 py-2.5 text-[13px] tracking-[0.2em] transition-colors duration-200"
           :class="tab === 'quotes' ? 'text-[#e8dcc8]' : 'text-[#555048] hover:text-[#8a8275]'"
           @click="switchTab('quotes')"
         >
           经典台词
-          <span v-if="tab === 'quotes'" class="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#9d2235] shadow-[0_0_10px_rgba(157,34,53,0.7)]"></span>
         </button>
       </div>
     </div>

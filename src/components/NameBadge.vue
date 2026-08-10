@@ -15,8 +15,16 @@ const props = defineProps({
 const color = computed(() => factionColor(props.faction))
 const cls = computed(() => {
   if (props.size === 'lg') return 'w-full h-full'
-  if (props.size === 'md') return 'w-14 h-14 text-xs'
-  return 'w-9 h-9 text-[10px]'
+  if (props.size === 'md') return 'w-14 h-14'
+  return 'w-9 h-9'
+})
+// 名字自适应：超过 2 字自动缩小字号，保证不溢出圆圈
+const badgeFont = computed(() => {
+  const n = (props.name || '').length
+  if (props.size === 'lg') return Math.round(46 - Math.max(0, n - 3) * 6)
+  const base = props.size === 'md' ? 12 : 10
+  const shrink = n >= 4 ? 0.62 : n === 3 ? 0.78 : 1
+  return Math.max(8, Math.round(base * shrink))
 })
 </script>
 
@@ -35,12 +43,12 @@ const cls = computed(() => {
     <div class="absolute bottom-2 left-3 font-mono text-[9px] tracking-[0.3em]" :style="{ color }">KITE FILE</div>
   </div>
 
-  <!-- 圆形名字徽章 -->
+  <!-- 圆形名字徽章（无衬线 + 字号自适应，防溢出） -->
   <div
     v-else
-    class="grid place-items-center rounded-full serif-title text-[#f5f2e9] shrink-0 select-none"
+    class="grid place-items-center rounded-full overflow-hidden title-sans text-[#f5f2e9] shrink-0 select-none"
     :class="cls"
-    :style="{ background: `radial-gradient(circle at 35% 30%, ${color}cc, ${color})`, border: '1px solid rgba(255,255,255,0.35)', boxShadow: `0 2px 8px ${color}55` }"
+    :style="{ background: `radial-gradient(circle at 35% 30%, ${color}cc, ${color})`, border: '1px solid rgba(255,255,255,0.3)', boxShadow: `0 2px 8px ${color}55`, fontSize: badgeFont + 'px', lineHeight: 1.2 }"
   >
     {{ name }}
   </div>

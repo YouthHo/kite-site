@@ -141,14 +141,33 @@ function buildOption({ center = false, pulse = 1 } = {}) {
         },
       }
     })
+  // 节点半径映射（用于标签避让计算）
+  const radiusOf = {}
+  nodes.forEach((n) => (radiusOf[n.id] = n.symbolSize / 2))
   const links = graph.links
     .filter((l) => ids.has(l.source) && ids.has(l.target))
-    .map((l) => ({
-      source: l.source,
-      target: l.target,
-      label: l.label,
-      lineStyle: { color: light ? 'rgba(110,103,90,0.45)' : 'rgba(138,130,117,0.42)', width: 1.2, curveness: 0.08 },
-    }))
+    .map((l) => {
+      const s = graph.nodes.find((n) => n.id === l.source)
+      const t = graph.nodes.find((n) => n.id === l.target)
+      // 标签避让：中点落入任一节点半径范围（+余量）则隐藏该标签，避免叠在圆圈上
+      const mx = (s.x + t.x) / 2
+      const my = (s.y + t.y) / 2
+      const overlap = graph.nodes.some((n) => {
+        const r = (radiusOf[n.id] || 17) / 8.5 + 1.8
+        return Math.hypot(mx - n.x, my - n.y) < r
+      })
+      return {
+        source: l.source,
+        target: l.target,
+        label: l.label,
+        label: { show: !overlap },
+        lineStyle: {
+          color: light ? 'rgba(110,103,90,0.3)' : 'rgba(190,180,160,0.25)',
+          width: 1,
+          curveness: 0.05,
+        },
+      }
+    })
   return {
     backgroundColor: 'transparent',
     grid: { left: 8, right: 8, top: 8, bottom: 8 },
@@ -166,29 +185,29 @@ function buildOption({ center = false, pulse = 1 } = {}) {
         animationDurationUpdate: 300,
         animationEasingUpdate: 'cubicOut',
         edgeSymbol: ['none', 'circle'],
-        edgeSymbolSize: [0, 4],
+        edgeSymbolSize: [0, 3],
         edgeLabel: {
           show: true,
           formatter: (p) => p.data.label || '',
-          color: light ? 'rgba(70,63,52,0.95)' : 'rgba(232,220,200,0.95)',
+          color: light ? 'rgba(60,52,40,0.92)' : 'rgba(235,225,205,0.92)',
           fontSize: 10,
-          fontFamily: '"JetBrains Mono","Noto Sans SC",monospace',
-          backgroundColor: light ? 'rgba(250,244,231,0.78)' : 'rgba(8,8,8,0.68)',
-          borderColor: light ? 'rgba(70,63,52,0.2)' : 'rgba(232,220,200,0.15)',
+          fontFamily: '"Noto Sans SC", sans-serif',
+          backgroundColor: light ? 'rgba(250,244,231,0.85)' : 'rgba(12,12,12,0.78)',
+          borderColor: light ? 'rgba(60,52,40,0.15)' : 'rgba(255,255,255,0.1)',
           borderWidth: 1,
-          borderRadius: 3,
-          padding: [2, 5],
-          distance: 10,
+          borderRadius: 10,
+          padding: [2, 7],
+          distance: 8,
         },
         emphasis: {
           focus: 'adjacency',
           blurScope: 'coordinateSystem',
-          itemStyle: { shadowBlur: 42, shadowColor: '#9d2235' },
-          lineStyle: { width: 3, color: '#b8860b', opacity: 0.95 },
-          edgeLabel: { show: true, color: light ? '#7a1a29' : '#f0e6d2', fontSize: 11 },
-          label: { color: '#ffffff', fontSize: 14 },
+          itemStyle: { shadowBlur: 26, shadowColor: '#9d2235' },
+          lineStyle: { width: 1.8, color: '#b8860b', opacity: 0.9 },
+          edgeLabel: { show: true, color: '#b8860b', fontSize: 11 },
+          label: { color: '#ffffff', fontSize: 13 },
         },
-        lineStyle: { color: light ? 'rgba(110,103,90,0.4)' : 'rgba(138,130,117,0.38)', width: 1.2 },
+        lineStyle: { color: light ? 'rgba(110,103,90,0.28)' : 'rgba(190,180,160,0.22)', width: 1 },
         label: { show: true },
       },
     ],
@@ -308,8 +327,7 @@ onBeforeUnmount(() => {
     </div>
     <div class="flex-1 flex flex-col lg:flex-row gap-0 min-h-0">
       <!-- 图谱区域：谍战网格背景 -->
-      <div class="flex-1 relative min-h-[420px] border border-[#2a2520] bg-[#0b0b0b]"
-        style="background-image: linear-gradient(rgba(138,130,117,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(138,130,117,0.05) 1px, transparent 1px); background-size: 42px 42px;">
+      <div class="flex-1 relative min-h-[420px] border border-[#2a2520] bg-[#0b0b0b]" style="background: radial-gradient(ellipse 70% 55% at 50% 38%, rgba(157,34,53,0.07), transparent 62%), radial-gradient(ellipse 55% 45% at 82% 88%, rgba(30,74,82,0.06), transparent 60%);">
         <div ref="chartEl" class="absolute inset-0" style="touch-action: none;"></div>
         <div class="absolute top-3 left-3 font-mono text-[10px] tracking-[0.25em] text-[#555048] pointer-events-none">KITE-MAP · 滚轮/双指局部缩放 · 拖拽平移 · 点击节点查看档案</div>
         <!-- 视图重置 -->
