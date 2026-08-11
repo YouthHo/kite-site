@@ -1,0 +1,5 @@
+/* 字体栈变量（与既有 .serif-title / .title-sans / body 字体栈一致） */
+:root {
+  --font-serif: 'Noto Serif SC', 'Songti SC', SimSun, serif;
+  --font-sans: 'Noto Sans SC', system-ui, 'Microsoft YaHei', sans-serif;
+}
