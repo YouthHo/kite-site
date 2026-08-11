@@ -6,6 +6,10 @@ import { GraphEngine } from '@/graph/GraphEngine'
 import { useGraphData, TYPE_META } from '@/graph/useGraphData'
 import NameBadge from '@/components/NameBadge.vue'
 import SealStamp from '@/components/SealStamp.vue'
+import GraphToolbar from '@/components/GraphToolbar.vue'
+import GraphStatusBar from '@/components/GraphStatusBar.vue'
+import GraphOnboarding from '@/components/GraphOnboarding.vue'
+import GraphHelpPanel from '@/components/GraphHelpPanel.vue'
 import { FACTION, factionLabel } from '@/utils/factions'
 import { theme } from '@/store/app'
 import { prefersReduced, typewriter } from '@/utils/anim'
@@ -13,25 +17,140 @@ import { prefersReduced, typewriter } from '@/utils/anim'
 const g = useGraphData()
 const chartEl = ref(null)
 const panelEl = ref(null)
+const briefEl = ref(null)
+const hoverEl = ref(null)
+const tourEl = ref(null)
 const selected = ref(null)
-const pathMode = ref(false)
+
+/* ================= Layer 0 · 交互状态机（互斥模式 + 解耦选择） ================= */
+const mode = ref('browse') // browse | decrypt | path | tour（任一时刻唯一）
 const pathStart = ref(null)
 const pathResult = ref(null)
+const focusClickId = ref(null) // 隔离聚焦（引擎 focusClick 的响应式镜像）
 const kbIndex = ref(0)
-const focusNodeId = ref(null)
+const focusNodeId = ref(null) // 键盘焦点
 const layoutMode = ref('none')
-const decryptMode = ref(false)
+const decryptCount = ref(0)
+const secretFound = ref(0)
+const tourIdx = ref(0)
+const tourText = ref('')
 const hoverNodeId = ref(null)
 const hoverSummary = ref('')
-const decryptedCount = ref(0)
-const secretFound = ref(0)
-const tour = ref(null) // { idx } 解密档案巡览
-const tourText = ref('')
+const helpOpen = ref(false)
 const liveText = ref('')
 const revealed = ref(false)
-const secretTotal = computed(() => g.links.filter((l) => l.secret).length)
 
-/* 解密档案巡览：沿图谱揭示 kite/shadow 双轴秘密 */
+const secretTotal = computed(() => g.links.filter((l) => l.secret).length)
+const statsText = computed(() => `${g.stats.value.nodes}节点 · ${g.stats.value.edges}连线 · ${g.stats.value.factions}阵营 · 核心 ${g.stats.value.top}`)
+const escHint = computed(() => {
+  if (mode.value === 'path') return '退出路径'
+  if (selected.value) return '关闭档案'
+  if (mode.value === 'decrypt') return '退出解密'
+  if (mode.value === 'tour') return '退出巡览'
+  if (focusClickId.value) return '退出隔离'
+  return ''
+})
+
+let engine = null
+let briefType = null
+let hoverType = null
+let tourType = null
+let resizeObs = null
+
+const SORTS = [
+  { id: 'faction', label: '阵营' },
+  { id: 'name', label: '姓名' },
+  { id: 'code', label: '代号' },
+  { id: 'span', label: '出场' },
+]
+
+/* ---------- 模式进入/退出（互斥，统一收口） ---------- */
+function setMode(m) {
+  if (mode.value === m) return
+  // 退出旧模式（清理副作用）
+  if (mode.value === 'tour') {
+    tourType?.kill?.()
+    engine?.setFocusClick(null)
+    focusClickId.value = null
+  }
+  if (mode.value === 'decrypt') engine?.setDecrypt(false)
+  if (mode.value === 'path') {
+    pathStart.value = null
+    pathResult.value = null
+    engine?.setPath(null)
+  }
+  mode.value = m
+  // 进入新模式（可见的"进入态"）
+  if (m === 'tour') {
+    tourIdx.value = 0
+    playTourStep(0)
+  }
+  if (m === 'decrypt') {
+    engine?.setDecrypt(true)
+    engine?.decrypted.clear()
+    handleDecrypt()
+  }
+  if (m === 'path') {
+    pathStart.value = null
+    pathResult.value = null
+  }
+  liveText.value = `进入${m}模式`
+}
+
+/* ---------- 主操作：点节点 = 看档案（browse 恒成立；其他模式显式改变时伴随进入态） ---------- */
+function handleNodeClick(id) {
+  if (mode.value === 'tour') {
+    nextTourStep()
+    return
+  }
+  if (mode.value === 'path') {
+    if (!pathStart.value) pathStart.value = id
+    else computePath(pathStart.value, id)
+    engine?.requestRender()
+    return
+  }
+  if (mode.value === 'decrypt' && !engine?.decrypted.has(id)) {
+    engine?.decryptNode(id)
+    handleDecrypt()
+    return
+  }
+  // 聚焦隔离（非特殊模式下的附加视觉，不改变主操作）
+  engine?.setFocusClick(id)
+  focusClickId.value = id
+  engine?.centerOn(id, 420)
+  openPanel(id)
+}
+function clearFocus() {
+  engine?.setFocusClick(null)
+  focusClickId.value = null
+  engine?.requestRender()
+}
+
+/* ---------- 路径模式（显式双步） ---------- */
+function computePath(a, b) {
+  const res = g.shortestPath(a, b)
+  pathResult.value = res ? res : { ids: [a, b], hops: -1, pairs: [] }
+  engine?.setPath(pathResult.value)
+}
+function cancelPath() {
+  pathStart.value = null
+  pathResult.value = null
+  engine?.setPath(null)
+  engine?.requestRender()
+}
+
+/* ---------- 解密 ---------- */
+function handleDecrypt() {
+  decryptCount.value = engine?.decrypted?.size || 0
+  const dec = engine?.decrypted
+  secretFound.value = dec ? g.links.filter((l) => l.secret && dec.has(l.source) && dec.has(l.target)).length : 0
+  if (dec && dec.size >= g.nodes.length && !revealed.value) {
+    revealed.value = true
+    liveText.value = '全部档案已解密：风筝与影子，同一根线。'
+  }
+}
+
+/* ---------- 档案巡览（10 幕） ---------- */
 const TOUR_STEPS = [
   { id: 'zheng-yaoxian', text: '1946 年的重庆，他是军统王牌「六哥」。没有人知道，他的真实代号叫——风筝。' },
   { id: 'han-bing', text: '她是最接近他的人，也是他的一生之敌。她的代号——影子。' },
@@ -44,14 +163,10 @@ const TOUR_STEPS = [
   { id: 'daili', text: '戴笠密令影子潜伏调查风筝——两大特工，互为镜像。' },
   { id: 'jian-bing', text: '三十年后，简冰为风筝作证。身份被证实的那一刻，他依然选择沉默。' },
 ]
-let tourType = null
-function startTour() {
-  tour.value = { idx: 0 }
-  playTourStep(0)
-}
 function playTourStep(i) {
   const s = TOUR_STEPS[i]
   engine?.setFocusClick(s.id)
+  focusClickId.value = s.id
   engine?.centerOn(s.id, 750)
   tourText.value = s.text
   tourType?.kill?.()
@@ -63,180 +178,62 @@ function playTourStep(i) {
   liveText.value = `巡览第 ${i + 1} 幕：${g.charMap[s.id]?.name || ''}。${s.text}`
 }
 function nextTourStep() {
-  if (!tour.value) return
-  const i = (tour.value.idx + 1) % TOUR_STEPS.length
-  tour.value = { idx: i }
-  playTourStep(i)
+  tourIdx.value = (tourIdx.value + 1) % TOUR_STEPS.length
+  playTourStep(tourIdx.value)
 }
 function prevTourStep() {
-  if (!tour.value) return
-  const i = (tour.value.idx - 1 + TOUR_STEPS.length) % TOUR_STEPS.length
-  tour.value = { idx: i }
-  playTourStep(i)
-}
-function exitTour() {
-  tour.value = null
-  tourType?.kill?.()
-  engine?.setFocusClick(null)
+  tourIdx.value = (tourIdx.value - 1 + TOUR_STEPS.length) % TOUR_STEPS.length
+  playTourStep(tourIdx.value)
 }
 
-function handleDecrypt() {
-  decryptedCount.value = engine?.decrypted?.size || 0
-  const dec = engine?.decrypted
-  secretFound.value = dec ? g.links.filter((l) => l.secret && dec.has(l.source) && dec.has(l.target)).length : 0
-  if (dec && dec.size >= g.nodes.length && !revealed.value) {
-    // 揭示彩蛋：全部解密完成
-    revealed.value = true
-    liveText.value = '全部档案已解密：风筝与影子，同一根线。' + liveText.value
-  }
-}
-
-let engine = null
-let briefType = null
-let resizeObs = null
-
-const SORTS = [
-  { id: 'faction', label: '阵营' },
-  { id: 'name', label: '姓名' },
-  { id: 'code', label: '代号' },
-  { id: 'span', label: '出场' },
-]
-
-/* ================= 交互 ================= */
-let hoverType = null
-function handleNodeClick(id) {
-  if (tour.value) {
-    // 巡览模式：点击画布 = 推进下一幕
-    nextTourStep()
-    return
-  }
-  if (pathMode.value) {
-    if (!pathStart.value) {
-      pathStart.value = id
-      engine?.requestRender()
-    } else {
-      computePath(pathStart.value, id)
-      pathStart.value = null
+/* ---------- 键盘（Esc 由状态机唯一决定，状态条实时提示） ---------- */
+function onKey(e) {
+  if (e.key === 'Escape') {
+    if (mode.value === 'path') {
+      setMode('browse')
+    } else if (selected.value) {
+      closePanel()
+    } else if (mode.value === 'decrypt') {
+      setMode('browse')
+    } else if (mode.value === 'tour') {
+      setMode('browse')
+    } else if (focusClickId.value) {
+      clearFocus()
+    } else if (focusNodeId.value) {
+      focusNodeId.value = null
+      engine?.setFocus(null)
     }
     return
   }
-  // 聚焦隔离 + 打开档案（Esc 释放）
-  engine?.setFocusClick(id)
-  engine?.centerOn(id, 420)
-  openPanel(id)
-}
-
-function toggleDecrypt() {
-  decryptMode.value = !decryptMode.value
-  engine?.setDecrypt(decryptMode.value)
-  handleDecrypt()
-}
-
-function handleHover(id) {
-  hoverNodeId.value = id
-  hoverType?.kill?.()
-  if (!id) {
-    hoverSummary.value = ''
+  const list = g.sortedList.value
+  if (!list.length) return
+  let i = kbIndex.value
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+    i = (i + 1) % list.length
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    i = (i - 1 + list.length) % list.length
+  } else if (e.key === 'Enter') {
+    if (focusNodeId.value) openPanel(focusNodeId.value)
+    return
+  } else {
     return
   }
-  const n = g.byId[id]
-  if (!n) return
-  // 悬停电报条：打字机逐字浮现核心关系摘要
-  const rels = g.visibleLinks.value
-    .filter((l) => l.source === id || l.target === id)
-    .map((l) => l.label)
-    .slice(0, 4)
-    .join(' · ')
-  const key = n.key ? (n.key === 'kite' ? ' [风筝轴]' : ' [影子轴]') : ''
-  const text = `接入 ${n.name}${key} · ${n.code ? '代号「' + n.code + '」· ' : ''}${rels || '孤悬于网'}`
-  hoverSummary.value = text
-  if (hoverEl.value && !prefersReduced) {
-    hoverType = typewriter(hoverEl.value, text, { speed: 14, caret: false })
-  } else if (hoverEl.value) {
-    hoverEl.value.textContent = text
-  }
-  // 屏幕阅读器播报
-  const deg = g.degree.value[id] || 0
-  liveText.value = `节点 ${n.name}，${n.role || g.factionLabel(n.faction)}，${key.trim()}，连接 ${deg} 条关系`
+  e.preventDefault()
+  kbIndex.value = i
+  focusNodeId.value = list[i].id
+  engine?.setFocus(focusNodeId.value)
+  engine?.centerOn(focusNodeId.value, 380)
 }
 
-function onSearchEnter() {
-  const kw = g.keyword.value.trim()
-  if (!kw || !engine) return
-  const hit = g.sortedList.value[0]
-  if (hit) {
-    engine.setFocusClick(hit.id)
-    engine.centerOn(hit.id, 500)
-  }
-}
-
-function computePath(a, b) {
-  const res = g.shortestPath(a, b)
-  if (!res) {
-    pathResult.value = { ids: [a, b], hops: -1, pairs: [] }
-  } else {
-    pathResult.value = res
-  }
-  engine?.setPath(pathResult.value)
-}
-
-function togglePathMode() {
-  pathMode.value = !pathMode.value
-  pathStart.value = null
-  if (!pathMode.value) {
-    pathResult.value = null
-    engine?.setPath(null)
-  }
-}
-
-function toggleLayout() {
-  layoutMode.value = layoutMode.value === 'force' ? 'none' : 'force'
-  if (layoutMode.value === 'force') {
-    engine?.setForce(true)
-  } else {
-    engine?.setForce(false)
-    engine?.nodePos.clear()
-    engine?.appear.clear()
-  }
-  engine?.requestRender()
-}
-
-function resetView() {
-  engine?.nodePos.clear()
-  engine?.appear.clear()
-  pathResult.value = null
-  engine?.setPath(null)
-  engine?.fit()
-}
-
-function openPanel(id) {
-  const c = g.charMap[id]
-  if (!c) return
-  selected.value = c
-  gsap.fromTo(panelEl.value, { x: 420, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' })
-  briefType?.kill?.()
-  if (briefEl.value && !prefersReduced) {
-    briefType = typewriter(briefEl.value, c.brief, { speed: 9 })
-  } else if (briefEl.value) {
-    briefEl.value.textContent = c.brief
-  }
-}
-function closePanel() {
-  gsap.to(panelEl.value, { x: 420, opacity: 0, duration: 0.35, ease: 'power2.in', onComplete: () => (selected.value = null) })
-}
-
+/* ---------- 侧栏（点击行 = 看档案；勾选 = 独立复选框；路径模式下行=选端点） ---------- */
 function onRowClick(n) {
-  if (pathMode.value) {
-    if (!pathStart.value) {
-      pathStart.value = n.id
-      engine?.requestRender()
-    } else {
-      computePath(pathStart.value, n.id)
-      pathStart.value = null
-    }
+  if (mode.value === 'path') {
+    if (!pathStart.value) pathStart.value = n.id
+    else computePath(pathStart.value, n.id)
+    engine?.requestRender()
     return
   }
-  togglePerson(n.id)
+  openPanel(n.id)
 }
 function togglePerson(id) {
   const s = new Set(g.personSel.value)
@@ -263,70 +260,82 @@ function toggleFaction(k) {
   g.activeFactions.value = s
 }
 
-/* ================= 键盘导航 ================= */
-function onKey(e) {
-  const list = g.sortedList.value
-  if (!list.length) return
-  let i = kbIndex.value
-  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    i = (i + 1) % list.length
-  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    i = (i - 1 + list.length) % list.length
-  } else if (e.key === 'Enter') {
-    if (focusNodeId.value) openPanel(focusNodeId.value)
-    return
-  } else if (e.key === 'Escape') {
-    if (pathMode.value) togglePathMode()
-    else if (selected.value) closePanel()
-    else if (focusNodeId.value) {
-      focusNodeId.value = null
-      engine?.setFocus(null)
-    } else if (engine?.focusClick) {
-      engine?.setFocusClick(null)
-    }
-    return
-  } else {
+/* ---------- 悬停电报条 + live region ---------- */
+function handleHover(id) {
+  hoverNodeId.value = id
+  hoverType?.kill?.()
+  if (!id) {
+    hoverSummary.value = ''
     return
   }
-  e.preventDefault()
-  kbIndex.value = i
-  focusNodeId.value = list[i].id
-  engine?.setFocus(focusNodeId.value)
-  engine?.centerOn(focusNodeId.value, 380)
+  const n = g.byId[id]
+  if (!n) return
+  const rels = g.visibleLinks.value
+    .filter((l) => l.source === id || l.target === id)
+    .map((l) => l.label)
+    .slice(0, 4)
+    .join(' · ')
+  const key = n.key ? (n.key === 'kite' ? ' [风筝轴]' : ' [影子轴]') : ''
+  const text = `接入 ${n.name}${key} · ${n.code ? '代号「' + n.code + '」· ' : ''}${rels || '孤悬于网'}`
+  hoverSummary.value = text
+  if (hoverEl.value && !prefersReduced) {
+    hoverType = typewriter(hoverEl.value, text, { speed: 14, caret: false })
+  } else if (hoverEl.value) {
+    hoverEl.value.textContent = text
+  }
+  const deg = g.degree.value[id] || 0
+  liveText.value = `节点 ${n.name}，${n.role || g.factionLabel(n.faction)}，${key.trim()}，连接 ${deg} 条关系`
 }
 
-/* ================= 生命周期 ================= */
-onMounted(async () => {
-  engine = new GraphEngine(chartEl.value, {
-    getData: () => g,
-    onNodeClick: handleNodeClick,
-    onNodeHover: handleHover,
-    onDecrypt: handleDecrypt,
-    prefersReduced,
-  })
-  engine.setTheme(theme.value === 'light')
-  engine.fit()
-  engine.start()
-
-  resizeObs = new ResizeObserver(() => engine?.resize())
-  resizeObs.observe(chartEl.value)
-})
-
-// 过滤状态变化 → 出生动画重置（引擎常驻 rAF 自动绘最新）
-watch(
-  () => [g.activeFactions.value, g.activeTypes.value, g.personSel.value, g.keyword.value, g.ep.value, g.sortBy.value],
-  () => {
-    engine?.appear.clear()
-    engine?.requestRender()
+function onSearchEnter() {
+  const kw = g.keyword.value.trim()
+  if (!kw || !engine) return
+  const hit = g.sortedList.value[0]
+  if (hit) {
+    engine.setFocusClick(hit.id)
+    focusClickId.value = hit.id
+    engine.centerOn(hit.id, 500)
   }
-)
-watch(theme, (v) => engine?.setTheme(v === 'light'))
-watch(layoutMode, () => {})
+}
 
-const briefEl = ref(null)
-const hoverEl = ref(null)
-const tourEl = ref(null)
-// 洞察面板：共同联系人 / 到风筝的最短链路
+/* ---------- 档案卡 ---------- */
+function openPanel(id) {
+  const c = g.charMap[id]
+  if (!c) return
+  selected.value = c
+  gsap.fromTo(panelEl.value, { x: 420, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' })
+  briefType?.kill?.()
+  if (briefEl.value && !prefersReduced) {
+    briefType = typewriter(briefEl.value, c.brief, { speed: 9 })
+  } else if (briefEl.value) {
+    briefEl.value.textContent = c.brief
+  }
+}
+function closePanel() {
+  gsap.to(panelEl.value, { x: 420, opacity: 0, duration: 0.35, ease: 'power2.in', onComplete: () => (selected.value = null) })
+}
+
+/* ---------- 布局/重置 ---------- */
+function toggleLayout() {
+  layoutMode.value = layoutMode.value === 'force' ? 'none' : 'force'
+  if (layoutMode.value === 'force') {
+    engine?.setForce(true)
+  } else {
+    engine?.setForce(false)
+    engine?.nodePos.clear()
+    engine?.appear.clear()
+  }
+  engine?.requestRender()
+}
+function resetView() {
+  engine?.nodePos.clear()
+  engine?.appear.clear()
+  cancelPath()
+  clearFocus()
+  engine?.fit()
+}
+
+/* ---------- 洞察面板 ---------- */
 const insight = computed(() => {
   if (!selected.value) return null
   const id = selected.value.id
@@ -339,11 +348,38 @@ const insight = computed(() => {
   return { toKite, toShadow, common, spread }
 })
 
+/* ---------- 生命周期 ---------- */
+onMounted(async () => {
+  engine = new GraphEngine(chartEl.value, {
+    getData: () => g,
+    onNodeClick: handleNodeClick,
+    onNodeHover: handleHover,
+    onDecrypt: handleDecrypt,
+    prefersReduced,
+  })
+  engine.setTheme(theme.value === 'light')
+  engine.fit()
+  engine.start()
+  resizeObs = new ResizeObserver(() => engine?.resize())
+  resizeObs.observe(chartEl.value)
+})
+
+watch(
+  () => [g.activeFactions.value, g.activeTypes.value, g.personSel.value, g.keyword.value, g.ep.value, g.sortBy.value],
+  () => {
+    engine?.appear.clear()
+    engine?.requestRender()
+  }
+)
+watch(theme, (v) => engine?.setTheme(v === 'light'))
+
 onBeforeUnmount(() => {
   g.stopEraPlay()
   engine?.dispose()
   resizeObs?.disconnect()
   briefType?.kill?.()
+  hoverType?.kill?.()
+  tourType?.kill?.()
 })
 </script>
 
@@ -366,77 +402,47 @@ onBeforeUnmount(() => {
           aria-label="人物关系图谱：滚轮缩放，拖拽平移，方向键移动焦点，回车查看档案，点击节点查看档案；也可使用右侧人物列表"
           @keydown="onKey"
         ></canvas>
-        <div class="absolute top-3 left-3 font-mono text-[10px] tracking-[0.25em] text-[#555048] pointer-events-none">KITE-MAP · 滚轮/双指缩放 · 拖拽平移 · 点击节点查看档案</div>
 
-        <!-- 统计条 -->
-        <div class="absolute top-3 left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[0.15em] text-[#8a8275] pointer-events-none bg-black/40 border border-[#2a2520] px-3 py-1 hidden md:block">
-          {{ g.stats.value.nodes }} 节点 · {{ g.stats.value.edges }} 连线 · {{ g.stats.value.factions }} 阵营 · 核心：{{ g.stats.value.top }}
+        <!-- 顶部：状态条（中央）+ 工具条（右侧） -->
+        <div class="absolute top-3 left-1/2 -translate-x-1/2 z-10">
+          <GraphStatusBar
+            :mode="mode"
+            :hover-name="hoverNodeId ? (g.charMap[hoverNodeId]?.name || '') : ''"
+            :focus-name="focusClickId ? (g.charMap[focusClickId]?.name || '') : ''"
+            :esc-hint="escHint"
+            :stats-text="statsText"
+          />
+        </div>
+        <div class="absolute top-3 right-3 z-10 max-w-[62%]">
+          <GraphToolbar
+            :mode="mode"
+            :tour-idx="tourIdx"
+            :tour-total="TOUR_STEPS.length"
+            :decrypt-count="decryptCount"
+            :node-total="g.nodes.length"
+            :layout-mode="layoutMode"
+            @mode="setMode"
+            @layout="toggleLayout"
+            @reset="resetView"
+            @help="helpOpen = true"
+          />
         </div>
 
-        <!-- 顶部工具条 -->
-        <div class="absolute top-3 right-3 z-10 flex gap-1.5 flex-wrap justify-end max-w-[62%]">
-          <button
-            class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors"
-            :class="tour ? 'border-[#b8860b] text-[#b8860b] bg-[#b8860b]/15' : 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235]'"
-            @click="tour ? exitTour() : startTour()"
-          >
-            {{ tour ? `退出巡览 ${tour.idx + 1}/${TOUR_STEPS.length}` : '解密档案' }}
-          </button>
-          <button
-            class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors"
-            :class="decryptMode ? 'border-[#9d2235] text-[#d8a0a8] bg-[#9d2235]/15' : 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235]'"
-            @click="toggleDecrypt"
-          >
-            解密模式{{ decryptMode ? ` ${decryptedCount}/30` : '' }}
-          </button>
-          <button
-            class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors"
-            :class="pathMode ? 'border-[#b8860b] text-[#b8860b] bg-[#b8860b]/10' : 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235]'"
-            @click="togglePathMode"
-          >
-            路径模式
-          </button>
-          <button
-            class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors"
-            :class="layoutMode === 'force' ? 'border-[#b8860b] text-[#b8860b] bg-[#b8860b]/10' : 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235]'"
-            @click="toggleLayout"
-          >
-            力导向
-          </button>
-          <button
-            class="px-2.5 py-1.5 border border-[#2a2520] bg-[#0e0e0e]/85 backdrop-blur font-mono text-[10px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] transition-colors"
-            @click="resetView"
-          >
-            重置视图
-          </button>
-        </div>
-
-        <!-- 路径信息条 -->
-        <div
-          v-if="pathResult"
-          class="absolute top-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#b8860b] bg-[#0e0e0e]/90 text-[#b8860b] whitespace-nowrap"
-        >
-          <template v-if="pathResult.hops >= 0">
-            最短路径：{{ pathResult.ids.map((id) => g.charMap[id]?.name || id).join(' → ') }} · {{ pathResult.hops }} 跳
+        <!-- 路径模式：显式双步提示 + 取消 -->
+        <div v-if="mode === 'path'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#b8860b] bg-[#0e0e0e]/90 text-[#b8860b] whitespace-nowrap">
+          <template v-if="!pathStart">① 点击起点（画布节点或人物列表）</template>
+          <template v-else-if="!pathResult">② 点击终点 — 起点：{{ g.charMap[pathStart]?.name }}</template>
+          <template v-else>
+            <span v-if="pathResult.hops >= 0">最短路径：{{ pathResult.ids.map((id) => g.charMap[id]?.name || id).join(' → ') }} · {{ pathResult.hops }} 跳</span>
+            <span v-else>两节点在当前图谱中不连通</span>
           </template>
-          <template v-else>两节点在当前图谱中不连通</template>
-        </div>
-        <div
-          v-if="pathMode && pathStart"
-          class="absolute top-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#d8a0a8] bg-[#0e0e0e]/90 text-[#d8a0a8] whitespace-nowrap"
-        >
-          起点：{{ g.charMap[pathStart]?.name }} — 请点击终点
+          <button class="pointer-events-auto border border-[#9d2235] text-[#d8a0a8] px-2 py-0.5 hover:bg-[#9d2235]/15 transition-colors" @click="cancelPath">取消</button>
         </div>
 
-        <!-- 悬停电报条（打字机） -->
-        <div v-if="hoverNodeId" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.2em] text-[#d8a0a8] bg-black/60 border border-[#9d2235]/40 px-4 py-1.5 whitespace-nowrap max-w-[90%] overflow-hidden text-ellipsis pointer-events-none">
-          <span ref="hoverEl">{{ hoverSummary }}</span>
-        </div>
-
-        <!-- 巡览旁白（打字机） -->
-        <div v-if="tour" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 max-w-[560px] w-[88%] bg-black/80 border border-[#b8860b]/50 px-4 py-3 pointer-events-none">
+        <!-- 巡览旁白 -->
+        <div v-if="mode === 'tour'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 max-w-[560px] w-[88%] bg-black/80 border border-[#b8860b]/50 px-4 py-3 pointer-events-none">
           <div class="flex items-center justify-between mb-1.5 font-mono text-[9px] tracking-[0.3em] text-[#b8860b]">
-            <span>DECRYPT FILE · {{ String(tour.idx + 1).padStart(2, '0') }}/{{ TOUR_STEPS.length }}</span>
+            <span>DECRYPT FILE · {{ String(tourIdx + 1).padStart(2, '0') }}/{{ TOUR_STEPS.length }}</span>
             <span class="flex gap-3">
               <button class="pointer-events-auto text-[#8a8275] hover:text-[#e8dcc8]" @click="prevTourStep">‹ 上一幕</button>
               <button class="pointer-events-auto text-[#8a8275] hover:text-[#e8dcc8]" @click="nextTourStep">下一幕 ›</button>
@@ -444,6 +450,25 @@ onBeforeUnmount(() => {
           </div>
           <p ref="tourEl" class="text-[13px] leading-6 text-[#e8dcc8]">{{ tourText }}</p>
         </div>
+
+        <!-- 解密模式：进入态提示 -->
+        <div v-if="mode === 'decrypt'" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#d8a0a8] bg-black/60 border border-[#9d2235]/50 px-3 py-1.5 pointer-events-none">
+          已解密 {{ decryptCount }}/{{ g.nodes.length }} · 秘密线索 {{ secretFound }}/{{ secretTotal }} — 点击遮蔽节点揭开档案
+        </div>
+
+        <!-- 悬停电报条 -->
+        <div v-if="hoverNodeId" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.2em] text-[#d8a0a8] bg-black/60 border border-[#9d2235]/40 px-4 py-1.5 whitespace-nowrap max-w-[90%] overflow-hidden text-ellipsis pointer-events-none">
+          <span ref="hoverEl">{{ hoverSummary }}</span>
+        </div>
+
+        <!-- 隔离退出按钮（可见的退出通道） -->
+        <button
+          v-if="focusClickId && mode === 'browse'"
+          class="absolute bottom-12 right-3 z-10 font-mono text-[10px] tracking-[0.15em] border border-[#b8860b] text-[#b8860b] bg-[#0e0e0e]/85 px-2.5 py-1 hover:bg-[#b8860b]/15 transition-colors"
+          @click="clearFocus"
+        >
+          退出隔离
+        </button>
 
         <!-- 揭示彩蛋 -->
         <transition name="era-fade">
@@ -454,11 +479,6 @@ onBeforeUnmount(() => {
             </div>
           </div>
         </transition>
-
-        <!-- 解密进度条 -->
-        <div v-if="decryptMode" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#8a8275] bg-black/50 border border-[#2a2520] px-3 py-1.5">
-          已解密 {{ decryptedCount }}/30 · 秘密线索 {{ secretFound }}/{{ secretTotal }}
-        </div>
 
         <!-- 底部图例：阵营 + 关系类型（类型可点击筛选） -->
         <div class="absolute bottom-3 left-3 z-10 flex flex-col gap-1.5 max-w-[48%]">
@@ -479,30 +499,31 @@ onBeforeUnmount(() => {
               {{ m.label }}
             </button>
           </div>
+          <div class="font-mono text-[9px] tracking-[0.1em] text-[#555048] pointer-events-none">
+            节点越大=权重越高 · 金/红双环=kite/shadow · 虚线=敌对 · 点线=秘密 · 箭头=有向
+          </div>
         </div>
 
-        <!-- 时间轴：集数演化 -->
+        <!-- 时间轴 -->
         <div class="absolute bottom-3 right-3 z-10 flex items-center gap-2.5 bg-[#0e0e0e]/85 border border-[#2a2520] px-3 py-1.5">
           <button class="text-[#8a8275] hover:text-[#e8dcc8] transition-colors" :aria-label="g.epPlaying.value ? '暂停演化' : '播放演化'" @click="g.toggleEraPlay()">
             <Pause v-if="g.epPlaying.value" :size="13" />
             <Play v-else :size="13" />
           </button>
-          <input
-            type="range"
-            min="1"
-            max="46"
-            step="1"
-            v-model.number="g.ep.value"
-            class="w-32 md:w-44 accent-[#9d2235]"
-            :aria-label="`剧情集数 ${g.ep.value}`"
-          />
-          <span class="font-mono text-[10px] tracking-[0.15em] text-[#8a8275] w-[74px]">EP {{ String(g.ep.value).padStart(2, '0') }}/46</span>
+          <input type="range" min="1" max="46" step="1" v-model.number="g.ep.value" class="w-28 md:w-40 accent-[#9d2235]" :aria-label="`剧情集数 ${g.ep.value}`" />
+          <span class="font-mono text-[10px] tracking-[0.15em] text-[#8a8275] w-[70px]">EP {{ String(g.ep.value).padStart(2, '0') }}/46</span>
         </div>
+
         <!-- 屏幕阅读器 live region -->
         <div class="sr-only" aria-live="polite" role="status">{{ liveText }}</div>
+
+        <!-- 首次引导 / 帮助面板 -->
+        <GraphOnboarding v-if="!helpOpen" />
+        <GraphHelpPanel v-if="helpOpen" @close="helpOpen = false" />
       </div>
-      <!-- 侧边栏 -->
-      <aside class="lg:w-[300px] glass border-t lg:border-t-0 lg:border-l border-[#2a2520] p-5 overflow-y-auto shrink-0">
+
+      <!-- 侧边栏：行点击=看档案；勾选=独立复选框 -->
+      <aside class="lg:w-[300px] glass border-t lg:border-t-0 lg:border-l border-[#2a2520] p-5 overflow-y-auto shrink-0" aria-label="人物列表（画布的等价文本视图）">
         <div class="relative mb-5">
           <Search :size="14" class="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8275]" />
           <input v-model="g.keyword.value" class="k-input w-full !pl-9" placeholder="搜索人物 / 代号……（回车跳转）" @keydown.enter="onSearchEnter" />
@@ -534,22 +555,26 @@ onBeforeUnmount(() => {
         <div class="mb-2 flex items-center justify-between">
           <span class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">人物索引（{{ g.sortedList.value.length }}）</span>
           <div class="flex gap-3">
-            <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectAllPeople">全选</button>
-            <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectNonePeople">全不选</button>
+            <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectAllPeople">全部</button>
+            <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectNonePeople">清空</button>
           </div>
         </div>
-        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#555048]">{{ pathMode ? '路径模式：点击人物行选择起点 → 终点' : '点击名字行 = 勾选/取消 · 点击右侧详情图标查看档案' }}</div>
-        <div class="space-y-0.5">
-          <div
+        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#555048]">{{ mode === 'path' ? '路径模式：点击人物行选择起点 → 终点' : '点击名字 = 查看档案 · 勾选 = 筛显图谱' }}</div>
+        <ul class="space-y-0.5" role="list">
+          <li
             v-for="(n, i) in g.sortedList.value"
             :key="n.id"
             class="w-full flex items-center gap-2.5 px-2.5 py-2 text-[12px] border-l-2 cursor-pointer select-none transition-colors"
-            :class="selected?.id === n.id ? 'border-[#9d2235] bg-[#161616]' : i === kbIndex && focusNodeId === n.id ? 'border-[#b8860b] bg-[#161616]' : pathMode && pathStart === n.id ? 'border-[#d8a0a8] bg-[#161616]' : 'border-transparent hover:bg-[#161616]'"
+            :class="selected?.id === n.id ? 'border-[#9d2235] bg-[#161616]' : i === kbIndex && focusNodeId === n.id ? 'border-[#b8860b] bg-[#161616]' : mode === 'path' && pathStart === n.id ? 'border-[#d8a0a8] bg-[#161616]' : 'border-transparent hover:bg-[#161616]'"
             @click="onRowClick(n)"
           >
             <span
-              class="w-3.5 h-3.5 border grid place-items-center shrink-0 transition-colors"
+              class="w-3.5 h-3.5 border grid place-items-center shrink-0 cursor-pointer transition-colors"
+              role="checkbox"
+              :aria-checked="g.personSel.value.has(n.id)"
+              :aria-label="`筛显 ${n.name}`"
               :style="{ borderColor: FACTION[n.faction].color, background: g.personSel.value.has(n.id) ? FACTION[n.faction].color : 'transparent' }"
+              @click.stop="togglePerson(n.id)"
             >
               <span v-if="g.personSel.value.has(n.id)" class="text-[9px] text-[#e8dcc8]">✓</span>
             </span>
@@ -564,8 +589,8 @@ onBeforeUnmount(() => {
             >
               <Info :size="12" />
             </button>
-          </div>
-        </div>
+          </li>
+        </ul>
       </aside>
     </div>
 

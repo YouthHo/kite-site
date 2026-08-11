@@ -75,7 +75,8 @@ export function useGraphData() {
 
   const activeFactions = ref(new Set(FACTION_ORDER))
   const activeTypes = ref(new Set(TYPE_ORDER))
-  const personSel = ref(new Set(nodes.map((n) => n.id)))
+  // personSel 语义：空 Set = 显示全部（勾选=仅显示所选；避免默认全选让列表误以为"强调"）
+  const personSel = ref(new Set())
   const keyword = ref('')
   const sortBy = ref('faction')
   const ep = ref(EP_MAX) // 集数演化
@@ -93,7 +94,11 @@ export function useGraphData() {
   /** 可见节点（阵营/人物/集数演化/搜索 四重过滤） */
   const visibleNodes = computed(() =>
     nodes.filter(
-      (n) => activeFactions.value.has(n.faction) && personSel.value.has(n.id) && n.episodes[0] <= ep.value && matchesKeyword(n)
+      (n) =>
+        activeFactions.value.has(n.faction) &&
+        (personSel.value.size === 0 || personSel.value.has(n.id)) &&
+        n.episodes[0] <= ep.value &&
+        matchesKeyword(n)
     )
   )
   const visibleIds = computed(() => new Set(visibleNodes.value.map((n) => n.id)))

@@ -303,8 +303,6 @@ export class GraphEngine {
       return
     }
     if (this.pan) {
-      const w = this.screenToWorld(px, py)
-      this.cam.x = this.pan.cx - (w.x - (this.pan.sx - this._w / 2) / this.cam.scale - this.pan.cx)
       this.cam.x = this.pan.cx + (this.pan.sx - px) / this.cam.scale
       this.cam.y = this.pan.cy + (this.pan.sy - py) / this.cam.scale
       this.requestRender()
@@ -581,6 +579,7 @@ export class GraphEngine {
     }
 
     // ---- 节点 ----
+    const placedLabels = [] // 已放置标签矩形（贪心避让）
     for (const n of nodes) {
       const p = posOf(n.id)
       const appearT = this._appearT(n.id, now)
@@ -665,15 +664,57 @@ export class GraphEngine {
         ctx.strokeStyle = onPath || isFocus ? T.focus : T.nodeBorder
         ctx.stroke()
       }
-      // 名字标签（等比缩放：fit 下 11px，随相机缩放）
-      if (r > 8) {
-        ctx.font = `500 ${Math.max(9, 11 * ui)}px "Noto Sans SC", sans-serif`
+      // 名字标签：分级显隐（缩放越小只显示关键节点）+ 贪心避让 + 引线兜底
+      const labelVisible =
+        n.key || n.centrality >= 8 ? ui >= 0.5 : n.centrality >= 4 ? ui >= 0.78 : ui >= 1.05
+      if (r > 8 && labelVisible) {
+        const fs = Math.max(9, 11 * ui)
+        ctx.font = `500 ${fs}px "Noto Sans SC", sans-serif`
         ctx.textAlign = 'center'
         ctx.textBaseline = 'top'
+        const tw = ctx.measureText(n.name).width
+        const lh = fs + 3 * ui
+        // 候选位置：下 / 上 / 右 / 左 / 8 方向斜位
+        const spots = [
+          { x: p.x, y: p.y + r + 5 * ui },
+          { x: p.x, y: p.y - r - 5 * ui - lh },
+          { x: p.x + r + 6 * ui + tw / 2, y: p.y - lh / 2 },
+          { x: p.x - r - 6 * ui - tw / 2, y: p.y - lh / 2 },
+        ]
+        const d = r + 16 * ui + lh / 2
+        for (let i = 0; i < 8; i++) {
+          const ang = 0.45 + (i / 8) * Math.PI * 2
+          spots.push({ x: p.x + Math.cos(ang) * d, y: p.y + Math.sin(ang) * d - lh / 2 })
+        }
+        let chosen = null
+        let leader = null
+        for (const s of spots) {
+          const rect = { x: s.x - tw / 2, y: s.y, w: tw, h: lh }
+          const hit = placedLabels.some((q) => Math.abs(rect.x - q.x) < (rect.w + q.w) / 2 + 2 && Math.abs(rect.y - q.y) < (rect.h + q.h) / 2 + 1)
+          if (!hit) {
+            chosen = rect
+            break
+          }
+        }
+        if (!chosen) {
+          // 全部碰撞 → 堆叠到底部空行 + 引线
+          const ly = placedLabels.reduce((max, q) => Math.max(max, q.y + q.h), p.y - r)
+          chosen = { x: p.x - tw / 2, y: ly + 6 * ui, w: tw, h: lh }
+          leader = { x0: p.x, y0: p.y - r, x1: p.x, y1: ly + 3 * ui }
+        }
+        placedLabels.push(chosen)
+        if (leader) {
+          ctx.strokeStyle = 'rgba(184,134,11,0.55)'
+          ctx.lineWidth = 1
+          ctx.beginPath()
+          ctx.moveTo(leader.x0, leader.y0)
+          ctx.lineTo(leader.x1, leader.y1)
+          ctx.stroke()
+        }
         ctx.shadowColor = T.light ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.75)'
         ctx.shadowBlur = 3
         ctx.fillStyle = T.label
-        ctx.fillText(n.name, p.x, p.y + r + 5 * ui)
+        ctx.fillText(n.name, chosen.x + tw / 2, chosen.y)
         ctx.shadowBlur = 0
       }
       ctx.restore()
