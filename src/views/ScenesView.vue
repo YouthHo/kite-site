@@ -4,23 +4,12 @@ import gsap from 'gsap'
 import scenes from '@/data/scenes.json'
 import quotes from '@/data/quotes.json'
 import SealStamp from '@/components/SealStamp.vue'
-import ImageLightbox from '@/components/ImageLightbox.vue'
+import SceneCard from '@/components/SceneCard.vue'
 import QuoteCard from '@/components/QuoteCard.vue'
 import { pageEnter, prefersReduced } from '@/utils/anim'
 
 const tab = ref('scenes')
-const lightbox = ref(null)
-const lightIndex = ref(0)
 let crossTween = null
-
-function openLightbox(scene, ev) {
-  const rect = ev.currentTarget.getBoundingClientRect()
-  lightIndex.value = scenes.findIndex((s) => s.id === scene.id)
-  lightbox.value = { origin: { x: rect.x, y: rect.y, w: rect.width, h: rect.height }, list: scenes }
-}
-function changeLight(i) {
-  lightIndex.value = i
-}
 
 function switchTab(t) {
   if (t === tab.value) return
@@ -61,24 +50,9 @@ onBeforeUnmount(() => crossTween?.kill())
       </div>
     </div>
 
-    <!-- 名场面：从左到右、从上到下的网格排列 -->
+    <!-- 名场面：原创构图卡（零照片依赖，无 img 无破图无条纹） -->
     <div v-if="tab === 'scenes'" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-      <figure
-        v-for="s in scenes"
-        :key="s.id"
-        class="scenes-item k-card archive-tape relative overflow-hidden cursor-pointer group"
-        @click="openLightbox(s, $event)"
-      >
-        <img :src="s.image" :alt="s.title" loading="eager" class="w-full object-cover brightness-[0.82] contrast-105 group-hover:brightness-100 group-hover:scale-[1.03] transition-all duration-700 bg-[#121212]" />
-        <!-- 底部文字：默认半透明，hover 清晰 -->
-        <figcaption class="absolute inset-x-0 bottom-0 p-4 pt-14" style="background: linear-gradient(rgba(8,8,8,0.05) 0%, rgba(8,8,8,0.72) 42%, rgba(8,8,8,0.94) 100%)">
-          <div class="font-mono text-[10px] tracking-[0.3em] text-[#d8a0a8] on-media">EP.{{ String(s.episode).padStart(2, '0') }}</div>
-          <div class="title-sans text-[15px] mt-1 on-media opacity-60 group-hover:opacity-100 transition-opacity duration-300" style="text-shadow: 0 1px 8px rgba(0,0,0,0.9);">{{ s.title }}</div>
-          <div class="text-[11px] leading-5 on-media opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-1" style="text-shadow: 0 1px 6px rgba(0,0,0,0.9);">{{ s.desc }}</div>
-        </figcaption>
-        <!-- 胶片角标 -->
-        <span class="absolute top-3 left-3 text-[10px] tracking-[0.2em] on-media opacity-50 border border-[#e8dcc8]/20 px-1.5 py-0.5">SCENE-{{ s.id.toUpperCase() }}</span>
-      </figure>
+      <SceneCard v-for="s in scenes" :key="s.id" :scene="s" />
     </div>
 
     <!-- 经典台词 -->
@@ -87,17 +61,5 @@ onBeforeUnmount(() => crossTween?.kill())
         <QuoteCard :quote="q" />
       </div>
     </div>
-
-    <!-- 灯箱 -->
-    <ImageLightbox
-      v-if="lightbox"
-      :src="scenes[lightIndex].image"
-      :alt="scenes[lightIndex].title"
-      :origin-rect="lightbox.origin"
-      :list="lightbox.list"
-      :index="lightIndex"
-      @close="lightbox = null"
-      @change="changeLight"
-    />
   </div>
 </template>
