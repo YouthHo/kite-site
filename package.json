@@ -10,7 +10,7 @@
     "prebuild": "node scripts/check-case.cjs && node scripts/check-bom.cjs && node scripts/validate-data.cjs && node scripts/gen-sitemap.cjs",
     "build": "vite build",
     "build:gh": "node scripts/build-gh.cjs",
-    "preview": "vite preview"
+    "preview": "vite preview", "postbuild": "node scripts/perf-check.cjs", "validate": "node scripts/check-bom.cjs && node scripts/validate-data.cjs", "audit": "npm audit --omit=dev"
   },
   "dependencies": {
     "echarts": "^5.5.1",
