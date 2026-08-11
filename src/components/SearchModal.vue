@@ -4,11 +4,7 @@ import { useRouter } from 'vue-router'
 import gsap from 'gsap'
 import { Search, X, Users, Clapperboard, FileText, Quote, Film, ArrowRight } from 'lucide-vue-next'
 import { searchOpen } from '@/store/app'
-import characters from '@/data/characters.json'
-import actors from '@/data/actors.json'
-import episodes from '@/data/episodes.json'
-import quotes from '@/data/quotes.json'
-import scenes from '@/data/scenes.json'
+import { searchIndex, searchCounts } from '@/utils/search-index'
 
 const router = useRouter()
 const keyword = ref('')
@@ -28,35 +24,11 @@ const TABS = [
 const results = computed(() => {
   const kw = keyword.value.trim().toLowerCase()
   if (!kw) return []
-  const hit = (s) => (s || '').toLowerCase().includes(kw)
-  const list = []
-  if (tab.value === 'all' || tab.value === 'character') {
-    characters.forEach((c) => {
-      if (hit(c.name) || hit(c.code) || hit(c.identity) || hit(c.brief)) list.push({ type: 'character', title: c.name, sub: c.identity, to: `/characters?q=${c.id}` })
-    })
-  }
-  if (tab.value === 'all' || tab.value === 'actor') {
-    actors.forEach((a) => {
-      if (hit(a.name) || hit(a.role)) list.push({ type: 'actor', title: `${a.name}`, sub: `饰 ${a.role}`, to: '/cast' })
-    })
-  }
-  if (tab.value === 'all' || tab.value === 'episode') {
-    episodes.forEach((e) => {
-      if (hit(e.title) || hit(e.summary)) list.push({ type: 'episode', title: `第${e.id}集 · ${e.title}`, sub: e.summary.slice(0, 30) + '…', to: `/episodes?ep=${e.id}` })
-    })
-  }
-  if (tab.value === 'all' || tab.value === 'quote') {
-    quotes.forEach((q) => {
-      if (hit(q.text) || hit(q.speaker)) list.push({ type: 'quote', title: q.text.slice(0, 26) + (q.text.length > 26 ? '…' : ''), sub: `${q.speaker} · 第${q.episode}集`, to: '/scenes?tab=quotes' })
-    })
-  }
-  if (tab.value === 'all' || tab.value === 'scene') {
-    scenes.forEach((s) => {
-      if (hit(s.title) || hit(s.desc)) list.push({ type: 'scene', title: s.title, sub: `第${s.episode}集`, to: '/scenes' })
-    })
-  }
-  return list.slice(0, 24)
+  const all = searchIndex(kw)
+  if (tab.value === 'all') return all.slice(0, 24)
+  return all.filter((r) => r.type === tab.value).slice(0, 24)
 })
+const counts = computed(() => (keyword.value.trim() ? searchCounts(keyword.value) : null))
 
 let openTween = null
 watch(searchOpen, async (v) => {
