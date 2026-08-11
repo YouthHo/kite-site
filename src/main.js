@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import i18n from './i18n'
 // 字体自托管（2.0）：本地 woff2，替代 Google Fonts 外链
 import '@fontsource/noto-sans-sc/400.css'
 import '@fontsource/noto-sans-sc/500.css'
@@ -20,4 +21,4 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 // 全局可访问（组件内也可直接 import）
 export { gsap, ScrollTrigger }
 
-createApp(App).use(router).mount('#app')
+createApp(App).use(router).use(i18n).mount('#app')

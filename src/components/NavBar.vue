@@ -1,24 +1,31 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import gsap from 'gsap'
-import { Search, Menu, X, FileText, Share2, BarChart3, Users, Calendar, Landmark, Clapperboard, Library, Sun, Moon } from 'lucide-vue-next'
+import { Search, Menu, X, FileText, Share2, BarChart3, Users, Calendar, Landmark, Clapperboard, Library, Sun, Moon, Languages } from 'lucide-vue-next'
 import { searchOpen, theme, toggleTheme } from '@/store/app'
+import { useI18n } from 'vue-i18n'
+import { setLocale } from '@/i18n'
 
+const { t, locale } = useI18n()
 const route = useRoute()
 const open = ref(false)
 
-const links = [
-  { to: '/', label: '首页' },
-  { to: '/graph', label: '关系图谱' },
-  { to: '/characters', label: '角色档案' },
-  { to: '/cast', label: '演员阵容' },
-  { to: '/episodes', label: '分集剧情' },
-  { to: '/timeline', label: '时间线' },
-  { to: '/architecture', label: '势力架构' },
-  { to: '/history', label: '历史背景' },
-  { to: '/scenes', label: '名场面·台词' },
-]
+const links = computed(() => [
+  { to: '/', label: t('nav.home') },
+  { to: '/graph', label: t('nav.graph') },
+  { to: '/characters', label: t('nav.characters') },
+  { to: '/cast', label: t('nav.cast') },
+  { to: '/episodes', label: t('nav.episodes') },
+  { to: '/timeline', label: t('nav.timeline') },
+  { to: '/architecture', label: t('nav.architecture') },
+  { to: '/history', label: t('nav.history') },
+  { to: '/scenes', label: t('nav.scenes') },
+])
+
+function toggleLang() {
+  setLocale(locale.value === 'zh' ? 'en' : 'zh')
+}
 
 let scrollTween = null
 let drawerTween = null
@@ -74,6 +81,15 @@ function toggleDrawer() {
       </nav>
 
       <div class="flex items-center gap-2">
+        <!-- 语言切换：中 / EN -->
+        <button
+          class="h-9 px-2 grid place-items-center text-[11px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] border border-transparent transition-colors font-mono"
+          :aria-label="locale === 'zh' ? 'Switch to English' : '切换中文'"
+          :title="locale === 'zh' ? 'EN' : '中'"
+          @click="toggleLang"
+        >
+          <Languages :size="15" class="mr-1" />{{ locale === 'zh' ? 'EN' : '中' }}
+        </button>
         <!-- 主题切换：深色胶片 / 浅色档案纸 -->
         <button
           class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] border border-transparent transition-colors"

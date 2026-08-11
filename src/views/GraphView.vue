@@ -1,6 +1,7 @@
 ﻿<script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import gsap from 'gsap'
 import { X, Search, ArrowRight, Info, Play, Pause } from 'lucide-vue-next'
 import { GraphEngine } from '@/graph/GraphEngine'
@@ -18,6 +19,7 @@ import { prefersReduced, typewriter } from '@/utils/anim'
 const g = useGraphData()
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const chartEl = ref(null)
 const panelEl = ref(null)
 const briefEl = ref(null)
@@ -62,13 +64,20 @@ const noteText = ref('')
 const noteKey = ref('')
 
 const secretTotal = computed(() => g.links.filter((l) => l.secret).length)
-const statsText = computed(() => `${g.stats.value.nodes}节点 · ${g.stats.value.edges}连线 · ${g.stats.value.factions}阵营 · 核心 ${g.stats.value.top}`)
+const statsText = computed(() =>
+  t('graph.stats', {
+    nodes: g.stats.value.nodes,
+    edges: g.stats.value.edges,
+    factions: g.stats.value.factions,
+    top: g.stats.value.top,
+  })
+)
 const escHint = computed(() => {
-  if (mode.value === 'path') return '退出路径'
-  if (selected.value) return '关闭档案'
-  if (mode.value === 'decrypt') return '退出解密'
-  if (mode.value === 'tour') return '退出巡览'
-  if (focusClickId.value) return '退出隔离'
+  if (mode.value === 'path') return t('graph.escExitPath')
+  if (selected.value) return t('graph.escClosePanel')
+  if (mode.value === 'decrypt') return t('graph.escExitDecrypt')
+  if (mode.value === 'tour') return t('graph.escExitTour')
+  if (focusClickId.value) return t('graph.escExitFocus')
   return ''
 })
 
@@ -501,13 +510,13 @@ onBeforeUnmount(() => {
 
         <!-- 路径模式：显式双步提示 + 取消（深底板+on-media） -->
         <div v-if="mode === 'path'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#b8860b] bg-[#0e0e0e]/90 text-[#b8860b] whitespace-nowrap on-media">
-          <template v-if="!pathStart">① 点击起点（画布节点或人物列表）</template>
-          <template v-else-if="!pathResult">② 点击终点 — 起点：{{ g.charMap[pathStart]?.name }}</template>
+          <template v-if="!pathStart">{{ t('graph.pathStep1') }}</template>
+          <template v-else-if="!pathResult">{{ t('graph.pathStep2', { name: g.charMap[pathStart]?.name }) }}</template>
           <template v-else>
-            <span v-if="pathResult.hops >= 0">最短路径：{{ pathResult.ids.map((id) => g.charMap[id]?.name || id).join(' → ') }} · {{ pathResult.hops }} 跳</span>
-            <span v-else>两节点在当前图谱中不连通</span>
+            <span v-if="pathResult.hops >= 0">{{ t('graph.pathResult', { path: pathResult.ids.map((id) => g.charMap[id]?.name || id).join(' → '), hops: pathResult.hops }) }}</span>
+            <span v-else>{{ t('graph.pathDisconnected') }}</span>
           </template>
-          <button class="pointer-events-auto border border-[#9d2235] text-[#d8a0a8] px-2 py-0.5 hover:bg-[#9d2235]/15 transition-colors" @click="cancelPath">取消</button>
+          <button class="pointer-events-auto border border-[#9d2235] text-[#d8a0a8] px-2 py-0.5 hover:bg-[#9d2235]/15 transition-colors" @click="cancelPath">{{ t('graph.cancel') }}</button>
         </div>
 
         <!-- 巡览旁白（深底板+on-media 双主题可读） -->
@@ -524,7 +533,7 @@ onBeforeUnmount(() => {
 
         <!-- 解密模式：进入态提示（深底板+on-media） -->
         <div v-if="mode === 'decrypt'" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#d8a0a8] bg-[#0e0e0e]/90 border border-[#9d2235]/50 px-3 py-1.5 pointer-events-none on-media">
-          已解密 {{ decryptCount }}/{{ g.nodes.length }} · 秘密线索 {{ secretFound }}/{{ secretTotal }} — 点击遮蔽节点揭开档案
+          {{ t('graph.decryptHint', { n: decryptCount, total: g.nodes.length, found: secretFound, total2: secretTotal }) }}
         </div>
 
         <!-- 悬停信息条（静态简洁，深底板+on-media 双主题可读） -->
@@ -571,7 +580,7 @@ onBeforeUnmount(() => {
             </button>
           </div>
           <div class="font-mono text-[9px] tracking-[0.1em] text-[#555048] pointer-events-none">
-            节点越大=权重越高 · 金/红双环=kite/shadow · 虚线=敌对 · 点线=秘密 · 箭头=有向
+            {{ t('graph.legendHint') }}
           </div>
         </div>
 
@@ -630,7 +639,7 @@ onBeforeUnmount(() => {
             <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectNonePeople">清空</button>
           </div>
         </div>
-        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#555048]">{{ mode === 'path' ? '路径模式：点击人物行选择起点 → 终点' : '点击名字 = 勾选/取消筛显 · 点击 ⓘ = 查看档案详情' }}</div>
+        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#555048]">{{ mode === 'path' ? t('graph.listHintPath') : t('graph.listHint') }}</div>
         <ul class="space-y-0.5" role="list">
           <li
             v-for="(n, i) in g.sortedList.value"
