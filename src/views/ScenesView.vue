@@ -69,7 +69,7 @@ onBeforeUnmount(() => crossTween?.kill())
         class="scenes-item k-card archive-tape relative overflow-hidden cursor-pointer group"
         @click="openLightbox(s, $event)"
       >
-        <img :src="s.image" :alt="s.title" loading="lazy" class="w-full object-cover brightness-[0.82] contrast-105 group-hover:brightness-100 group-hover:scale-[1.03] transition-all duration-700" />
+        <img :src="s.image" :alt="s.title" loading="eager" class="w-full object-cover brightness-[0.82] contrast-105 group-hover:brightness-100 group-hover:scale-[1.03] transition-all duration-700 bg-[#121212]" />
         <!-- 底部文字：默认半透明，hover 清晰 -->
         <figcaption class="absolute inset-x-0 bottom-0 p-4 pt-14" style="background: linear-gradient(rgba(8,8,8,0.05) 0%, rgba(8,8,8,0.72) 42%, rgba(8,8,8,0.94) 100%)">
           <div class="font-mono text-[10px] tracking-[0.3em] text-[#d8a0a8] on-media">EP.{{ String(s.episode).padStart(2, '0') }}</div>

@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import gsap from 'gsap'
 import { X, Search, ArrowRight, Info, Play, Pause } from 'lucide-vue-next'
@@ -36,6 +36,22 @@ const tourIdx = ref(0)
 const tourText = ref('')
 const hoverNodeId = ref(null)
 const hoverSummary = ref('')
+const hoverHighlight = ref(true)
+// 悬停高亮开关：localStorage 持久化（默认开）
+try {
+  hoverHighlight.value = localStorage.getItem('kite-graph-highlight') !== '0'
+} catch (e) {
+  /* ignore */
+}
+function toggleHighlight() {
+  hoverHighlight.value = !hoverHighlight.value
+  engine?.setHoverHighlight(hoverHighlight.value)
+  try {
+    localStorage.setItem('kite-graph-highlight', hoverHighlight.value ? '1' : '0')
+  } catch (e) {
+    /* ignore */
+  }
+}
 const helpOpen = ref(false)
 const liveText = ref('')
 const revealed = ref(false)
@@ -53,7 +69,6 @@ const escHint = computed(() => {
 
 let engine = null
 let briefType = null
-let hoverType = null
 let tourType = null
 let resizeObs = null
 
@@ -225,7 +240,7 @@ function onKey(e) {
   engine?.centerOn(focusNodeId.value, 380)
 }
 
-/* ---------- 侧栏（点击行 = 看档案；勾选 = 独立复选框；路径模式下行=选端点） ---------- */
+/* ---------- 侧栏（点击名字行 = 勾选筛显；ⓘ = 看档案；路径模式下行=选端点） ---------- */
 function onRowClick(n) {
   if (mode.value === 'path') {
     if (!pathStart.value) pathStart.value = n.id
@@ -233,7 +248,7 @@ function onRowClick(n) {
     engine?.requestRender()
     return
   }
-  openPanel(n.id)
+  togglePerson(n.id)
 }
 function togglePerson(id) {
   const s = new Set(g.personSel.value)
@@ -260,29 +275,18 @@ function toggleFaction(k) {
   g.activeFactions.value = s
 }
 
-/* ---------- 悬停电报条 + live region ---------- */
+/* ---------- 悬停信息条（静态简洁：姓名·阵营·代号；关系语义由线上嵌字承载） + live region ---------- */
 function handleHover(id) {
   hoverNodeId.value = id
-  hoverType?.kill?.()
   if (!id) {
     hoverSummary.value = ''
     return
   }
   const n = g.byId[id]
   if (!n) return
-  const rels = g.visibleLinks.value
-    .filter((l) => l.source === id || l.target === id)
-    .map((l) => l.label)
-    .slice(0, 4)
-    .join(' · ')
-  const key = n.key ? (n.key === 'kite' ? ' [风筝轴]' : ' [影子轴]') : ''
-  const text = `接入 ${n.name}${key} · ${n.code ? '代号「' + n.code + '」· ' : ''}${rels || '孤悬于网'}`
-  hoverSummary.value = text
-  if (hoverEl.value && !prefersReduced) {
-    hoverType = typewriter(hoverEl.value, text, { speed: 14, caret: false })
-  } else if (hoverEl.value) {
-    hoverEl.value.textContent = text
-  }
+  const key = n.key ? (n.key === 'kite' ? ' · 风筝轴' : ' · 影子轴') : ''
+  hoverSummary.value = `${n.name} · ${g.factionLabel(n.faction)}${n.code ? ' · ' + n.code : ''}${key}`
+  if (hoverEl.value) hoverEl.value.textContent = hoverSummary.value
   const deg = g.degree.value[id] || 0
   liveText.value = `节点 ${n.name}，${n.role || g.factionLabel(n.faction)}，${key.trim()}，连接 ${deg} 条关系`
 }
@@ -358,6 +362,7 @@ onMounted(async () => {
     prefersReduced,
   })
   engine.setTheme(theme.value === 'light')
+  engine.setHoverHighlight(hoverHighlight.value)
   engine.fit()
   engine.start()
   resizeObs = new ResizeObserver(() => engine?.resize())
@@ -378,7 +383,6 @@ onBeforeUnmount(() => {
   engine?.dispose()
   resizeObs?.disconnect()
   briefType?.kill?.()
-  hoverType?.kill?.()
   tourType?.kill?.()
 })
 </script>
@@ -403,8 +407,8 @@ onBeforeUnmount(() => {
           @keydown="onKey"
         ></canvas>
 
-        <!-- 顶部：状态条（中央）+ 工具条（右侧） -->
-        <div class="absolute top-3 left-1/2 -translate-x-1/2 z-10">
+        <!-- 顶部：状态条（左锚定 max-w-[400px]，不与右工具条重叠）+ 工具条（右锚定） -->
+        <div class="absolute top-3 left-3 z-10 max-w-[400px] hidden sm:block">
           <GraphStatusBar
             :mode="mode"
             :hover-name="hoverNodeId ? (g.charMap[hoverNodeId]?.name || '') : ''"
@@ -413,7 +417,7 @@ onBeforeUnmount(() => {
             :stats-text="statsText"
           />
         </div>
-        <div class="absolute top-3 right-3 z-10 max-w-[62%]">
+        <div class="absolute top-3 right-3 z-10 max-w-[52%]">
           <GraphToolbar
             :mode="mode"
             :tour-idx="tourIdx"
@@ -421,15 +425,17 @@ onBeforeUnmount(() => {
             :decrypt-count="decryptCount"
             :node-total="g.nodes.length"
             :layout-mode="layoutMode"
+            :hover-highlight="hoverHighlight"
             @mode="setMode"
             @layout="toggleLayout"
             @reset="resetView"
             @help="helpOpen = true"
+            @highlight="toggleHighlight"
           />
         </div>
 
-        <!-- 路径模式：显式双步提示 + 取消 -->
-        <div v-if="mode === 'path'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#b8860b] bg-[#0e0e0e]/90 text-[#b8860b] whitespace-nowrap">
+        <!-- 路径模式：显式双步提示 + 取消（深底板+on-media） -->
+        <div v-if="mode === 'path'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#b8860b] bg-[#0e0e0e]/90 text-[#b8860b] whitespace-nowrap on-media">
           <template v-if="!pathStart">① 点击起点（画布节点或人物列表）</template>
           <template v-else-if="!pathResult">② 点击终点 — 起点：{{ g.charMap[pathStart]?.name }}</template>
           <template v-else>
@@ -439,8 +445,8 @@ onBeforeUnmount(() => {
           <button class="pointer-events-auto border border-[#9d2235] text-[#d8a0a8] px-2 py-0.5 hover:bg-[#9d2235]/15 transition-colors" @click="cancelPath">取消</button>
         </div>
 
-        <!-- 巡览旁白 -->
-        <div v-if="mode === 'tour'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 max-w-[560px] w-[88%] bg-black/80 border border-[#b8860b]/50 px-4 py-3 pointer-events-none">
+        <!-- 巡览旁白（深底板+on-media 双主题可读） -->
+        <div v-if="mode === 'tour'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 max-w-[560px] w-[88%] bg-[#0e0e0e]/94 border border-[#b8860b]/50 px-4 py-3 pointer-events-none on-media">
           <div class="flex items-center justify-between mb-1.5 font-mono text-[9px] tracking-[0.3em] text-[#b8860b]">
             <span>DECRYPT FILE · {{ String(tourIdx + 1).padStart(2, '0') }}/{{ TOUR_STEPS.length }}</span>
             <span class="flex gap-3">
@@ -451,20 +457,20 @@ onBeforeUnmount(() => {
           <p ref="tourEl" class="text-[13px] leading-6 text-[#e8dcc8]">{{ tourText }}</p>
         </div>
 
-        <!-- 解密模式：进入态提示 -->
-        <div v-if="mode === 'decrypt'" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#d8a0a8] bg-black/60 border border-[#9d2235]/50 px-3 py-1.5 pointer-events-none">
+        <!-- 解密模式：进入态提示（深底板+on-media） -->
+        <div v-if="mode === 'decrypt'" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#d8a0a8] bg-[#0e0e0e]/90 border border-[#9d2235]/50 px-3 py-1.5 pointer-events-none on-media">
           已解密 {{ decryptCount }}/{{ g.nodes.length }} · 秘密线索 {{ secretFound }}/{{ secretTotal }} — 点击遮蔽节点揭开档案
         </div>
 
-        <!-- 悬停电报条 -->
-        <div v-if="hoverNodeId" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.2em] text-[#d8a0a8] bg-black/60 border border-[#9d2235]/40 px-4 py-1.5 whitespace-nowrap max-w-[90%] overflow-hidden text-ellipsis pointer-events-none">
+        <!-- 悬停信息条（静态简洁，深底板+on-media 双主题可读） -->
+        <div v-if="hoverNodeId" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.2em] text-[#e8dcc8] bg-[#0e0e0e]/90 border border-[#2a2520] px-4 py-1.5 whitespace-nowrap max-w-[90%] overflow-hidden text-ellipsis pointer-events-none on-media">
           <span ref="hoverEl">{{ hoverSummary }}</span>
         </div>
 
-        <!-- 隔离退出按钮（可见的退出通道） -->
+        <!-- 隔离退出按钮（可见的退出通道，深底板+on-media） -->
         <button
           v-if="focusClickId && mode === 'browse'"
-          class="absolute bottom-12 right-3 z-10 font-mono text-[10px] tracking-[0.15em] border border-[#b8860b] text-[#b8860b] bg-[#0e0e0e]/85 px-2.5 py-1 hover:bg-[#b8860b]/15 transition-colors"
+          class="absolute bottom-12 right-3 z-10 font-mono text-[10px] tracking-[0.15em] border border-[#b8860b] text-[#b8860b] bg-[#0e0e0e]/90 px-2.5 py-1 hover:bg-[#b8860b]/15 transition-colors on-media"
           @click="clearFocus"
         >
           退出隔离
@@ -504,8 +510,8 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <!-- 时间轴 -->
-        <div class="absolute bottom-3 right-3 z-10 flex items-center gap-2.5 bg-[#0e0e0e]/85 border border-[#2a2520] px-3 py-1.5">
+        <!-- 时间轴（深底板+on-media） -->
+        <div class="absolute bottom-3 right-3 z-10 flex items-center gap-2.5 bg-[#0e0e0e]/90 border border-[#2a2520] px-3 py-1.5 on-media">
           <button class="text-[#8a8275] hover:text-[#e8dcc8] transition-colors" :aria-label="g.epPlaying.value ? '暂停演化' : '播放演化'" @click="g.toggleEraPlay()">
             <Pause v-if="g.epPlaying.value" :size="13" />
             <Play v-else :size="13" />
@@ -559,7 +565,7 @@ onBeforeUnmount(() => {
             <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectNonePeople">清空</button>
           </div>
         </div>
-        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#555048]">{{ mode === 'path' ? '路径模式：点击人物行选择起点 → 终点' : '点击名字 = 查看档案 · 勾选 = 筛显图谱' }}</div>
+        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#555048]">{{ mode === 'path' ? '路径模式：点击人物行选择起点 → 终点' : '点击名字 = 勾选/取消筛显 · 点击 ⓘ = 查看档案详情' }}</div>
         <ul class="space-y-0.5" role="list">
           <li
             v-for="(n, i) in g.sortedList.value"
@@ -661,3 +667,4 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 </style>
+

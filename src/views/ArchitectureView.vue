@@ -100,7 +100,7 @@ onBeforeUnmount(() => {
     <p class="mb-8 text-[12px] leading-6 text-[#8a8275]" data-enter>{{ currentOrg.desc }}</p>
 
     <!-- 树形架构：逐层行 -->
-    <div class="overflow-x-auto pb-6">
+    <div class="overflow-x-auto pt-12 pb-6">
       <div class="min-w-[720px]">
         <div v-for="(level, li) in byLevel" :key="li" class="relative mb-8">
           <!-- 层间连接线 -->

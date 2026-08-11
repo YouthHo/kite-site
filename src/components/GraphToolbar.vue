@@ -1,9 +1,9 @@
-<script setup>
-import { BookOpen, Unlock, Route, Network, Locate, HelpCircle } from 'lucide-vue-next'
+﻿<script setup>
+import { BookOpen, Unlock, Route, Network, Locate, HelpCircle, Eye, EyeOff } from 'lucide-vue-next'
 
 /**
  * 图谱工具条：图标 + 文字 + tooltip；激活态强对比（底填充 + 亮边框）
- * 模式互斥由父层状态机保证
+ * 模式互斥由父层状态机保证；悬停高亮开关独立于模式
  */
 defineProps({
   mode: { type: String, default: 'browse' },
@@ -12,11 +12,12 @@ defineProps({
   decryptCount: { type: Number, default: 0 },
   nodeTotal: { type: Number, default: 30 },
   layoutMode: { type: String, default: 'none' },
+  hoverHighlight: { type: Boolean, default: true },
 })
-const emit = defineEmits(['mode', 'layout', 'reset', 'help'])
+const emit = defineEmits(['mode', 'layout', 'reset', 'help', 'highlight'])
 
-const activeCls = 'border-[#b8860b] text-[#b8860b] bg-[#b8860b]/15'
-const idleCls = 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235]'
+const activeCls = 'border-[#b8860b] text-[#b8860b] bg-[#b8860b]/15 on-media'
+const idleCls = 'border-[#2a2520] bg-[#0e0e0e]/90 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] on-media'
 </script>
 
 <template>
@@ -34,7 +35,7 @@ const idleCls = 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8
     </button>
     <!-- 解密模式（逐节点揭开遮蔽） -->
     <button
-      class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors flex items-center gap-1.5"
+      class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors flex items-center gap-1.5 on-media"
       :class="mode === 'decrypt' ? 'border-[#9d2235] text-[#d8a0a8] bg-[#9d2235]/15' : idleCls"
       :title="mode === 'decrypt' ? '退出解密模式' : '解密模式：点击被遮蔽节点逐层揭开（共 30 份档案）'"
       :aria-pressed="mode === 'decrypt'"
@@ -75,6 +76,18 @@ const idleCls = 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8
       <Locate :size="12" />
       <span>重置</span>
     </button>
+    <!-- 悬停高亮开关（C2：关闭时悬停无任何高亮/强调/脉冲） -->
+    <button
+      class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors flex items-center gap-1.5 on-media"
+      :class="hoverHighlight ? 'border-[#2a2520] bg-[#0e0e0e]/90 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235]' : 'border-[#555048] text-[#555048] bg-[#0e0e0e]/60'"
+      :title="hoverHighlight ? '悬停高亮已开启：悬停节点会高亮其关系网' : '悬停高亮已关闭：悬停不产生任何高亮（点击等主交互不受影响）'"
+      :aria-pressed="hoverHighlight"
+      @click="emit('highlight')"
+    >
+      <Eye v-if="hoverHighlight" :size="12" />
+      <EyeOff v-else :size="12" />
+      <span>{{ hoverHighlight ? '悬停高亮' : '高亮关闭' }}</span>
+    </button>
     <!-- 帮助 -->
     <button
       class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors flex items-center gap-1.5"
@@ -88,3 +101,4 @@ const idleCls = 'border-[#2a2520] bg-[#0e0e0e]/85 text-[#8a8275] hover:text-[#e8
     </button>
   </div>
 </template>
+

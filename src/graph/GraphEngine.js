@@ -30,6 +30,7 @@ export class GraphEngine {
     this.focusClick = null // 点击聚焦：隔离自我网络
     this.decryptMode = false // 解密模式：初始遮蔽
     this.decrypted = new Set() // 已揭开节点
+    this.hoverHighlight = true // C2：悬停高亮开关（默认开，关闭时悬停无任何高亮/强调/脉冲）
     this.appear = new Map() // id -> 出现时间戳
     this.vanish = new Map() // id -> 消失时间戳（残影淡出）
     this.lastIds = null // 上一帧可见节点集（diff 出消散）
@@ -152,6 +153,10 @@ export class GraphEngine {
     if (!on) this.decrypted.clear()
     this.requestRender()
   }
+  setHoverHighlight(on) {
+    this.hoverHighlight = !!on
+    this.requestRender()
+  }
   decryptNode(id) {
     this.decrypted.add(id)
     this.requestRender()
@@ -214,10 +219,11 @@ export class GraphEngine {
     let best = null
     let bestD = Infinity
     const ui = this.cam.scale / this.fitScale
-    const hitR = 26 / ui // 屏幕 26px 命中半径（世界单位）
+    // C1：命中 = 指针中心落在圆圈内（视觉半径 + 4px 屏幕容差，换算为世界单位）
     for (const n of d.visibleNodes.value) {
       const p = this.nodePos.get(n.id) || { x: n.x, y: n.y }
       const r = Math.hypot(w.x - p.x, w.y - p.y)
+      const hitR = (nodeRadius(n) * ui + 4) / this.cam.scale
       if (r < hitR && r < bestD) {
         best = n.id
         bestD = r
@@ -472,7 +478,8 @@ export class GraphEngine {
       if (now - t > 320) this.vanish.delete(id)
     }
 
-    const hoverNode = this.hover
+    const hoverNode = this.hoverHighlight ? this.hover : null
+    const hh = this.hoverHighlight
     const focusId = this.focusNodeId
     const fc = this.focusClick
     const fcNeighbors = fc ? new Set() : null
@@ -579,7 +586,6 @@ export class GraphEngine {
     }
 
     // ---- 节点 ----
-    const placedLabels = [] // 已放置标签矩形（贪心避让）
     for (const n of nodes) {
       const p = posOf(n.id)
       const appearT = this._appearT(n.id, now)
@@ -620,7 +626,7 @@ export class GraphEngine {
         ctx.restore()
         continue
       }
-      // 印章节点（kite / shadow）
+      // 印章节点（kite / shadow）：画完整姓名（+代号小字），圈内不溢出
       if (n.key) {
         const seal = n.key === 'kite' ? T.sealKite : T.sealShadow
         ctx.shadowColor = seal
@@ -642,13 +648,6 @@ export class GraphEngine {
         ctx.beginPath()
         ctx.arc(p.x, p.y, r * 0.72, 0, Math.PI * 2)
         ctx.fill()
-        if (n.code && r > 10) {
-          ctx.fillStyle = T.label
-          ctx.font = `500 ${Math.max(9, r * 0.42)}px "Noto Sans SC", sans-serif`
-          ctx.textAlign = 'center'
-          ctx.textBaseline = 'middle'
-          ctx.fillText(n.code.slice(0, 2), p.x, p.y + 0.5)
-        }
       } else {
         ctx.shadowColor = color + T.nodeGlow
         ctx.shadowBlur = 10
@@ -664,98 +663,89 @@ export class GraphEngine {
         ctx.strokeStyle = onPath || isFocus ? T.focus : T.nodeBorder
         ctx.stroke()
       }
-      // 名字标签：分级显隐（缩放越小只显示关键节点）+ 贪心避让 + 引线兜底
-      const labelVisible =
-        n.key || n.centrality >= 8 ? ui >= 0.5 : n.centrality >= 4 ? ui >= 0.78 : ui >= 1.05
-      if (r > 8 && labelVisible) {
-        const fs = Math.max(9, 11 * ui)
-        ctx.font = `500 ${fs}px "Noto Sans SC", sans-serif`
+      // C3：悬停时邻居节点正向强调（金色细环），非邻居仍 dim
+      const isNb = hh && !!hoverNeighbors && hoverNeighbors.has(n.id) && !isHover && !this.drag
+      // D：名字写在圆圈内（单行居中；measureText 收缩；放不下不画；绝不溢出/换行）
+      const margin = r * 0.2
+      const maxW = 2 * (r - margin)
+      if (r > 7) {
+        let fs = Math.min(Math.max(r * 0.66, 7), 22)
+        let weight = fs >= 12 ? 600 : 500
+        ctx.font = `${weight} ${fs}px "Noto Sans SC", sans-serif`
         ctx.textAlign = 'center'
-        ctx.textBaseline = 'top'
-        const tw = ctx.measureText(n.name).width
-        const lh = fs + 3 * ui
-        // 候选位置：下 / 上 / 右 / 左 / 8 方向斜位
-        const spots = [
-          { x: p.x, y: p.y + r + 5 * ui },
-          { x: p.x, y: p.y - r - 5 * ui - lh },
-          { x: p.x + r + 6 * ui + tw / 2, y: p.y - lh / 2 },
-          { x: p.x - r - 6 * ui - tw / 2, y: p.y - lh / 2 },
-        ]
-        const d = r + 16 * ui + lh / 2
-        for (let i = 0; i < 8; i++) {
-          const ang = 0.45 + (i / 8) * Math.PI * 2
-          spots.push({ x: p.x + Math.cos(ang) * d, y: p.y + Math.sin(ang) * d - lh / 2 })
+        ctx.textBaseline = 'middle'
+        let tw = ctx.measureText(n.name).width
+        let guard = 0
+        while (tw > maxW && fs > 6.5 && guard < 8) {
+          fs *= 0.86
+          ctx.font = `${weight} ${fs}px "Noto Sans SC", sans-serif`
+          tw = ctx.measureText(n.name).width
+          guard++
         }
-        let chosen = null
-        let leader = null
-        for (const s of spots) {
-          const rect = { x: s.x - tw / 2, y: s.y, w: tw, h: lh }
-          const hit = placedLabels.some((q) => Math.abs(rect.x - q.x) < (rect.w + q.w) / 2 + 2 && Math.abs(rect.y - q.y) < (rect.h + q.h) / 2 + 1)
-          if (!hit) {
-            chosen = rect
-            break
+        if (tw <= maxW && fs >= 6) {
+          ctx.fillStyle = 'rgba(255,255,255,0.94)'
+          ctx.shadowColor = 'rgba(0,0,0,0.8)'
+          ctx.shadowBlur = 2
+          if (n.key && n.code) {
+            // 印章节点：姓名 + 代号两行（都做收缩检查，放不下只画姓名）
+            ctx.fillText(n.name, p.x, p.y - fs * 0.34)
+            const fs2 = Math.max(6, fs * 0.58)
+            ctx.font = `500 ${fs2}px "Noto Sans SC", sans-serif`
+            if (ctx.measureText(n.code).width <= maxW) ctx.fillText(n.code, p.x, p.y + fs * 0.52)
+          } else {
+            ctx.fillText(n.name, p.x, p.y)
           }
+          ctx.shadowBlur = 0
         }
-        if (!chosen) {
-          // 全部碰撞 → 堆叠到底部空行 + 引线
-          const ly = placedLabels.reduce((max, q) => Math.max(max, q.y + q.h), p.y - r)
-          chosen = { x: p.x - tw / 2, y: ly + 6 * ui, w: tw, h: lh }
-          leader = { x0: p.x, y0: p.y - r, x1: p.x, y1: ly + 3 * ui }
-        }
-        placedLabels.push(chosen)
-        if (leader) {
-          ctx.strokeStyle = 'rgba(184,134,11,0.55)'
-          ctx.lineWidth = 1
-          ctx.beginPath()
-          ctx.moveTo(leader.x0, leader.y0)
-          ctx.lineTo(leader.x1, leader.y1)
-          ctx.stroke()
-        }
-        ctx.shadowColor = T.light ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.75)'
-        ctx.shadowBlur = 3
-        ctx.fillStyle = T.label
-        ctx.fillText(n.name, chosen.x + tw / 2, chosen.y)
-        ctx.shadowBlur = 0
+      }
+      if (isNb) {
+        ctx.strokeStyle = 'rgba(184,134,11,0.9)'
+        ctx.lineWidth = 1.4 * ui
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, r + 2.5 * ui, 0, Math.PI * 2)
+        ctx.stroke()
       }
       ctx.restore()
     }
 
-    // ---- 悬停邻边关系标签（边中点药丸 + 矩形碰撞避让） ----
+    // ---- C4：悬停邻边关系文字沿曲线切线嵌入线中（贴线不漂移；线够长才画） ----
     if (hoverNode && !this.reduced) {
       const p = posOf(hoverNode)
       const neighbors = links.filter((l) => l.source === hoverNode || l.target === hoverNode)
-      const rects = []
       ctx.font = `500 ${10.5 * ui}px "Noto Sans SC", sans-serif`
-      const padX = 7 * ui
-      const padY = 4 * ui
-      const lh = 17 * ui + padY * 2
       for (const l of neighbors) {
         const other = l.source === hoverNode ? l.target : l.source
         const op = posOf(other)
         if (!op) continue
+        const len = Math.hypot(op.x - p.x, op.y - p.y)
         const text = l.label
         const tw = ctx.measureText(text).width
-        // 默认：边中点上方
-        let lx = (p.x + op.x) / 2
-        let ly = (p.y + op.y) / 2 - lh / 2 - 6 * ui
-        // 与已放置标签的碰撞避让：垂直偏移（按先来后到堆叠）
-        for (let tries = 0; tries < 24; tries++) {
-          const hit = rects.some((r) => Math.abs(lx - r.x) < (tw + padX * 2 + r.w) / 2 + 4 && Math.abs(ly - r.y) < (lh + r.h) / 2 + 2)
-          if (!hit) break
-          ly -= lh + 2
-        }
-        rects.push({ x: lx, y: ly, w: tw + padX * 2, h: lh })
+        // 线足够长才画（屏幕像素 > 文字宽 + 余量），避免短边文字重叠
+        if (len < tw + 30 * ui) continue
+        // 曲线中点（含悬链垂坠）
+        const sag = Math.min(26, len * 0.12) * ui
+        const midX = (p.x + op.x) / 2
+        const midY = (p.y + op.y) / 2 + sag
+        // 切线方向：quadratic 在 t=0.5 的切线恒为端点向量方向
+        const ang = Math.atan2(op.y - p.y, op.x - p.x)
+        ctx.save()
+        ctx.translate(midX, midY)
+        ctx.rotate(ang)
+        const padX = 6 * ui
+        const padY = 3 * ui
+        const lh = 14 * ui
         ctx.fillStyle = T.labelBg
         ctx.strokeStyle = T.labelBorder
         ctx.lineWidth = 1
         ctx.beginPath()
-        ctx.roundRect(lx - tw / 2 - padX, ly - padY, tw + padX * 2, lh, 10 * ui)
+        ctx.roundRect(-tw / 2 - padX, -lh / 2 - padY, tw + padX * 2, lh + padY * 2, 8 * ui)
         ctx.fill()
         ctx.stroke()
         ctx.fillStyle = T.labelDim
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
-        ctx.fillText(text, lx, ly + lh / 2)
+        ctx.fillText(text, 0, 0)
+        ctx.restore()
       }
     }
 
