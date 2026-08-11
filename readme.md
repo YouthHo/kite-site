@@ -21,6 +21,15 @@
 
 全站通用：**深色胶片 / 浅色档案纸双主题**（导航栏太阳/月亮一键切换）、首屏解密加载（每会话一次）、胶片颗粒、扫描线、全局搜索、观剧进度锁（localStorage）、自定义滚动条、红印章装饰、返回顶部。
 
+
+## 2.0 工程化（2026-08）
+
+- 版本 2.0.0：数据正确性门禁、占位域名环境化、字体自托管、名场面原创构图卡、体积预算、可分享图谱状态、导出与私人备注。
+- 构建门禁：prebuild 串联 check-case → check-bom → validate-data → gen-sitemap；postbuild 跑 perf-check（首屏 JS ≤200KB gzip）。
+- 配置：VITE_SITE_URL=https://your-domain.example npm run build 注入 sitemap/robots/OG 真实域名（默认占位 kite.example.com）。
+- 数据校验：
+pm run validate（schema/交叉引用/破图/一致性）。
+
 ## 技术栈
 
 - **框架** Vue 3（`<script setup>`）+ Vue Router 4（history 模式，路由懒加载 + 空闲预热）
