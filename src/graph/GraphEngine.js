@@ -140,6 +140,57 @@ export class GraphEngine {
   }
 
   /* ================= 公开控制 ================= */
+  exportPNG() {
+    // 导出当前画布为 PNG（2x DPR 高清）
+    const out = document.createElement('canvas')
+    out.width = this._w * 2
+    out.height = this._h * 2
+    const octx = out.getContext('2d')
+    octx.fillStyle = this.tokens.light ? '#efe6d3' : '#0b0b0b'
+    octx.fillRect(0, 0, out.width, out.height)
+    octx.drawImage(this.canvas, 0, 0, out.width, out.height)
+    return out.toDataURL('image/png')
+  }
+
+  exportSVG() {
+    // 导出矢量快照（节点+边+标签，可缩放不失真）
+    const d = this.getData()
+    const ui = this.cam.scale / this.fitScale
+    const nodes = d.visibleNodes.value
+    const links = d.visibleLinks.value
+    const w = this._w
+    const h = this._h
+    const posOf = (id) => {
+      const n = d.byId[id]
+      const p = this.nodePos.get(id) || { x: n.x, y: n.y }
+      return this.worldToScreen(p.x, p.y)
+    }
+    const bg = this.tokens.light ? '#efe6d3' : '#0b0b0b'
+    let body = `<rect width="${w}" height="${h}" fill="${bg}"/>`
+    for (const l of links) {
+      const a = posOf(l.source)
+      const b = posOf(l.target)
+      const meta = TYPE_META[l.type]
+      const midX = (a.x + b.x) / 2
+      const len = Math.hypot(b.x - a.x, b.y - a.y)
+      const sag = Math.min(26, len * 0.12) * ui
+      const cy = (a.y + b.y) / 2 + sag
+      const dash = meta.dash ? ` stroke-dasharray="6 5"` : ''
+      const opacity = this.tokens.light ? 0.5 : 0.55
+      body += `<path d="M ${a.x.toFixed(1)} ${a.y.toFixed(1)} Q ${midX.toFixed(1)} ${cy.toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}" fill="none" stroke="${meta.color}" stroke-width="${(0.8 + l.strength * 0.4).toFixed(1)}" opacity="${opacity}"${dash}/>`
+    }
+    for (const n of nodes) {
+      const p = posOf(n.id)
+      const r = nodeRadius(n) * ui
+      const color = d.FACTION[n.faction]?.color || '#555048'
+      body += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r.toFixed(1)}" fill="${color}" stroke="${this.tokens.nodeBorder}" stroke-width="1"/>`
+      const fs = Math.max(8, Math.min(r * 0.66, 20))
+      body += `<text x="${p.x.toFixed(1)}" y="${(p.y + fs * 0.35).toFixed(1)}" text-anchor="middle" font-family="Noto Sans SC, sans-serif" font-size="${fs.toFixed(1)}" fill="${this.tokens.label}">${n.name}</text>`
+    }
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
+  }
+
   setFocus(id) {
     this.focusNodeId = id
     this.requestRender()

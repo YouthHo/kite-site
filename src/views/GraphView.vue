@@ -1,5 +1,6 @@
 ﻿<script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import gsap from 'gsap'
 import { X, Search, ArrowRight, Info, Play, Pause } from 'lucide-vue-next'
 import { GraphEngine } from '@/graph/GraphEngine'
@@ -15,6 +16,8 @@ import { theme } from '@/store/app'
 import { prefersReduced, typewriter } from '@/utils/anim'
 
 const g = useGraphData()
+const route = useRoute()
+const router = useRouter()
 const chartEl = ref(null)
 const panelEl = ref(null)
 const briefEl = ref(null)
@@ -55,6 +58,8 @@ function toggleHighlight() {
 const helpOpen = ref(false)
 const liveText = ref('')
 const revealed = ref(false)
+const noteText = ref('')
+const noteKey = ref('')
 
 const secretTotal = computed(() => g.links.filter((l) => l.secret).length)
 const statsText = computed(() => `${g.stats.value.nodes}节点 · ${g.stats.value.edges}连线 · ${g.stats.value.factions}阵营 · 核心 ${g.stats.value.top}`)
@@ -139,6 +144,63 @@ function clearFocus() {
   engine?.setFocusClick(null)
   focusClickId.value = null
   engine?.requestRender()
+}
+
+/* ---------- I.1 可分享状态（URL query 编码/还原） ---------- */
+function syncUrl() {
+  const q = {}
+  if (mode.value !== 'browse') q.mode = mode.value
+  if (pathStart.value) q.from = pathStart.value
+  if (pathResult.value && pathResult.value.hops >= 0) q.to = pathResult.value.ids[pathResult.value.ids.length - 1]
+  if (g.ep.value < 46) q.ep = String(g.ep.value)
+  if (focusClickId.value) q.focus = focusClickId.value
+  router.replace({ query: q })
+}
+function restoreFromUrl() {
+  const q = route.query
+  if (q.ep) {
+    const e = Math.min(46, Math.max(1, Number(q.ep) || 46))
+    g.ep.value = e
+  }
+  if (q.mode && ['decrypt', 'path', 'tour'].includes(q.mode)) setMode(q.mode)
+  if (q.from && g.byId[q.from]) {
+    pathStart.value = q.from
+    if (q.to && g.byId[q.to]) computePath(q.from, q.to)
+  }
+  if (q.focus && g.byId[q.focus]) {
+    engine?.setFocusClick(q.focus)
+    focusClickId.value = q.focus
+  }
+}
+watch([mode, pathStart, pathResult, focusClickId, () => g.ep.value], syncUrl)
+
+/* ---------- I.2 导出 PNG ---------- */
+function handleExport() {
+  if (!engine) return
+  const a = document.createElement('a')
+  a.href = engine.exportPNG()
+  a.download = `kite-graph-${Date.now()}.png`
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+}
+
+/* ---------- I.3 私人备注（localStorage，仅本机） ---------- */
+function loadNote(id) {
+  noteKey.value = id || ''
+  try {
+    noteText.value = localStorage.getItem('kite-note-' + id) || ''
+  } catch (e) {
+    noteText.value = ''
+  }
+}
+function saveNote() {
+  if (!noteKey.value) return
+  try {
+    localStorage.setItem('kite-note-' + noteKey.value, noteText.value)
+  } catch (e) {
+    /* ignore */
+  }
 }
 
 /* ---------- 路径模式（显式双步） ---------- */
@@ -307,6 +369,7 @@ function openPanel(id) {
   const c = g.charMap[id]
   if (!c) return
   selected.value = c
+  loadNote(id)
   gsap.fromTo(panelEl.value, { x: 420, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' })
   briefType?.kill?.()
   if (briefEl.value && !prefersReduced) {
@@ -365,6 +428,7 @@ onMounted(async () => {
   engine.setHoverHighlight(hoverHighlight.value)
   engine.fit()
   engine.start()
+  restoreFromUrl()
   resizeObs = new ResizeObserver(() => engine?.resize())
   resizeObs.observe(chartEl.value)
 })
@@ -431,6 +495,7 @@ onBeforeUnmount(() => {
             @reset="resetView"
             @help="helpOpen = true"
             @highlight="toggleHighlight"
+            @export="handleExport"
           />
         </div>
 
@@ -620,6 +685,17 @@ onBeforeUnmount(() => {
             </div>
             <p ref="briefEl" class="mt-5 text-[13px] leading-7 text-[#8a8275]"></p>
             <p class="mt-3 text-[12px] leading-6 text-[#555048]">出场：第 {{ selected.episodes[0] }}—{{ selected.episodes[1] }} 集</p>
+
+            <!-- I.3 私人备注（仅本机 localStorage） -->
+            <div class="mt-6">
+              <div class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">私人备注 · 仅本机</div>
+              <textarea
+                v-model="noteText"
+                class="k-input w-full mt-2 h-20 text-[12px] leading-5"
+                placeholder="写下你的推演与猜想……（自动保存到本机）"
+                @input="saveNote"
+              ></textarea>
+            </div>
 
             <!-- 关系网络洞察 -->
             <div v-if="insight" class="mt-6 border border-[#2a2520] bg-[#0b0b0b] p-4">

@@ -1,5 +1,5 @@
 ﻿<script setup>
-import { BookOpen, Unlock, Route, Network, Locate, HelpCircle, Eye, EyeOff } from 'lucide-vue-next'
+import { BookOpen, Unlock, Route, Network, Locate, HelpCircle, Eye, EyeOff, Download } from 'lucide-vue-next'
 
 /**
  * 图谱工具条：图标 + 文字 + tooltip；激活态强对比（底填充 + 亮边框）
@@ -14,7 +14,7 @@ defineProps({
   layoutMode: { type: String, default: 'none' },
   hoverHighlight: { type: Boolean, default: true },
 })
-const emit = defineEmits(['mode', 'layout', 'reset', 'help', 'highlight'])
+const emit = defineEmits(['mode', 'layout', 'reset', 'help', 'highlight', 'export'])
 
 const activeCls = 'border-[#b8860b] text-[#b8860b] bg-[#b8860b]/15 on-media'
 const idleCls = 'border-[#2a2520] bg-[#0e0e0e]/90 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] on-media'
@@ -87,6 +87,16 @@ const idleCls = 'border-[#2a2520] bg-[#0e0e0e]/90 text-[#8a8275] hover:text-[#e8
       <Eye v-if="hoverHighlight" :size="12" />
       <EyeOff v-else :size="12" />
       <span>{{ hoverHighlight ? '悬停高亮' : '高亮关闭' }}</span>
+    </button>
+    <!-- 导出 PNG -->
+    <button
+      class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors flex items-center gap-1.5"
+      :class="idleCls"
+      title="导出当前视图为 PNG 图片"
+      @click="emit('export')"
+    >
+      <Download :size="12" />
+      <span>导出</span>
     </button>
     <!-- 帮助 -->
     <button
