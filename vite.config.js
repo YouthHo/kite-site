@@ -11,11 +11,27 @@ import { resolve } from 'node:path'
  *   例：VITE_BASE=/kite-site/ npm run build
  */
 const BASE = process.env.VITE_BASE || '/'
+// 占位域名环境化：sitemap/robots/OG 由 VITE_SITE_URL 驱动（默认占位，上线时注入真实域名）
+const SITE_URL = (process.env.VITE_SITE_URL || 'https://kite.example.com').replace(/\/$/, '')
 
 /**
  * GitHub Pages 没有服务端 rewrite 能力，SPA 深链接（如 /kite-site/graph）
  * 会走到 404。将 index.html 复制为 404.html 即可让 Pages 回退到 SPA 入口。
  */
+/**
+ * OG 社交元信息构建期注入：{{SITE_URL}} 占位替换为 VITE_SITE_URL + BASE（OG 需要绝对 URL）
+ */
+function injectSiteUrl() {
+  return {
+    name: 'inject-site-url',
+    apply: 'build',
+    transformIndexHtml(html) {
+      const abs = SITE_URL + (BASE === '/' ? '' : BASE.replace(/\/$/, ''))
+      return html.replaceAll('{{SITE_URL}}', abs)
+    },
+  }
+}
+
 function spaFallback404() {
   return {
     name: 'spa-fallback-404',
@@ -54,7 +70,7 @@ function rewriteDataAssetBase() {
 // https://vitejs.dev/config/
 export default defineConfig({
   base: BASE,
-  plugins: [vue(), rewriteDataAssetBase(), spaFallback404()],
+  plugins: [vue(), rewriteDataAssetBase(), injectSiteUrl(), spaFallback404()],
   css: {
     preprocessorOptions: {
       // 使用 Dart Sass 现代 API，避免 legacy-js-api 弃用警告
