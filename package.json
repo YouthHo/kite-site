@@ -28,6 +28,7 @@
     "vue-router": "^4.4.3"
   },
   "devDependencies": {
+    "@axe-core/puppeteer": "^4.12.1",
     "@vitejs/plugin-vue": "^5.1.2",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.41",
