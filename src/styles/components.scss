@@ -1,0 +1,186 @@
+/* ============================================================
+   组件视觉精修（Q · components.scss）
+   表单/标签/空态/加载/错误/tooltip 统一语言，全部基于 tokens
+   ============================================================ */
+
+/* ---------- 输入框（补全现有 k-input 的 focus 态） ---------- */
+.k-input {
+  border-color: var(--line);
+  background: var(--surface-2);
+  color: var(--paper);
+  transition:
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+.k-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--c-warning-bg);
+}
+.k-input::placeholder {
+  color: var(--dim);
+}
+
+/* ---------- 选择/开关 ---------- */
+.k-select {
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--paper);
+  padding: 8px 12px;
+  font-size: var(--fs-sm);
+  border-radius: var(--radius-sm);
+}
+.k-select:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.k-toggle {
+  width: 38px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--line);
+  position: relative;
+  transition: background var(--dur-base) var(--ease-out);
+  cursor: pointer;
+}
+.k-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--paper);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.k-toggle[aria-checked='true'] {
+  background: var(--gold);
+}
+.k-toggle[aria-checked='true']::after {
+  transform: translateX(18px);
+}
+
+/* ---------- 标签/Chip ---------- */
+.k-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--surface-2);
+  transition:
+    border-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out);
+}
+.k-tag:hover {
+  border-color: var(--gold);
+  color: var(--paper);
+}
+
+/* ---------- 空态（原创插画 = 印章模糊 + 文案） ---------- */
+.k-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-10) var(--sp-6);
+  color: var(--dim);
+  text-align: center;
+}
+.k-empty .empty-seal {
+  opacity: 0.25;
+  filter: blur(0.5px);
+}
+.k-empty-title {
+  font-family: var(--font-serif);
+  font-size: var(--fs-md);
+  color: var(--ink);
+}
+.k-empty-desc {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  max-width: 320px;
+}
+
+/* ---------- 加载骨架（纯色块，杜绝任何条纹/渐变横纹） ---------- */
+.k-skeleton {
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+}
+.k-skeleton-line {
+  height: 12px;
+  background: var(--surface-3);
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- 错误态 ---------- */
+.k-error {
+  border: 1px solid var(--c-danger);
+  background: var(--c-danger-bg);
+  color: var(--c-danger);
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--fs-sm);
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- tooltip（纯 CSS，hover 显现） ---------- */
+.k-tip {
+  position: relative;
+}
+.k-tip::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 4px 10px;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  color: var(--paper);
+  background: var(--surface-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+  z-index: 60;
+}
+.k-tip:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ---------- 浅色主题自适应（令牌驱动，无需逐组件映射） ---------- */
+[data-theme='light'] .k-input {
+  color: #3d362b;
+  background: #fbf5e7;
+  border-color: #d9c9ab;
+}
+[data-theme='light'] .k-select {
+  color: #3d362b;
+  background: #fbf5e7;
+  border-color: #d9c9ab;
+}
+[data-theme='light'] .k-toggle::after {
+  background: #3d362b;
+}
+[data-theme='light'] .k-tag {
+  color: #62574a;
+  background: #f9f2e3;
+  border-color: #d9c9ab;
+}
+[data-theme='light'] .k-tip::after {
+  color: #3d362b;
+  background: #f3ead6;
+  border-color: #d9c9ab;
+}
