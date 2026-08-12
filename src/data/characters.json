@@ -185,8 +185,8 @@
       { "id": "lu-hanqing", "rel": "上线" },
       { "id": "gao-zhanlong", "rel": "仇人" }
     ],
-    "episodes": [1, 5],
-    "image": "/images/actors/actor_zhang_meng.webp"
+      "episodes": [1, 14],
+      "image": "/images/actors/actor_zhang_meng.webp"
   },
   {
     "id": "zeng-moyi",

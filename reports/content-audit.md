@@ -85,3 +85,19 @@
 - `reports/fact-check.md`（Stage 3）
 - `reports/fact-check-recheck.md`（Stage 4）
 - 可复用脚本：`scripts/verify-struct.cjs`、`scripts/verify-content.cjs`（只读，不改数据）
+
+## 六、授权后修正（2026-08-12）
+
+用户授权按 §五 决策修正 4 条数据错误候选，并确认 `episodes` 语义统一为 **叙事活跃区间**（含被提及/遗物/回忆/闪回）。已应用：
+
+| 文件 | 字段 | 原值 | 改值 | 依据 |
+| --- | --- | --- | --- | --- |
+| characters.json · cheng-zhener | episodes | `[1,5]` | `[1,14]` | 第2集死、ep14 骨灰撒海（叙事活跃）；消除 s11 名场面冲突 |
+| relationships.json · zheng-yaoxian→lu-hanqing | activeEra | `[10,33]` | `[2,14]` | 陆汉卿第14集牺牲（6 源一致） |
+| relationships.json · tian-hu→lu-hanqing | activeEra | `[10,33]` | `[10,14]` | 同上，起点保持 10 不动 |
+| relationships.json · lu-hanqing→cheng-zhener | activeEra | `[6,26]` | `[2,14]` | 陆14集+程2集，交集 `[2,14]` |
+
+重跑校验：跨文件冲突 `31 → 27`（3 个 activeEra + 1 个名场面 s11 已消除）。
+- 剩余 27 = 24 个 activeEra（真·语义未统一，需逐角色 episodes 研究，非本次授权范围）+ 1 个名场面 s22（ep30 老陆遗愿，需用户确认陆汉卿 episodes 是否延伸到 30）+ 2 个架构成员（**脚本误报**：`verify-content.cjs:67` 用 `n.person \|\| n.id`，当 `person:null` 时退化成节点自身 id 比对角色表；j3/c9 的 `person` 均为 null，非数据错误）。
+
+> 注：审计 §3.2 中"程真儿演员 张萍 vs 冷玮"已过时——当前 `characters.json` 该角色 `actor` 字段为"张檬"，与维基/百度均不一致，属独立待核项，不在本次修正内。

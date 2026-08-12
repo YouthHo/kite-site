@@ -1,6 +1,6 @@
 # Stage 1 · 结构静态校验报告
 
-- HEAD: e3bb578 feat(2.0): J 搜索增强 — search-index.js统一全文索引(角色/演员/剧集/台词/名场面~180docs,子串匹配<2ms零依赖)+SearchModal接入(分组跳转+结果计数)；实测郑耀先24/风筝18/刑场6条命中；双模式构建+27项扫版通过
+- HEAD: 55cdd18 audit(content): 内容正确性多重确认审计 — Stage1结构(0 error)+Stage2跨文件(31冲突:28 activeEra语义+2名场面+1架构修正后0)+Stage3外部核查(DDG+open-link实抓:9项已确认,含陆汉卿第14集牺牲/程真儿第2集遇害/郑耀先=风筝等)+Stage4换路径复核(2项升确认)+Stage5汇总CONTENT-AUDIT.md；4条数据错误候选(activeEra/episodes)建议修正未改数据；全部报告+可复用校验脚本
 - 日期: 2026-08-12
 
 ## 结果：error=0 warn=2
