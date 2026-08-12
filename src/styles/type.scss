@@ -1,0 +1,67 @@
+/* ============================================================
+   排版规范（M · type.scss）
+   标题/正文/标签/代码的排版规则，全部基于 tokens 类型尺度
+   ============================================================ */
+
+/* 展示标题（宋体，大字号） */
+.t-display {
+  font-family: var(--font-serif);
+  font-size: var(--fs-3xl);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-normal);
+}
+@media (min-width: 768px) {
+  .t-display {
+    font-size: var(--fs-4xl);
+  }
+}
+
+/* 页面标题 */
+.t-title {
+  font-family: var(--font-serif);
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-normal);
+}
+
+/* 区块标题 */
+.t-section {
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-normal);
+}
+
+/* 正文 */
+.t-body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: var(--lh-relaxed);
+}
+
+/* 次要文字 */
+.t-muted {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--ink);
+}
+
+/* 标签/元信息（电报风格小字） */
+.t-label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+}
+
+/* 等宽数字/电报（全站唯一允许 mono 的场合） */
+.t-mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wider);
+}

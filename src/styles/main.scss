@@ -1,4 +1,7 @@
 @use './fonts';
+@use './tokens';
+@use './type';
+@use './motion';
 
 @tailwind base;
 @tailwind components;
@@ -454,3 +457,4 @@ body {
   /* 压在现代深色媒体上的元素必须保持浅字 */
   .on-media { color: #e8dcc8 !important; }
 }
+
