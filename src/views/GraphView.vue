@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -11,6 +11,7 @@ import SealStamp from '@/components/SealStamp.vue'
 import GraphToolbar from '@/components/GraphToolbar.vue'
 import GraphStatusBar from '@/components/GraphStatusBar.vue'
 import GraphOnboarding from '@/components/GraphOnboarding.vue'
+import FactionEmblem from '@/components/FactionEmblem.vue'
 import GraphHelpPanel from '@/components/GraphHelpPanel.vue'
 import { FACTION, factionLabel } from '@/utils/factions'
 import { theme } from '@/store/app'
@@ -564,7 +565,8 @@ onBeforeUnmount(() => {
         <div class="absolute bottom-3 left-3 z-10 flex flex-col gap-1.5 max-w-[48%]">
           <div class="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] tracking-[0.15em] text-[#8a8275] pointer-events-none">
             <span v-for="(v, k) in FACTION" :key="k" class="flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full" :style="{ background: v.color }"></span>{{ v.label }}
+              <FactionEmblem :faction="k" :size="13" :style="{ color: v.color }" class="shrink-0" />
+              {{ v.label }}
             </span>
           </div>
           <div class="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] tracking-[0.1em]">

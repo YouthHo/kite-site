@@ -43,8 +43,9 @@ onMounted(() => {
   )
   // 金色细线从中间展开
   tweens.push(gsap.fromTo('.hero-goldline', { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: 'power2.inOut', delay: 1.5 }))
-  // 副标题淡入
+  // 副标题淡入（含双 CTA）
   tweens.push(gsap.fromTo('.hero-sub', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.9, delay: 1.9 }))
+  tweens.push(gsap.fromTo('.hero-ctas', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.8, delay: 2.3 }))
   // 电报码闪烁
   tweens.push(
     gsap.to('.telegraph', { opacity: 0.08, duration: 0.4, repeat: -1, yoyo: true, stagger: 0.3, ease: 'sine.inOut', delay: 3 })
@@ -54,6 +55,13 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
+
+// O · 随机潜入：随机跳转一个内容页（命令面板同源能力）
+function randomExplore() {
+  const routes = ['/graph', '/characters', '/episodes', '/timeline', '/architecture', '/history', '/scenes']
+  const pick = routes[Math.floor(Math.random() * routes.length)]
+  window.location.href = pick + '?ref=random'
+}
 </script>
 
 <template>
@@ -96,6 +104,22 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
       <div class="hero-goldline gold-line w-[280px] md:w-[420px] mt-6 origin-center"></div>
       <p class="hero-sub mt-6 text-[13px] tracking-[0.4em] text-[#d9a441] on-media" style="text-shadow: 0 0 18px rgba(184,134,11,0.35);">信仰至上 · 半生潜伏</p>
       <p class="hero-sub mt-3 text-[11px] tracking-[0.3em] text-[#8a8275] on-media">THE KITE · 2017 · 柳云龙 导演作品</p>
+
+      <!-- O · 双主 CTA：随机潜入 + 进入档案 -->
+      <div class="hero-sub hero-ctas mt-8 flex flex-wrap items-center justify-center gap-4">
+        <router-link
+          to="/graph"
+          class="px-6 py-2.5 border border-[#9d2235] text-[#e8dcc8] text-[12px] tracking-[0.3em] on-media bg-[#9d2235]/10 hover:bg-[#9d2235]/25 transition-colors m-focus-ring"
+        >
+          进入档案 →
+        </router-link>
+        <button
+          class="px-6 py-2.5 border border-[#2a2520] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] text-[12px] tracking-[0.3em] transition-colors on-media m-focus-ring"
+          @click="randomExplore"
+        >
+          随机潜入
+        </button>
+      </div>
 
       <!-- 功能入口：编辑式索引（无边框盒，编号+细线+悬停变色） -->
       <div class="hero-cards grid grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-12 mt-24 w-full max-w-6xl">
