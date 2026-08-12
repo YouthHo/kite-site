@@ -64,12 +64,13 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
 
 <template>
   <div class="loading-screen fixed inset-0 z-[100] bg-[#080808] flex flex-col items-center justify-center">
-    <div ref="dot" class="w-4 h-4 rounded-full bg-[#9d2235] shadow-[0_0_30px_rgba(157,34,53,0.9)]"></div>
+    <ArtLoader :text="'正在解密档案'" :size="150" />
+    <div ref="dot" class="hidden w-4 h-4 rounded-full bg-[#9d2235] shadow-[0_0_30px_rgba(157,34,53,0.9)]"></div>
     <div class="mt-6 font-mono text-[13px] tracking-[0.35em] text-[#8a8275] h-6">
       <span ref="text"></span>
     </div>
-      <div class="absolute bottom-8 font-mono text-[10px] tracking-[0.5em] text-[#555048] select-none">
+    <div class="absolute bottom-8 font-mono text-[10px] tracking-[0.5em] text-[#555048] select-none">
       THE KITE · TOP SECRET
-      </div>
+    </div>
   </div>
 </template>
