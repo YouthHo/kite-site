@@ -12,6 +12,7 @@ import CustomCursor from '@/components/CustomCursor.vue'
 import LoadingScreen from '@/components/LoadingScreen.vue'
 import PageTransition from '@/components/PageTransition.vue'
 import CommandPalette from '@/components/CommandPalette.vue'
+import ArchiveRail from '@/components/ArchiveRail.vue'
 import { refreshTriggers } from '@/utils/anim'
 
 const route = useRoute()
@@ -85,6 +86,7 @@ onBeforeUnmount(() => {
 
   <NavBar />
   <CommandPalette />
+    <ArchiveRail />
     <PageTransition>
     <router-view :key="route.fullPath" />
   </PageTransition>

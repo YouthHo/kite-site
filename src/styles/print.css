@@ -1,0 +1,83 @@
+/* ============================================================
+   打印视图（Z · print.css）
+   干净打印：隐藏导航/浮层/动效层，内容全宽，墨色友好
+   ============================================================ */
+
+@media print {
+  /* 隐藏交互与装饰层 */
+  .k-nav,
+  .k-backtop,
+  .k-drawer,
+  .loading-screen,
+  .film-grain,
+  .custom-cursor,
+  .cc-ring,
+  .cc-dot,
+  .search-panel,
+  .search-mask,
+  .pt-veil,
+  .pt-line,
+  .pt-seal,
+  .hero-field,
+  .scan-line,
+  .telegraph,
+  .back-to-top,
+  .on-media,
+  .sticky {
+    display: none !important;
+  }
+
+  /* 页面主体：全宽、无溢出裁剪 */
+  html,
+  body {
+    background: #fff !important;
+    color: #1a1a1a !important;
+    overflow: visible !important;
+  }
+
+  .page-wrap {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* 卡片去阴影去圆角，留边框 */
+  .k-card,
+  .scene-card,
+  .quote-card,
+  .episode-card,
+  .character-card,
+  .kraft-card {
+    background: #fff !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  /* 文字转墨色 */
+  * {
+    color: #1a1a1a !important;
+    text-shadow: none !important;
+    background-image: none !important;
+  }
+  .serif-title,
+  .title-sans {
+    color: #1a1a1a !important;
+  }
+
+  /* 图片与画布：尽量显示（图谱导出建议用导出功能） */
+  img {
+    max-width: 100%;
+  }
+
+  /* 链接显示 URL（信息型打印） */
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    color: #555;
+  }
+
+  /* 图谱画布：打印时保留静态帧 */
+  canvas {
+    max-width: 100% !important;
+  }
+}
