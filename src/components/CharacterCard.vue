@@ -28,7 +28,7 @@ const factionClass = computed(() => `f-${props.character.faction}`)
 <template>
   <button
     v-if="compact"
-    class="w-full text-left flex items-center gap-3 px-3 py-2.5 border-l-2 transition-all duration-300 group"
+    class="w-full text-left flex items-center gap-3 px-3 py-2.5 border-l-2 transition-all duration-300 group min-w-0"
     :class="active ? 'border-[#9d2235] bg-[#161616]' : 'border-transparent hover:bg-[#141414]'"
     @click="emit('select', character)"
   >

@@ -105,7 +105,7 @@ watch(() => route.query.q, (q) => {
 
     <div class="grid lg:grid-cols-[320px_1fr] gap-8">
       <!-- 左侧人物列表 -->
-      <aside class="lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto pr-1">
+      <aside class="lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto pr-1 min-w-0">
         <div class="flex items-center justify-between mb-3" data-enter>
           <span class="font-mono text-[10px] tracking-[0.25em] text-[#555048]">按阵营分组 · 可折叠</span>
           <div class="flex gap-3">
