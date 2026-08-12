@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import gsap from 'gsap'
-import { Search, Menu, X, FileText, Share2, BarChart3, Users, Calendar, Landmark, Clapperboard, Library, Sun, Moon, Languages } from 'lucide-vue-next'
+import { Search, Menu, X, FileText, Share2, BarChart3, Users, Calendar, Landmark, Clapperboard, Library, Sun, Moon, Languages, Star } from 'lucide-vue-next'
 import { searchOpen, theme, toggleTheme } from '@/store/app'
 import { useI18n } from 'vue-i18n'
 import { setLocale } from '@/i18n'
@@ -81,6 +81,7 @@ function toggleDrawer() {
       </nav>
 
       <div class="flex items-center gap-2">
+        <router-link to="/library" class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] border border-transparent transition-colors" aria-label="收藏夹" title="收藏夹"><Star :size="16" /></router-link>
         <!-- 语言切换：中 / EN -->
         <button
           class="h-9 px-2 grid place-items-center text-[11px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] border border-transparent transition-colors font-mono"

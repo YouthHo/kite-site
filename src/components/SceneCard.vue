@@ -1,5 +1,6 @@
 <script setup>
 import SealStamp from '@/components/SealStamp.vue'
+import FavoriteButton from '@/components/FavoriteButton.vue'
 
 /**
  * 名场面原创构图卡：零照片依赖、零横纹风险
@@ -25,7 +26,10 @@ defineProps({
       <!-- 大号集数（主题映射色，无 on-media） -->
       <div class="flex items-baseline justify-between">
         <div class="serif-title text-5xl md:text-6xl leading-none text-[#9d2235]/85">{{ String(scene.episode).padStart(2, '0') }}</div>
-        <div class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">SCENE-{{ scene.id.toUpperCase() }}</div>
+        <div class="flex items-center gap-2">
+          <div class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">SCENE-{{ scene.id.toUpperCase() }}</div>
+          <FavoriteButton type="scene" :id="scene.id" />
+        </div>
       </div>
       <div class="gold-line mt-3"></div>
       <h3 class="title-sans text-[17px] mt-3 text-[#e8dcc8] group-hover:text-[#f0e6d2] transition-colors duration-200">{{ scene.title }}</h3>

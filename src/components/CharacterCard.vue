@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import NameBadge from '@/components/NameBadge.vue'
+import FavoriteButton from '@/components/FavoriteButton.vue'
 
 /**
  * 角色卡片（列表行 / 头像两种形态），统一使用完整名字徽章
@@ -37,6 +38,7 @@ const factionClass = computed(() => `f-${props.character.faction}`)
       <span class="block text-[10px] text-[#555048] font-mono tracking-wider truncate">{{ character.code ? '代号 · ' + character.code : character.identity }}</span>
     </span>
     <span class="badge-faction shrink-0" :class="factionClass">{{ FACTION_LABEL[character.faction] }}</span>
+    <FavoriteButton type="character" :id="character.id" class="shrink-0" />
   </button>
 
   <!-- 图谱/关联人物头像卡：头像内是名字，下方文字为关系 -->

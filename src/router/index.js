@@ -51,6 +51,12 @@ const routes = [
     meta: { title: '历史背景 · 风筝', desc: '历史' },
   },
   {
+    path: '/library',
+    name: 'library',
+    component: () => import('@/views/LibraryView.vue'),
+    meta: { title: '收藏夹 · 风筝', desc: '收藏夹' },
+  },
+  {
     path: '/scenes',
     name: 'scenes',
     component: () => import('@/views/ScenesView.vue'),
