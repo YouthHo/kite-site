@@ -2,6 +2,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import gsap from 'gsap'
 import GraphView from '@/views/GraphView.vue'
+import LensView from '@/views/LensView.vue'
 import SealStamp from '@/components/SealStamp.vue'
 import { prefersReduced } from '@/utils/anim'
 import { threadDraw, sealStamp } from '@/utils/motion'
@@ -56,7 +57,10 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <!-- 镜4：关系图谱为魂的宇宙 -->
-    <GraphView v-if="revealed || prefersReduced" :universe="universe" :open-dossier="openDossier" />
+    <!-- 镜4：宇宙内容（透镜驱动：关系=图谱，其余=对应内容形态） -->
+    <template v-if="revealed || prefersReduced">
+      <GraphView v-if="universe.state.currentLens === 'relation'" :universe="universe" :open-dossier="openDossier" />
+      <LensView v-else :universe="universe" :open-dossier="openDossier" />
+    </template>
   </div>
 </template>

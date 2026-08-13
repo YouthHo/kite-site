@@ -460,6 +460,24 @@ watch(
   }
 )
 watch(theme, (v) => engine?.setTheme(v === 'light'))
+// 多视角：切换视角预设 = 聚焦对应核心节点（高亮其线索网）
+const VIEW_FOCUS = { zheng: 'zheng-yaoxian', han: 'han-bing', kmind: 'tian-hu', underground: 'jian-bing' }
+watch(
+  () => props.universe?.state.viewpoint,
+  (v) => {
+    if (!v || v === 'all') {
+      engine?.setFocusClick(null)
+      focusClickId.value = null
+      return
+    }
+    const id = VIEW_FOCUS[v]
+    if (id && g.byId[id]) {
+      engine?.setFocusClick(id)
+      focusClickId.value = id
+      engine?.centerOn(id, 500)
+    }
+  }
+)
 // P3 时间飞行：线轴年代视窗 → 图谱节点过滤
 watch(
   () => props.universe?.state.eraViewport?.join('-'),

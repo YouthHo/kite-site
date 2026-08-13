@@ -5,7 +5,7 @@ import { Search, Star, Sun, Moon, Languages, Palette } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
 import { setLocale } from '@/i18n'
 import { theme, toggleTheme, commandOpen } from '@/store/app'
-import { LENSES, LENS_LABEL } from '@/store/universe'
+import { LENSES, LENS_LABEL, VIEWPOINTS } from '@/store/universe'
 
 /**
  * ThreadAxis —— 线轴导航（第一套皮肤「一线宇宙」）
@@ -70,6 +70,10 @@ function toggleLang() {
   props.universe.state.lang = locale.value
 }
 
+const viewSel = ref('all')
+function onViewChange() {
+  props.universe.setViewpoint(viewSel.value)
+}
 const skinId = ref('')
 try {
   skinId.value = localStorage.getItem('kite-skin') || 'thread-universe'
@@ -116,6 +120,10 @@ function goLibrary() {
           <button class="w-8 h-8 grid place-items-center text-[var(--axis-text)] hover:text-[var(--axis-text-strong)] hover:border-[var(--axis-accent)] border border-transparent transition-colors m-focus-ring" :aria-label="theme === 'dark' ? '昼' : '夜'" title="主题" @click="toggleTheme"><Sun v-if="theme === 'dark'" :size="14" /><Moon v-else :size="14" /></button>
         </div>
       </div>
+      <!-- 多视角叙事 -->
+      <select class="hidden md:block px-2 py-1 border font-mono text-[10px] tracking-[0.15em] bg-[var(--axis-bg-glass)] text-[var(--axis-text)] border-[var(--axis-line)] m-focus-ring" aria-label="视角" v-model="viewSel" @change="onViewChange">
+        <option v-for="v in VIEWPOINTS" :key="v.id" :value="v.id">{{ v.label }}</option>
+      </select>
       <!-- 年代线轴 -->
       <div class="flex items-center gap-1 overflow-x-auto pb-1">
         <span class="font-mono text-[9px] tracking-[0.2em] text-[var(--axis-text-dim)] shrink-0 w-10">{{ universe.state.eraViewport[0] }}</span>
