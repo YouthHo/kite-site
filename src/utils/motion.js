@@ -47,3 +47,57 @@ export function staggerIn(container, { delay = 0, y = 14 } = {}) {
   }
   return gsap.fromTo(els, { opacity: 0, y }, { opacity: 1, y: 0, duration: presets.dur.entrance, stagger: presets.stagger, delay, ease: presets.ease.out })
 }
+
+/* ============ 3.0 · 四类原创动效（朱砂入墨语法） ============ */
+
+/** 墨晕开：模糊浓墨 → 清晰落定（标题/卡片显影） */
+export function inkBleed(el, { delay = 0, blur = 14, duration = 1.1 } = {}) {
+  if (!el) return null
+  if (prefersReduced) {
+    gsap.set(el, { opacity: 1, filter: 'none' })
+    return null
+  }
+  return gsap.fromTo(
+    el,
+    { opacity: 0, filter: `blur(${blur}px)`, scale: 1.06 },
+    { opacity: 1, filter: 'blur(0px)', scale: 1, duration, delay, ease: presets.ease.out }
+  )
+}
+
+/** 封印落定：旋转压印（印章/徽章） */
+export function sealStamp(el, { delay = 0, rotation = -14, scale = 1.7 } = {}) {
+  if (!el) return null
+  if (prefersReduced) {
+    gsap.set(el, { opacity: 1, rotation: 0, scale: 1 })
+    return null
+  }
+  return gsap.fromTo(
+    el,
+    { opacity: 0, rotation, scale },
+    { opacity: 1, rotation: rotation * 0.7, scale: 1, duration: 0.5, delay, ease: 'back.out(2.2)' }
+  )
+}
+
+/** 卷轴展开：自上而下展开（区块/页面揭幕） */
+export function scrollUnfurl(el, { delay = 0, duration = 0.7 } = {}) {
+  if (!el) return null
+  if (prefersReduced) {
+    gsap.set(el, { opacity: 1, clipPath: 'none' })
+    return null
+  }
+  return gsap.fromTo(
+    el,
+    { opacity: 0.4, clipPath: 'inset(100% 0 0 0)' },
+    { opacity: 1, clipPath: 'inset(0% 0 0 0)', duration, delay, ease: presets.ease.inOut }
+  )
+}
+
+/** 一线牵引：SVG 描边生长（风筝线/装饰线） */
+export function threadDraw(el, { delay = 0, length = 420, duration = 1.3 } = {}) {
+  if (!el) return null
+  if (prefersReduced) {
+    gsap.set(el, { strokeDashoffset: 0 })
+    return null
+  }
+  return gsap.fromTo(el, { strokeDashoffset: length }, { strokeDashoffset: 0, duration, delay, ease: presets.ease.inOut })
+}

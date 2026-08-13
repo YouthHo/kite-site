@@ -23,7 +23,8 @@ function variant() {
   const p = route.path
   if (p === '/graph') return 'seal'
   if (p === '/history') return 'paper'
-  return 'wipe'
+  if (p === '/scenes') return 'ink'
+  return 'unfurl'
 }
 
 function runTransition() {
@@ -39,7 +40,7 @@ function runTransition() {
   tl = gsap.timeline()
 
   if (v === 'seal') {
-    // 封条撕裂：血红竖条从右向左撕开 + 内容淡入
+    // 封印撕裂：朱砂竖条自右向左撕开 + 内容淡入
     tl.fromTo(seal.value, { left: '102%', opacity: 1 }, { left: '-2%', duration: 0.55, ease: 'power2.inOut' })
       .to(seal.value, { opacity: 0, duration: 0.2 }, 0.5)
       .to(c, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.45)
@@ -47,11 +48,14 @@ function runTransition() {
     // 档案展开：内容从中心向两侧展开
     tl.fromTo(veil.value, { opacity: 0.45 }, { opacity: 0, duration: 0.4, ease: 'power2.out' })
       .fromTo(c, { scale: 0.985, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: presets.ease.out }, 0.1)
+  } else if (v === 'ink') {
+    // 墨迹划过：竖向墨带自上而下扫过
+    tl.fromTo(seal.value, { top: '-2%', left: '50%', height: '0%', opacity: 1, width: '40%' }, { top: '102%', height: '104%', duration: 0.6, ease: 'power2.inOut' })
+      .to(c, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.45)
   } else {
-    // 红线揭幕（既有签名）
-    tl.fromTo(line.value, { top: '-2%', opacity: 1 }, { top: '102%', duration: 0.5, ease: 'power2.inOut' })
-      .fromTo(veil.value, { opacity: 0.4 }, { opacity: 0, duration: 0.35, ease: 'power2.out' }, 0.2)
-      .to(c, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.38)
+    // 卷轴展开（3.0 主语言）：内容自上而下展开
+    tl.fromTo(veil.value, { opacity: 0.35 }, { opacity: 0, duration: 0.4, ease: 'power2.out' })
+      .fromTo(c, { opacity: 0.3, clipPath: 'inset(100% 0 0 0)' }, { opacity: 1, clipPath: 'inset(0% 0 0 0)', duration: 0.6, ease: presets.ease.inOut }, 0.05)
   }
 }
 
