@@ -73,6 +73,7 @@ function persist() {
   }
 }
 
+export const commandOpen = ref(false)
 export const searchOpen = computed({
   get: () => state.searchOpen,
   set: (v) => (state.searchOpen = v),

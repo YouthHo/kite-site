@@ -23,6 +23,7 @@ const router = useRouter()
 const { t } = useI18n()
 const props = defineProps({
   universe: { type: Object, default: null }, // 宇宙状态（ThreadAxis 年代视窗驱动）
+  openDossier: { type: Function, default: null }, // 宇宙浮层回调（UniverseView 传入）
 })
 const chartEl = ref(null)
 const panelEl = ref(null)
@@ -151,7 +152,12 @@ function handleNodeClick(id) {
   engine?.setFocusClick(id)
   focusClickId.value = id
   engine?.centerOn(id, 420)
-  openPanel(id)
+  if (props.openDossier) {
+    // 宇宙内：走 DossierOverlay 浮层（统一范式）
+    props.openDossier('character', id)
+  } else {
+    openPanel(id)
+  }
 }
 function clearFocus() {
   engine?.setFocusClick(null)

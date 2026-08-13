@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, onBeforeUnmount } from 'vue'
 import { X } from 'lucide-vue-next'
 import characters from '@/data/characters.json'
 import episodes from '@/data/episodes.json'
@@ -31,6 +31,13 @@ const item = computed(() => {
   return pool?.data.find((x) => String(x.id) === props.id) || null
 })
 
+// Esc 关闭（键盘可达）
+function onKey(e) {
+  if (e.key === 'Escape') close()
+}
+onMounted(() => window.addEventListener('keydown', onKey))
+onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
+
 function close() {
   emit('close')
 }
@@ -40,19 +47,19 @@ function close() {
   <div class="fixed inset-0 z-[85]">
     <div class="absolute inset-0 bg-black/60" @click="close"></div>
     <aside
-      class="absolute right-0 top-0 bottom-0 w-[92vw] max-w-[420px] bg-[#0e0e0e] border-l border-[#2a2520] overflow-y-auto"
+      class="absolute right-0 top-0 bottom-0 w-[92vw] max-w-[420px] bg-[var(--dossier-bg)] border-l border-[var(--dossier-border)] overflow-y-auto"
       role="dialog"
       aria-modal="true"
       :aria-label="item ? item.title || item.name : '档案'"
     >
       <div v-if="item" class="p-7">
         <div class="flex items-center justify-between">
-          <div class="font-mono text-[10px] tracking-[0.35em] text-[#b91c1c]">DOSSIER · {{ type.toUpperCase() }}</div>
-          <button class="text-[#a89f8e] hover:text-[#ece3d2] m-focus-ring" aria-label="关闭档案" @click="close"><X :size="18" /></button>
+          <div class="font-mono text-[10px] tracking-[0.35em] text-[var(--dossier-accent)]">DOSSIER · {{ type.toUpperCase() }}</div>
+          <button class="text-[var(--dossier-text-dim)] hover:text-[var(--dossier-text)] m-focus-ring" aria-label="关闭档案" @click="close"><X :size="18" /></button>
         </div>
 
-        <h3 class="serif-title text-3xl mt-4 text-[#ece3d2]">{{ POOL[type].title(item) }}</h3>
-        <div class="mt-1 font-mono text-[10px] tracking-[0.2em] text-[#a89f8e]">{{ POOL[type].sub(item) }}</div>
+        <h3 class="serif-title text-3xl mt-4 text-[var(--dossier-text)]">{{ POOL[type].title(item) }}</h3>
+        <div class="mt-1 font-mono text-[10px] tracking-[0.2em] text-[var(--dossier-text-dim)]">{{ POOL[type].sub(item) }}</div>
         <div class="gold-line mt-4 w-20"></div>
 
         <template v-if="type === 'character'">
@@ -60,14 +67,14 @@ function close() {
             <span v-if="item.code" class="badge-faction f-junton">代号 · {{ item.code }}</span>
             <span class="badge-faction" :class="`f-${item.faction}`">{{ factionLabel(item.faction) }}</span>
           </div>
-          <p class="mt-4 text-[13px] leading-7 text-[#a89f8e]">{{ item.brief }}</p>
+          <p class="mt-4 text-[13px] leading-7 text-[var(--dossier-text-dim)]">{{ item.brief }}</p>
           <p class="mt-2 text-[12px] text-[#8f897c]">出场：第 {{ item.episodes[0] }}—{{ item.episodes[1] }} 集</p>
         </template>
-        <p v-else class="mt-4 text-[13px] leading-7 text-[#a89f8e]">{{ POOL[type].brief(item) }}</p>
+        <p v-else class="mt-4 text-[13px] leading-7 text-[var(--dossier-text-dim)]">{{ POOL[type].brief(item) }}</p>
 
-        <button class="mt-6 w-full py-2.5 border border-[#b91c1c] text-[#ece3d2] text-[12px] tracking-[0.25em] hover:bg-[#b91c1c]/15 transition-colors m-focus-ring" @click="close">关闭档案</button>
+        <button class="mt-6 w-full py-2.5 border border-[var(--dossier-accent)] text-[var(--dossier-text)] text-[12px] tracking-[0.25em] hover:bg-[var(--dossier-accent)]/15 transition-colors m-focus-ring" @click="close">关闭档案</button>
       </div>
-      <div v-else class="p-7 text-[12px] text-[#a89f8e]">档案不存在</div>
+      <div v-else class="p-7 text-[12px] text-[var(--dossier-text-dim)]">档案不存在</div>
     </aside>
   </div>
 </template>

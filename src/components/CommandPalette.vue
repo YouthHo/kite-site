@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { Search, Moon, Sun, Shuffle, Star, CornerDownLeft } from 'lucide-vue-next'
 import { searchIndex, searchCounts } from '@/utils/search-index'
@@ -13,6 +13,18 @@ import { favoriteCount } from '@/store/library'
  */
 const router = useRouter()
 const open = ref(false)
+import { commandOpen } from '@/store/app'
+watch(commandOpen, (v) => {
+  if (v && !open.value) {
+    open.value = true
+    nextTick(() => input.value?.focus())
+  }
+  if (!v) open.value = false
+})
+function closeGlobal() {
+  commandOpen.value = false
+  close()
+}
 const keyword = ref('')
 const idx = ref(0)
 const input = ref(null)
@@ -77,7 +89,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKey))
 <template>
   <Teleport to="body">
     <div v-if="open" class="fixed inset-0 z-[95] flex items-start justify-center pt-[16vh] px-4" role="dialog" aria-modal="true" aria-label="命令面板">
-      <div class="absolute inset-0 bg-black/60" @click="close"></div>
+      <div class="absolute inset-0 bg-black/60" @click="closeGlobal"></div>
       <div class="relative w-full max-w-[540px] bg-[#0e0e0e] border border-[#2a2520] shadow-[0_24px_60px_rgba(0,0,0,0.6)]">
         <!-- 输入行 -->
         <div class="flex items-center gap-3 px-4 py-3 border-b border-[#2a2520]">

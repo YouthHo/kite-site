@@ -68,3 +68,34 @@
   stroke-width: 1.6;
   stroke-linecap: round;
 }
+
+
+/* 语义组件令牌（W2-c/W4-a：线轴与浮层不再写死色） */
+:root[data-skin='thread-universe'] {
+  --axis-bg: #14110d;
+  --axis-bg-glass: rgba(14, 12, 9, 0.92);
+  --axis-line: #2e2820;
+  --axis-text: #a89f8e;
+  --axis-text-strong: #ece3d2;
+  --axis-text-dim: #8f897c;
+  --axis-accent: var(--vermilion);
+  --axis-tick: #3a352c;
+  --dossier-bg: #15110d;
+  --dossier-border: #2e2820;
+  --dossier-text: #ece3d2;
+  --dossier-text-dim: #a89f8e;
+  --dossier-accent: var(--vermilion);
+}
+[data-skin='thread-universe'][data-theme='light'] {
+  --axis-bg: #f4ecdc;
+  --axis-bg-glass: rgba(244, 236, 220, 0.94);
+  --axis-line: #ddd2bd;
+  --axis-text: #6b6358;
+  --axis-text-strong: #2b2620;
+  --axis-text-dim: #8a7f6e;
+  --axis-tick: #c9bda4;
+  --dossier-bg: #faf6ec;
+  --dossier-border: #ddd2bd;
+  --dossier-text: #2b2620;
+  --dossier-text-dim: #6b6358;
+}

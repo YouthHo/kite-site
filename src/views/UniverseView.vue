@@ -13,6 +13,7 @@ import { threadDraw, sealStamp } from '@/utils/motion'
  */
 const props = defineProps({
   universe: { type: Object, required: true },
+  openDossier: { type: Function, default: null }, // 宇宙浮层回调（UniverseShell slot 传入）
 })
 const revealed = ref(false)
 const threadEl = ref(null)
@@ -56,6 +57,6 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- 镜4：关系图谱为魂的宇宙 -->
-    <GraphView v-if="revealed || prefersReduced" />
+    <GraphView v-if="revealed || prefersReduced" :universe="universe" :open-dossier="openDossier" />
   </div>
 </template>

@@ -22,7 +22,7 @@ const universe = createUniverseState()
 onMounted(() => {
   universe.restoreFromUrl()
   // 加载显影（沿用既有 LoadingScreen 语义，时长短促）
-  const t = setTimeout(() => (loading.value = false), 1400)
+  const t = setTimeout(() => (loading.value = false), 600)
   watch(
     () => loading.value,
     (v) => { if (!v) clearTimeout(t) }
@@ -32,7 +32,7 @@ onMounted(() => {
 
 <template>
   <div :data-theme="universe.state.theme">
-    <LoadingScreen v-if="loading" @done="loading = false" />
+    <LoadingScreen v-if="loading" @done="loading = false" @click="loading = false" />
     <CustomCursor />
     <InkTexture />
     <PaperGrain />
