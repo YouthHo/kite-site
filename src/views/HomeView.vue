@@ -27,14 +27,16 @@ onMounted(() => {
   const bg = heroBg.value
   const title = heroTitle.value
   // Ken Burns：极缓慢放大 + 呼吸式明暗
-  tweens.push(gsap.fromTo(bg, { scale: 1, filter: 'brightness(0.9)' }, { scale: 1.1, filter: 'brightness(1.02)', duration: 26, ease: 'none' }))
+  // 3.0 O2 · 一线朱砂风筝：描边生长（stroke-dashoffset）
+  tweens.push(gsap.fromTo('.hero-thread', { strokeDashoffset: 420 }, { strokeDashoffset: 0, duration: 1.3, ease: 'power2.inOut', delay: 0.1 }))
+  tweens.push(gsap.fromTo(bg, { scale: 1, filter: 'brightness(0.85)' }, { scale: 1.1, filter: 'brightness(1.02)', duration: 26, ease: 'none' }))
   tweens.push(gsap.to('.hero-breathe', { opacity: 0.5, duration: 6, repeat: -1, yoyo: true, ease: 'sine.inOut' }))
   // 标题：titleSweep 显影——模糊淡入 + 字距从宽收束（0.58em → 0.42em）
   tweens.push(
     gsap.fromTo(
       title,
-      { filter: 'blur(16px)', scale: 1.12, opacity: 0, letterSpacing: '0.58em' },
-      { filter: 'blur(0px)', scale: 1, opacity: 1, letterSpacing: '0.42em', duration: 1.6, ease: 'power3.out', delay: 0.15 }
+      { filter: 'blur(18px)', scale: 1.14, opacity: 0, letterSpacing: '0.62em' },
+      { filter: 'blur(0px)', scale: 1, opacity: 1, letterSpacing: '0.42em', duration: 1.5, ease: 'power3.out', delay: 0.25 }
     )
   )
   // 印章压印出现（快速旋转复位）
@@ -90,6 +92,11 @@ function randomExplore() {
     <div class="telegraph absolute top-32 left-6 text-[10px] leading-6">01001010 01101011<br />01010100 01101011<br />01101011 01101010</div>
     <div class="telegraph absolute bottom-32 right-6 text-[10px] leading-6 text-right">11010110 01011010<br />00110110 11010110<br />10110101 00110101</div>
 
+      <!-- 3.0 O2 · 一线朱砂风筝（SVG 描边生长母题） -->
+      <svg class="hero-thread absolute left-1/2 -translate-x-1/2 top-[26vh] w-[min(72vw,560px)] h-[52px]" viewBox="0 0 560 52" fill="none" aria-hidden="true" style="stroke-dasharray: 420;">
+        <path d="M20 40 Q 160 4 280 26 T 540 18" stroke="var(--vermilion)" stroke-width="1.6" stroke-linecap="round" opacity="0.85" />
+        <path d="M280 26 L292 14 L300 30 Z" fill="var(--vermilion)" opacity="0.9" />
+      </svg>
     <!-- 居中标题 -->
     <div class="relative z-10 min-h-screen flex flex-col items-center justify-center px-5 pt-20">
       <div ref="heroTitle" class="text-center relative">

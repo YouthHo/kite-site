@@ -7,7 +7,8 @@ import Footer from '@/components/Footer.vue'
 import SearchModal from '@/components/SearchModal.vue'
 import ProgressSetting from '@/components/ProgressSetting.vue'
 import BackToTop from '@/components/BackToTop.vue'
-import FilmGrain from '@/components/FilmGrain.vue'
+import PaperGrain from '@/components/PaperGrain.vue'
+import InkTexture from '@/components/InkTexture.vue'
 import CustomCursor from '@/components/CustomCursor.vue'
 import LoadingScreen from '@/components/LoadingScreen.vue'
 import PageTransition from '@/components/PageTransition.vue'
@@ -75,7 +76,8 @@ onBeforeUnmount(() => {
 <template>
   <LoadingScreen v-if="loading" @done="onLoaded" />
   <CustomCursor />
-  <FilmGrain />
+  <InkTexture />
+    <PaperGrain />
 
   <!-- 路由切换进度条 -->
   <div

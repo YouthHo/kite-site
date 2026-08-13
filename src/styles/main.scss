@@ -60,8 +60,8 @@ html {
   /* 不做全局平滑滚动：路由切换与回顶都要求即时响应，平滑会带来卡顿感 */
 }
 
-body {
-  @apply bg-bg text-paper font-sans antialiased;
+body {  background: var(--bg);
+  @apply text-paper font-sans antialiased;
   background-image:
     radial-gradient(ellipse 80% 60% at 50% -10%, rgba(30, 74, 82, 0.06), transparent 60%),
     radial-gradient(ellipse 60% 50% at 90% 110%, rgba(157, 34, 53, 0.05), transparent 60%);
@@ -378,7 +378,7 @@ body {
   letter-spacing: 0.3em;
   color: #7a4a24;
 }
-.kraft-body {
+.kraft-body {  background: var(--bg);
   color: #4d4232;
 }
 .kraft-term {
@@ -433,7 +433,7 @@ body {
   --gold: #8a6a2f;
   --node-bg: #f6eedb;
 
-  body {
+  body {  background: var(--bg);
     /* 暖象牙底：低刺眼度 · 纸纤维噪点 + 边缘暖晕 */
     background-color: #efe6d3;
     background-image:
