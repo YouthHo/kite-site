@@ -21,6 +21,9 @@ const g = useGraphData()
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
+const props = defineProps({
+  universe: { type: Object, default: null }, // 宇宙状态（ThreadAxis 年代视窗驱动）
+})
 const chartEl = ref(null)
 const panelEl = ref(null)
 const briefEl = ref(null)
@@ -451,6 +454,17 @@ watch(
   }
 )
 watch(theme, (v) => engine?.setTheme(v === 'light'))
+// P3 时间飞行：线轴年代视窗 → 图谱节点过滤
+watch(
+  () => props.universe?.state.eraViewport?.join('-'),
+  (era) => {
+    if (!era) return
+    const [a, b] = era.split('-').map(Number)
+    g.eraRange.value = [a, b]
+    engine?.appear.clear()
+    engine?.requestRender()
+  }
+)
 
 onBeforeUnmount(() => {
   g.stopEraPlay()

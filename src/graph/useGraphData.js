@@ -2,6 +2,8 @@ import { ref, computed } from 'vue'
 import graph from '@/data/relationships.json'
 import characters from '@/data/characters.json'
 import { FACTION, factionLabel } from '@/utils/factions'
+import episodesDataRaw from '@/data/episodes.json'
+const graphEpisodes = episodesDataRaw
 import { theme } from '@/store/app'
 
 /**
@@ -20,6 +22,22 @@ export const TYPE_META = {
 export const TYPE_ORDER = Object.keys(TYPE_META)
 export const FACTION_ORDER = ['junton', 'zhongtong', 'underground', 'gongan', 'civilian']
 export const EP_MAX = 46
+
+/** 解析年代字符串 → 起点年份（'1946'→1946, '1947-1949'→1947, '1960s'→1960） */
+export function parseEra(s) {
+  if (!s) return null
+  const m = String(s).match(/(\\d{4})/)
+  return m ? Number(m[1]) : null
+}
+
+/** 角色活跃年代区间（由出场集数的 era 映射） */
+export function nodeEraRange(id, charMapData, epList) {
+  const c = charMapData[id]
+  if (!c?.episodes) return [1927, 1980]
+  const a = epList.find((e) => e.id === c.episodes[0])
+  const b = epList.find((e) => e.id === c.episodes[1])
+  return [parseEra(a?.era) || 1927, parseEra(b?.era) || 1980]
+}
 
 const charMap = Object.fromEntries(characters.map((c) => [c.id, c]))
 
@@ -80,6 +98,7 @@ export function useGraphData() {
   const keyword = ref('')
   const sortBy = ref('faction')
   const ep = ref(EP_MAX) // 集数演化
+  const eraRange = ref([1927, 1980]) // 年代视窗（ThreadAxis 时间飞行驱动）
   const epPlaying = ref(false)
   let eraTimer = null
 
@@ -91,16 +110,22 @@ export function useGraphData() {
     return (n.name + (n.code || '') + (n.role || '') + n.aliases.join('')).toLowerCase().includes(kw)
   }
 
-  /** 可见节点（阵营/人物/集数演化/搜索 四重过滤） */
-  const visibleNodes = computed(() =>
-    nodes.filter(
+  /** 可见节点（阵营/人物/集数演化/年代视窗/搜索 五重过滤） */
+  const visibleNodes = computed(() => {
+    const [ea, eb] = eraRange.value
+    return nodes.filter(
       (n) =>
         activeFactions.value.has(n.faction) &&
         (personSel.value.size === 0 || personSel.value.has(n.id)) &&
         n.episodes[0] <= ep.value &&
+        // 年代视窗：节点活跃区间与视窗相交才显示（ThreadAxis 时间飞行）
+        (() => {
+          const [na, nb] = nodeEraRange(n.id, charMap, graphEpisodes)
+          return nb >= ea && na <= eb
+        })() &&
         matchesKeyword(n)
     )
-  )
+  })
   const visibleIds = computed(() => new Set(visibleNodes.value.map((n) => n.id)))
 
   /** 可见边（两端可见 + 类型筛选） */
@@ -229,6 +254,7 @@ export function useGraphData() {
     keyword,
     sortBy,
     ep,
+    eraRange,
     epPlaying,
     visibleNodes,
     visibleLinks,
