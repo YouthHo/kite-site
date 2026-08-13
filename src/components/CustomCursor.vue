@@ -96,7 +96,7 @@ onBeforeUnmount(() => cleanup?.())
   font-family: 'Noto Sans SC', system-ui, sans-serif;
   font-size: 9px;
   letter-spacing: 0.3em;
-  color: #e8dcc8;
+  color: var(--axis-text-strong);
   opacity: 0;
 }
 .cc-dot {

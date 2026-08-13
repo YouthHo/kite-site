@@ -64,7 +64,7 @@ defineExpose({ toggle, open })
   <Teleport to="body">
     <!-- 触发按钮（右侧边缘常驻） -->
     <button
-      class="fixed right-0 top-1/2 -translate-y-1/2 z-[70] px-1.5 py-3 border border-r-0 border-[#2a2520] bg-[var(--axis-bg-glass)] text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] transition-colors on-media"
+      class="fixed right-0 top-1/2 -translate-y-1/2 z-[70] px-1.5 py-3 border border-r-0 border-[#2a2520] bg-[var(--axis-bg-glass)] text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] transition-colors"
       style="writing-mode: vertical-rl; letter-spacing: 0.3em; font-size: 10px"
       :aria-label="open ? '关闭档案索引' : '打开档案索引'"
       @click="toggle"

@@ -18,8 +18,8 @@ defineProps({
 const emit = defineEmits(['mode', 'layout', 'reset', 'help', 'highlight', 'export'])
 const { t } = useI18n()
 
-const activeCls = 'border-[#8c4a2f] text-[#8c4a2f] bg-[#8c4a2f]/15 on-media'
-const idleCls = 'border-[#2a2520] bg-[var(--axis-bg-glass)] text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] on-media'
+const activeCls = 'border-[#8c4a2f] text-[#8c4a2f] bg-[#8c4a2f]/15'
+const idleCls = 'border-[#2a2520] bg-[var(--axis-bg-glass)] text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c]'
 </script>
 
 <template>
@@ -37,7 +37,7 @@ const idleCls = 'border-[#2a2520] bg-[var(--axis-bg-glass)] text-[#a89f8e] hover
     </button>
     <!-- 解密模式（逐节点揭开遮蔽） -->
     <button
-      class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors flex items-center gap-1.5 on-media"
+      class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors flex items-center gap-1.5"
       :class="mode === 'decrypt' ? 'border-[#b91c1c] text-[#a8443a] bg-[#b91c1c]/15' : idleCls"
       :title="mode === 'decrypt' ? t('graph.escExitDecrypt') : t('graph.decrypt')"
       :aria-pressed="mode === 'decrypt'"
@@ -80,7 +80,7 @@ const idleCls = 'border-[#2a2520] bg-[var(--axis-bg-glass)] text-[#a89f8e] hover
     </button>
     <!-- 悬停高亮开关（C2：关闭时悬停无任何高亮/强调/脉冲） -->
     <button
-      class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors flex items-center gap-1.5 on-media"
+      class="px-2.5 py-1.5 border font-mono text-[10px] tracking-[0.15em] transition-colors flex items-center gap-1.5"
       :class="hoverHighlight ? 'border-[#2a2520] bg-[var(--axis-bg-glass)] text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c]' : 'border-[#8f897c] text-[#8f897c] bg-[#0e0e0e]/60'"
       :title="hoverHighlight ? t('graph.hoverHighlight') : t('graph.highlightOff')"
       :aria-pressed="hoverHighlight"

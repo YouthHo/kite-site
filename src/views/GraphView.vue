@@ -549,7 +549,7 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- 路径模式：显式双步提示 + 取消（深底板+on-media） -->
-        <div v-if="mode === 'path'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#8c4a2f] bg-[var(--axis-bg-glass)] text-[#8c4a2f] whitespace-nowrap on-media">
+        <div v-if="mode === 'path'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#8c4a2f] bg-[var(--axis-bg-glass)] text-[#8c4a2f] whitespace-nowrap">
           <template v-if="!pathStart">{{ t('graph.pathStep1') }}</template>
           <template v-else-if="!pathResult">{{ t('graph.pathStep2', { name: g.charMap[pathStart]?.name }) }}</template>
           <template v-else>
@@ -559,8 +559,8 @@ onBeforeUnmount(() => {
           <button class="pointer-events-auto border border-[#b91c1c] text-[#a8443a] px-2 py-0.5 hover:bg-[#b91c1c]/15 transition-colors" @click="cancelPath">{{ t('graph.cancel') }}</button>
         </div>
 
-        <!-- 巡览旁白（深底板+on-media 双主题可读） -->
-        <div v-if="mode === 'tour'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 max-w-[560px] w-[88%] bg-[#0e0e0e]/94 border border-[#8c4a2f]/50 px-4 py-3 pointer-events-none on-media">
+        <!-- 巡览旁白（深底板+双主题可读） -->
+        <div v-if="mode === 'tour'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 max-w-[560px] w-[88%] bg-[#0e0e0e]/94 border border-[#8c4a2f]/50 px-4 py-3 pointer-events-none">
           <div class="flex items-center justify-between mb-1.5 font-mono text-[9px] tracking-[0.3em] text-[#8c4a2f]">
             <span>DECRYPT FILE · {{ String(tourIdx + 1).padStart(2, '0') }}/{{ TOUR_STEPS.length }}</span>
             <span class="flex gap-3">
@@ -572,19 +572,19 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- 解密模式：进入态提示（深底板+on-media） -->
-        <div v-if="mode === 'decrypt'" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#a8443a] bg-[var(--axis-bg-glass)] border border-[#b91c1c]/50 px-3 py-1.5 pointer-events-none on-media">
+        <div v-if="mode === 'decrypt'" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#a8443a] bg-[var(--axis-bg-glass)] border border-[#b91c1c]/50 px-3 py-1.5 pointer-events-none">
           {{ t('graph.decryptHint', { n: decryptCount, total: g.nodes.length, found: secretFound, total2: secretTotal }) }}
         </div>
 
-        <!-- 悬停信息条（静态简洁，深底板+on-media 双主题可读） -->
-        <div v-if="hoverNodeId" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.2em] text-[#e8dcc8] bg-[var(--axis-bg-glass)] border border-[#2a2520] px-4 py-1.5 whitespace-nowrap max-w-[90%] overflow-hidden text-ellipsis pointer-events-none on-media">
+        <!-- 悬停信息条（静态简洁，深底板+双主题可读） -->
+        <div v-if="hoverNodeId" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.2em] text-[#e8dcc8] bg-[var(--axis-bg-glass)] border border-[#2a2520] px-4 py-1.5 whitespace-nowrap max-w-[90%] overflow-hidden text-ellipsis pointer-events-none">
           <span ref="hoverEl">{{ hoverSummary }}</span>
         </div>
 
         <!-- 隔离退出按钮（可见的退出通道，深底板+on-media） -->
         <button
           v-if="focusClickId && mode === 'browse'"
-          class="absolute bottom-12 right-3 z-10 font-mono text-[10px] tracking-[0.15em] border border-[#8c4a2f] text-[#8c4a2f] bg-[var(--axis-bg-glass)] px-2.5 py-1 hover:bg-[#8c4a2f]/15 transition-colors on-media"
+          class="absolute bottom-12 right-3 z-10 font-mono text-[10px] tracking-[0.15em] border border-[#8c4a2f] text-[#8c4a2f] bg-[var(--axis-bg-glass)] px-2.5 py-1 hover:bg-[#8c4a2f]/15 transition-colors"
           @click="clearFocus"
         >
           退出隔离
@@ -626,7 +626,7 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- 时间轴（深底板+on-media） -->
-        <div class="absolute bottom-3 right-3 z-10 flex items-center gap-2.5 bg-[var(--axis-bg-glass)] border border-[#2a2520] px-3 py-1.5 on-media">
+        <div class="absolute bottom-3 right-3 z-10 flex items-center gap-2.5 bg-[var(--axis-bg-glass)] border border-[#2a2520] px-3 py-1.5">
           <button class="text-[#a89f8e] hover:text-[#e8dcc8] transition-colors" :aria-label="g.epPlaying.value ? '暂停演化' : '播放演化'" @click="g.toggleEraPlay()">
             <Pause v-if="g.epPlaying.value" :size="13" />
             <Play v-else :size="13" />
@@ -655,7 +655,7 @@ onBeforeUnmount(() => {
             :class="g.activeFactions.value.has(k) ? 'text-[#e8dcc8]' : 'text-[#8f897c]'">
             <span class="w-3.5 h-3.5 border grid place-items-center transition-colors"
               :style="{ borderColor: v.color, background: g.activeFactions.value.has(k) ? v.color : 'transparent' }">
-              <span v-if="g.activeFactions.value.has(k)" class="text-[9px] text-[#e8dcc8]">✓</span>
+              <span v-if="g.activeFactions.value.has(k)" class="text-[9px] text-[#e8dcc8] on-media">✓</span>
             </span>
             {{ v.label }}
             <input type="checkbox" class="hidden" :checked="g.activeFactions.value.has(k)" @change="toggleFaction(k)" />
@@ -697,7 +697,7 @@ onBeforeUnmount(() => {
               :style="{ borderColor: FACTION[n.faction].color, background: g.personSel.value.has(n.id) ? FACTION[n.faction].color : 'transparent' }"
               @click.stop="togglePerson(n.id)"
             >
-              <span v-if="g.personSel.value.has(n.id)" class="text-[9px] text-[#e8dcc8]">✓</span>
+              <span v-if="g.personSel.value.has(n.id)" class="text-[9px] text-[#e8dcc8] on-media">✓</span>
             </span>
             <span class="w-2 h-2 rounded-full shrink-0" :style="{ background: FACTION[n.faction].color }"></span>
             <span class="text-[#e8dcc8] truncate">{{ n.name }}</span>

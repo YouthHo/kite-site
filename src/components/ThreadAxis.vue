@@ -95,7 +95,7 @@ function goLibrary() {
 </script>
 
 <template>
-  <div class="thread-axis fixed bottom-0 inset-x-0 z-[60] on-media" :data-theme="theme" role="navigation" aria-label="一线宇宙导航">
+  <div class="thread-axis fixed bottom-0 inset-x-0 z-[60]" :data-theme="theme" role="navigation" aria-label="一线宇宙导航">
     <div class="bg-[var(--axis-bg-glass)] backdrop-blur border-t border-[var(--axis-line)] px-3 md:px-6 py-2.5">
       <!-- 透镜切换（非路由跳转） -->
       <div class="flex items-center justify-between gap-2 mb-2">
