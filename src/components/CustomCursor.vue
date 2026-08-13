@@ -106,7 +106,7 @@ onBeforeUnmount(() => cleanup?.())
   width: 5px;
   height: 5px;
   margin: -2.5px 0 0 -2.5px;
-  background: #9d2235;
+  background: #b91c1c;
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;

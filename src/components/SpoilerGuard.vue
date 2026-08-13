@@ -23,11 +23,11 @@ const unlocked = computed(() => appState.unlocked(props.threshold))
       </div>
       <div class="absolute inset-0 z-10 grid place-items-center">
         <div class="text-center">
-          <Lock :size="20" class="mx-auto text-[#9d2235] mb-2" />
+          <Lock :size="20" class="mx-auto text-[#b91c1c] mb-2" />
           <p class="text-[12px] tracking-[0.25em] text-[#8a8275]">{{ label }}已加密</p>
           <p class="mt-1 text-[10px] tracking-[0.15em] text-[#555048]">观看到第 {{ threshold }} 集后自动解锁</p>
           <button
-            class="mt-3 text-[11px] tracking-[0.2em] border border-[#9d2235] text-[#e8dcc8] px-4 py-1.5 hover:bg-[#9d2235]/20 transition-colors"
+            class="mt-3 text-[11px] tracking-[0.2em] border border-[#b91c1c] text-[#e8dcc8] px-4 py-1.5 hover:bg-[#b91c1c]/20 transition-colors"
             @click="appState.markRange(1, threshold)"
           >
             标记已看完 {{ threshold }} 集

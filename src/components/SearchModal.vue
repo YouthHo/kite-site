@@ -66,7 +66,7 @@ onBeforeUnmount(() => openTween?.kill())
       <div ref="panel" class="search-panel relative max-w-2xl mx-auto mt-[12vh] mx-4 px-2">
         <div class="glass p-5 md:p-7">
           <div class="flex items-center gap-3 border-b border-[#2a2520] pb-4">
-            <Search :size="18" class="text-[#9d2235]" />
+            <Search :size="18" class="text-[#b91c1c]" />
             <input
               ref="input"
               v-model="keyword"
@@ -82,7 +82,7 @@ onBeforeUnmount(() => openTween?.kill())
               v-for="t in TABS"
               :key="t.id"
               class="shrink-0 px-3 py-1.5 text-[12px] tracking-[0.15em] border-b-2 transition-colors"
-              :class="tab === t.id ? 'border-[#9d2235] text-[#e8dcc8]' : 'border-transparent text-[#555048] hover:text-[#8a8275]'"
+              :class="tab === t.id ? 'border-[#b91c1c] text-[#e8dcc8]' : 'border-transparent text-[#555048] hover:text-[#8a8275]'"
               @click="tab = t.id"
             >
               <component :is="t.icon" :size="12" class="inline mr-1" />{{ t.label }}
@@ -95,10 +95,10 @@ onBeforeUnmount(() => openTween?.kill())
             <button
               v-for="(r, i) in results"
               :key="r.type + r.title + i"
-              class="w-full text-left flex items-center gap-3 px-3 py-2.5 border-l-2 border-transparent hover:border-[#9d2235] hover:bg-[#161616] transition-colors"
+              class="w-full text-left flex items-center gap-3 px-3 py-2.5 border-l-2 border-transparent hover:border-[#b91c1c] hover:bg-[#161616] transition-colors"
               @click="go(r)"
             >
-              <span class="font-mono text-[10px] text-[#9d2235] w-14 shrink-0">{{ { character: '人物', actor: '演员', episode: '剧集', quote: '台词', scene: '场面' }[r.type] }}</span>
+              <span class="font-mono text-[10px] text-[#b91c1c] w-14 shrink-0">{{ { character: '人物', actor: '演员', episode: '剧集', quote: '台词', scene: '场面' }[r.type] }}</span>
               <span class="flex-1 min-w-0">
                 <span class="block text-[13px] text-[#e8dcc8] truncate">{{ r.title }}</span>
                 <span class="block text-[11px] text-[#555048] truncate">{{ r.sub }}</span>

@@ -70,13 +70,13 @@ onBeforeUnmount(() => tl?.kill())
     <div
       ref="line"
       class="pt-line pointer-events-none fixed left-0 right-0 z-[56] h-[3px]"
-      style="top: -2%; background: linear-gradient(90deg, transparent, #9d2235 20%, #b8860b 55%, #9d2235 80%, transparent); box-shadow: 0 0 18px rgba(157,34,53,0.8); opacity: 0"
+      style="top: -2%; background: linear-gradient(90deg, transparent, #b91c1c 20%, #8c4a2f 55%, #b91c1c 80%, transparent); box-shadow: 0 0 18px rgba(157,34,53,0.8); opacity: 0"
     ></div>
     <!-- 封条撕裂竖条（graph 变体） -->
     <div
       ref="seal"
       class="pt-seal pointer-events-none fixed top-0 bottom-0 z-[56] w-[3px]"
-      style="left: 102%; background: linear-gradient(180deg, transparent, #9d2235 18%, #b8860b 50%, #9d2235 82%, transparent); box-shadow: 0 0 22px rgba(157,34,53,0.85); opacity: 0"
+      style="left: 102%; background: linear-gradient(180deg, transparent, #b91c1c 18%, #8c4a2f 50%, #b91c1c 82%, transparent); box-shadow: 0 0 22px rgba(157,34,53,0.85); opacity: 0"
     ></div>
   </div>
 </template>

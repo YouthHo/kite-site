@@ -5,6 +5,11 @@
 [data-theme='light'] .group:hover .group-hover\:bg-\[\#060606\] { background-color: #e7ddc7 !important; }
 [data-theme='light'] .border-\[\#060606\] { border-color: #e7ddc7 !important; }
 [data-theme='light'] .hover\:border-\[\#060606\]:hover { border-color: #e7ddc7 !important; }
+[data-theme='light'] .bg-\[\#0d0d0f\] { background-color: #efe6d3 !important; }
+[data-theme='light'] .hover\:bg-\[\#0d0d0f\]:hover { background-color: #efe6d3 !important; }
+[data-theme='light'] .group:hover .group-hover\:bg-\[\#0d0d0f\] { background-color: #efe6d3 !important; }
+[data-theme='light'] .border-\[\#0d0d0f\] { border-color: #efe6d3 !important; }
+[data-theme='light'] .hover\:border-\[\#0d0d0f\]:hover { border-color: #efe6d3 !important; }
 [data-theme='light'] .bg-\[\#080808\] { background-color: #efe6d3 !important; }
 [data-theme='light'] .hover\:bg-\[\#080808\]:hover { background-color: #efe6d3 !important; }
 [data-theme='light'] .group:hover .group-hover\:bg-\[\#080808\] { background-color: #efe6d3 !important; }
@@ -60,6 +65,21 @@
 [data-theme='light'] .group:hover .group-hover\:bg-\[\#161616\] { background-color: #f6eeda !important; }
 [data-theme='light'] .border-\[\#161616\] { border-color: #f6eeda !important; }
 [data-theme='light'] .hover\:border-\[\#161616\]:hover { border-color: #f6eeda !important; }
+[data-theme='light'] .bg-\[\#15151a\] { background-color: #f7f0e1 !important; }
+[data-theme='light'] .hover\:bg-\[\#15151a\]:hover { background-color: #f7f0e1 !important; }
+[data-theme='light'] .group:hover .group-hover\:bg-\[\#15151a\] { background-color: #f7f0e1 !important; }
+[data-theme='light'] .border-\[\#15151a\] { border-color: #f7f0e1 !important; }
+[data-theme='light'] .hover\:border-\[\#15151a\]:hover { border-color: #f7f0e1 !important; }
+[data-theme='light'] .bg-\[\#1c1c22\] { background-color: #f1e8d4 !important; }
+[data-theme='light'] .hover\:bg-\[\#1c1c22\]:hover { background-color: #f1e8d4 !important; }
+[data-theme='light'] .group:hover .group-hover\:bg-\[\#1c1c22\] { background-color: #f1e8d4 !important; }
+[data-theme='light'] .border-\[\#1c1c22\] { border-color: #f1e8d4 !important; }
+[data-theme='light'] .hover\:border-\[\#1c1c22\]:hover { border-color: #f1e8d4 !important; }
+[data-theme='light'] .bg-\[\#202027\] { background-color: #ece2cd !important; }
+[data-theme='light'] .hover\:bg-\[\#202027\]:hover { background-color: #ece2cd !important; }
+[data-theme='light'] .group:hover .group-hover\:bg-\[\#202027\] { background-color: #ece2cd !important; }
+[data-theme='light'] .border-\[\#202027\] { border-color: #ece2cd !important; }
+[data-theme='light'] .hover\:border-\[\#202027\]:hover { border-color: #ece2cd !important; }
 [data-theme='light'] .bg-\[\#1a1415\] { background-color: #f5e4dc !important; }
 [data-theme='light'] .hover\:bg-\[\#1a1415\]:hover { background-color: #f5e4dc !important; }
 [data-theme='light'] .group:hover .group-hover\:bg-\[\#1a1415\] { background-color: #f5e4dc !important; }
@@ -80,12 +100,18 @@
 [data-theme='light'] .group:hover .group-hover\:bg-\[\#2a2520\] { background-color: #d9c9ab !important; }
 [data-theme='light'] .border-\[\#2a2520\] { border-color: #d9c9ab !important; }
 [data-theme='light'] .hover\:border-\[\#2a2520\]:hover { border-color: #d9c9ab !important; }
+[data-theme='light'] .bg-\[\#26262c\] { background-color: #d9c9ab !important; }
+[data-theme='light'] .hover\:bg-\[\#26262c\]:hover { background-color: #d9c9ab !important; }
+[data-theme='light'] .group:hover .group-hover\:bg-\[\#26262c\] { background-color: #d9c9ab !important; }
+[data-theme='light'] .border-\[\#26262c\] { border-color: #d9c9ab !important; }
+[data-theme='light'] .hover\:border-\[\#26262c\]:hover { border-color: #d9c9ab !important; }
 [data-theme='light'] .bg-\[\#080808\]\/95 { background-color: #efe6d3 !important; }
 [data-theme='light'] .bg-\[\#080808\]\/90 { background-color: #efe6d3 !important; }
 [data-theme='light'] .bg-\[\#080808\]\/60 { background-color: #efe6d3 !important; }
 [data-theme='light'] .bg-\[\#0e0e0e\]\/95 { background-color: #f9f2e3 !important; }
 [data-theme='light'] .bg-\[\#0e0e0e\]\/85 { background-color: #f9f2e3 !important; }
 [data-theme='light'] .bg-\[\#0e0e0e\]\/80 { background-color: #f9f2e3 !important; }
+[data-theme='light'] .bg-\[\#15151a\]\/90 { background-color: #f7f0e1 !important; }
 [data-theme='light'] .text-\[\#e8dcc8\]\/90 { color: #3d362b !important; }
 [data-theme='light'] .text-\[\#e8dcc8\]\/70 { color: #3d362b !important; }
 [data-theme='light'] .text-\[\#e8dcc8\]\/50 { color: #3d362b !important; }
@@ -107,6 +133,10 @@
 [data-theme='light'] .hover\:text-\[\#d8ccb8\]:hover { color: #4a4134 !important; }
 [data-theme='light'] .group:hover .group-hover\:text-\[\#d8ccb8\] { color: #4a4134 !important; }
 [data-theme='light'] .border-\[\#d8ccb8\] { border-color: #4a4134 !important; }
+[data-theme='light'] .text-\[\#ece3d2\] { color: #3d362b !important; }
+[data-theme='light'] .hover\:text-\[\#ece3d2\]:hover { color: #3d362b !important; }
+[data-theme='light'] .group:hover .group-hover\:text-\[\#ece3d2\] { color: #3d362b !important; }
+[data-theme='light'] .border-\[\#ece3d2\] { border-color: #3d362b !important; }
 [data-theme='light'] .text-\[\#e8dcc8\] { color: #3d362b !important; }
 [data-theme='light'] .hover\:text-\[\#e8dcc8\]:hover { color: #3d362b !important; }
 [data-theme='light'] .group:hover .group-hover\:text-\[\#e8dcc8\] { color: #3d362b !important; }
@@ -123,6 +153,10 @@
 [data-theme='light'] .hover\:text-\[\#b8860b\]:hover { color: #8a6a2f !important; }
 [data-theme='light'] .group:hover .group-hover\:text-\[\#b8860b\] { color: #8a6a2f !important; }
 [data-theme='light'] .border-\[\#b8860b\] { border-color: #8a6a2f !important; }
+[data-theme='light'] .text-\[\#8c4a2f\] { color: #7a4a2f !important; }
+[data-theme='light'] .hover\:text-\[\#8c4a2f\]:hover { color: #7a4a2f !important; }
+[data-theme='light'] .group:hover .group-hover\:text-\[\#8c4a2f\] { color: #7a4a2f !important; }
+[data-theme='light'] .border-\[\#8c4a2f\] { border-color: #7a4a2f !important; }
 
 /* 自定义类的浅色覆盖（对比度修正） */
 [data-theme='light'] .file-label { background: rgba(120, 90, 50, 0.07) !important; border-color: #d9c9ab !important; color: #4a4232 !important; }

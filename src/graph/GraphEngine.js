@@ -87,10 +87,10 @@ export class GraphEngine {
       nodeGlow: light ? '33' : '44',
       dimOpacity: 0.14,
       edge: Object.fromEntries(Object.entries(TYPE_META).map(([k, m]) => [k, edgeBase(m.color)])),
-      edgeHover: '#b8860b',
-      path: '#b8860b',
-      focus: '#b8860b',
-      sealKite: '#b8860b',
+      edgeHover: '#8c4a2f',
+      path: '#8c4a2f',
+      focus: '#8c4a2f',
+      sealKite: '#8c4a2f',
       sealShadow: '#d8475c',
     }
     this.requestRender()
@@ -625,7 +625,7 @@ export class GraphEngine {
         const qy = (1 - tt) * (1 - tt) * a.y + 2 * (1 - tt) * tt * cy + tt * tt * b.y
         ctx.save()
         ctx.globalAlpha = 0.95
-        ctx.shadowColor = '#b8860b'
+        ctx.shadowColor = '#8c4a2f'
         ctx.shadowBlur = 10
         ctx.fillStyle = '#f0d9a0'
         ctx.beginPath()

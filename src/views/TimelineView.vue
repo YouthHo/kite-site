@@ -167,8 +167,8 @@ function initMiniChart() {
     xAxis: { type: 'category', data: SECTIONS.map((s) => s.label + ' ' + s.sub), axisLine: { lineStyle: { color: light ? '#c9b795' : '#2a2520' } }, axisLabel: { color: light ? '#6e675a' : '#8a8275', interval: 0, rotate: 0, fontSize: 10 } },
     yAxis: { type: 'value', splitLine: { lineStyle: { color: light ? 'rgba(150,120,70,0.2)' : 'rgba(42,37,32,0.6)' } }, axisLabel: { color: light ? '#7a7366' : '#555048' } },
     series: [
-      { name: '剧情节点', type: 'bar', data: SECTIONS.map((s) => nodes.value.filter((n) => n.section === s.id && n.type === 'plot').length), itemStyle: { color: '#9d2235' }, barWidth: 18 },
-      { name: '真实历史', type: 'bar', data: SECTIONS.map((s) => nodes.value.filter((n) => n.section === s.id && n.type === 'history').length), itemStyle: { color: '#b8860b' }, barWidth: 18 },
+      { name: '剧情节点', type: 'bar', data: SECTIONS.map((s) => nodes.value.filter((n) => n.section === s.id && n.type === 'plot').length), itemStyle: { color: '#b91c1c' }, barWidth: 18 },
+      { name: '真实历史', type: 'bar', data: SECTIONS.map((s) => nodes.value.filter((n) => n.section === s.id && n.type === 'history').length), itemStyle: { color: '#8c4a2f' }, barWidth: 18 },
     ],
   })
 }
@@ -207,7 +207,7 @@ onBeforeUnmount(() => {
         ></div>
 
         <!-- 主线：垂直居中 -->
-        <div ref="lineRef" class="absolute left-0 right-0 top-1/2 h-[2px] origin-left -translate-y-1/2 z-10" style="background: linear-gradient(90deg, rgba(157,34,53,0) 0%, #9d2235 4%, #b8860b 50%, #9d2235 96%, rgba(157,34,53,0) 100%); box-shadow: 0 0 16px rgba(157,34,53,0.45);"></div>
+        <div ref="lineRef" class="absolute left-0 right-0 top-1/2 h-[2px] origin-left -translate-y-1/2 z-10" style="background: linear-gradient(90deg, rgba(157,34,53,0) 0%, #b91c1c 4%, #8c4a2f 50%, #b91c1c 96%, rgba(157,34,53,0) 100%); box-shadow: 0 0 16px rgba(157,34,53,0.45);"></div>
 
         <!-- 序章 -->
         <div class="relative z-10 h-full flex flex-col items-center justify-center text-center shrink-0" :style="{ width: INTRO_W + 'px' }">
@@ -216,8 +216,8 @@ onBeforeUnmount(() => {
           <div class="mt-4 font-mono text-[11px] tracking-[0.45em] text-[#8a8275]">1927 — 1980</div>
           <div class="mt-10 font-mono text-[10px] tracking-[0.3em] text-[#555048]">↓ 向下滚动 · 横向展开</div>
           <div class="mt-6 flex gap-5 font-mono text-[10px] tracking-[0.2em] text-[#8a8275]">
-            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#9d2235]"></span>剧情 · 上行</span>
-            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#b8860b]"></span>真实历史 · 下行</span>
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#b91c1c]"></span>剧情 · 上行</span>
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#8c4a2f]"></span>真实历史 · 下行</span>
           </div>
         </div>
 
@@ -237,7 +237,7 @@ onBeforeUnmount(() => {
               class="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-[#0a0a0a] transition-all duration-500 z-10"
               :style="{
                 top: '50%',
-                background: lit.has(i) ? (it.node.type === 'history' ? '#b8860b' : '#9d2235') : '#2a2520',
+                background: lit.has(i) ? (it.node.type === 'history' ? '#8c4a2f' : '#b91c1c') : '#2a2520',
                 boxShadow: lit.has(i) ? '0 0 18px rgba(157,34,53,0.9)' : 'none',
                 transform: lit.has(i) ? 'translate(-50%,-50%) scale(1.25)' : 'translate(-50%,-50%)',
               }"
@@ -265,20 +265,20 @@ onBeforeUnmount(() => {
 
       <!-- 横向进度条 -->
       <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-64 h-[2px] bg-[#2a2520]/60 overflow-hidden">
-        <div class="h-full origin-left" :style="{ transform: 'scaleX(' + progress + ')', background: 'linear-gradient(90deg,#9d2235,#b8860b)' }"></div>
+        <div class="h-full origin-left" :style="{ transform: 'scaleX(' + progress + ')', background: 'linear-gradient(90deg,#b91c1c,#8c4a2f)' }"></div>
       </div>
     </div>
 
     <!-- 移动端：纵向时间线 -->
     <div class="md:hidden relative pl-9">
-      <div class="absolute left-3 top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#9d2235] via-[#b8860b] to-transparent"></div>
+      <div class="absolute left-3 top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#b91c1c] via-[#8c4a2f] to-transparent"></div>
       <div v-for="(it, i) in layout.items" :key="i">
         <div v-if="it.type === 'header'" class="m-node relative mb-5">
           <div class="serif-title text-xl tracking-[0.3em] text-[#e8dcc8]">{{ SECTIONS[it.section - 1].label }}</div>
           <div class="font-mono text-[10px] tracking-[0.25em] text-[#8a8275]">{{ SECTIONS[it.section - 1].sub }}</div>
         </div>
         <div v-else class="m-node relative mb-6">
-          <span class="absolute -left-[23px] top-2 w-3 h-3 rounded-full border-2 border-[#080808]" :style="{ background: it.node.type === 'history' ? '#b8860b' : '#9d2235' }"></span>
+          <span class="absolute -left-[23px] top-2 w-3 h-3 rounded-full border-2 border-[#080808]" :style="{ background: it.node.type === 'history' ? '#8c4a2f' : '#b91c1c' }"></span>
           <TimelineNode :node="it.node" :index="i" side="bottom" />
         </div>
       </div>

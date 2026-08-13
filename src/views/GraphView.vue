@@ -510,19 +510,19 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- 路径模式：显式双步提示 + 取消（深底板+on-media） -->
-        <div v-if="mode === 'path'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#b8860b] bg-[#0e0e0e]/90 text-[#b8860b] whitespace-nowrap on-media">
+        <div v-if="mode === 'path'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#8c4a2f] bg-[#0e0e0e]/90 text-[#8c4a2f] whitespace-nowrap on-media">
           <template v-if="!pathStart">{{ t('graph.pathStep1') }}</template>
           <template v-else-if="!pathResult">{{ t('graph.pathStep2', { name: g.charMap[pathStart]?.name }) }}</template>
           <template v-else>
             <span v-if="pathResult.hops >= 0">{{ t('graph.pathResult', { path: pathResult.ids.map((id) => g.charMap[id]?.name || id).join(' → '), hops: pathResult.hops }) }}</span>
             <span v-else>{{ t('graph.pathDisconnected') }}</span>
           </template>
-          <button class="pointer-events-auto border border-[#9d2235] text-[#d8a0a8] px-2 py-0.5 hover:bg-[#9d2235]/15 transition-colors" @click="cancelPath">{{ t('graph.cancel') }}</button>
+          <button class="pointer-events-auto border border-[#b91c1c] text-[#a8443a] px-2 py-0.5 hover:bg-[#b91c1c]/15 transition-colors" @click="cancelPath">{{ t('graph.cancel') }}</button>
         </div>
 
         <!-- 巡览旁白（深底板+on-media 双主题可读） -->
-        <div v-if="mode === 'tour'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 max-w-[560px] w-[88%] bg-[#0e0e0e]/94 border border-[#b8860b]/50 px-4 py-3 pointer-events-none on-media">
-          <div class="flex items-center justify-between mb-1.5 font-mono text-[9px] tracking-[0.3em] text-[#b8860b]">
+        <div v-if="mode === 'tour'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 max-w-[560px] w-[88%] bg-[#0e0e0e]/94 border border-[#8c4a2f]/50 px-4 py-3 pointer-events-none on-media">
+          <div class="flex items-center justify-between mb-1.5 font-mono text-[9px] tracking-[0.3em] text-[#8c4a2f]">
             <span>DECRYPT FILE · {{ String(tourIdx + 1).padStart(2, '0') }}/{{ TOUR_STEPS.length }}</span>
             <span class="flex gap-3">
               <button class="pointer-events-auto text-[#8a8275] hover:text-[#e8dcc8]" @click="prevTourStep">‹ 上一幕</button>
@@ -533,7 +533,7 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- 解密模式：进入态提示（深底板+on-media） -->
-        <div v-if="mode === 'decrypt'" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#d8a0a8] bg-[#0e0e0e]/90 border border-[#9d2235]/50 px-3 py-1.5 pointer-events-none on-media">
+        <div v-if="mode === 'decrypt'" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#a8443a] bg-[#0e0e0e]/90 border border-[#b91c1c]/50 px-3 py-1.5 pointer-events-none on-media">
           {{ t('graph.decryptHint', { n: decryptCount, total: g.nodes.length, found: secretFound, total2: secretTotal }) }}
         </div>
 
@@ -545,7 +545,7 @@ onBeforeUnmount(() => {
         <!-- 隔离退出按钮（可见的退出通道，深底板+on-media） -->
         <button
           v-if="focusClickId && mode === 'browse'"
-          class="absolute bottom-12 right-3 z-10 font-mono text-[10px] tracking-[0.15em] border border-[#b8860b] text-[#b8860b] bg-[#0e0e0e]/90 px-2.5 py-1 hover:bg-[#b8860b]/15 transition-colors on-media"
+          class="absolute bottom-12 right-3 z-10 font-mono text-[10px] tracking-[0.15em] border border-[#8c4a2f] text-[#8c4a2f] bg-[#0e0e0e]/90 px-2.5 py-1 hover:bg-[#8c4a2f]/15 transition-colors on-media"
           @click="clearFocus"
         >
           退出隔离
@@ -555,7 +555,7 @@ onBeforeUnmount(() => {
         <transition name="era-fade">
           <div v-if="revealed" class="absolute inset-0 z-20 grid place-items-center pointer-events-none">
             <div class="text-center px-6">
-              <div class="serif-title text-4xl md:text-5xl text-[#b8860b] tracking-[0.2em]" style="text-shadow: 0 0 40px rgba(184,134,11,0.6);">风筝与影子 · 同一根线</div>
+              <div class="serif-title text-4xl md:text-5xl text-[#8c4a2f] tracking-[0.2em]" style="text-shadow: 0 0 40px rgba(184,134,11,0.6);">风筝与影子 · 同一根线</div>
               <div class="mt-3 font-mono text-[10px] tracking-[0.4em] text-[#8a8275]">ALL FILES DECRYPTED · WHO IS KITE · WHO IS SHADOW</div>
             </div>
           </div>
@@ -592,7 +592,7 @@ onBeforeUnmount(() => {
             <Pause v-if="g.epPlaying.value" :size="13" />
             <Play v-else :size="13" />
           </button>
-          <input type="range" min="1" max="46" step="1" v-model.number="g.ep.value" class="w-28 md:w-40 accent-[#9d2235]" :aria-label="`剧情集数 ${g.ep.value}`" />
+          <input type="range" min="1" max="46" step="1" v-model.number="g.ep.value" class="w-28 md:w-40 accent-[#b91c1c]" :aria-label="`剧情集数 ${g.ep.value}`" />
           <span class="font-mono text-[10px] tracking-[0.15em] text-[#8a8275] w-[70px]">EP {{ String(g.ep.value).padStart(2, '0') }}/46</span>
         </div>
 
@@ -628,7 +628,7 @@ onBeforeUnmount(() => {
             v-for="s in SORTS"
             :key="s.id"
             class="flex-1 text-[11px] py-1.5 border transition-colors"
-            :class="g.sortBy.value === s.id ? 'border-[#9d2235] text-[#e8dcc8] bg-[#9d2235]/10' : 'border-[#2a2520] text-[#555048] hover:border-[#9d2235]/60 hover:text-[#8a8275]'"
+            :class="g.sortBy.value === s.id ? 'border-[#b91c1c] text-[#e8dcc8] bg-[#b91c1c]/10' : 'border-[#2a2520] text-[#555048] hover:border-[#b91c1c]/60 hover:text-[#8a8275]'"
             @click="g.sortBy.value = s.id"
           >
             {{ s.label }}
@@ -647,7 +647,7 @@ onBeforeUnmount(() => {
             v-for="(n, i) in g.sortedList.value"
             :key="n.id"
             class="w-full flex items-center gap-2.5 px-2.5 py-2 text-[12px] border-l-2 cursor-pointer select-none transition-colors"
-            :class="selected?.id === n.id ? 'border-[#9d2235] bg-[#161616]' : i === kbIndex && focusNodeId === n.id ? 'border-[#b8860b] bg-[#161616]' : mode === 'path' && pathStart === n.id ? 'border-[#d8a0a8] bg-[#161616]' : 'border-transparent hover:bg-[#161616]'"
+            :class="selected?.id === n.id ? 'border-[#b91c1c] bg-[#161616]' : i === kbIndex && focusNodeId === n.id ? 'border-[#8c4a2f] bg-[#161616]' : mode === 'path' && pathStart === n.id ? 'border-[#a8443a] bg-[#161616]' : 'border-transparent hover:bg-[#161616]'"
             @click="onRowClick(n)"
           >
             <span
@@ -662,9 +662,9 @@ onBeforeUnmount(() => {
             </span>
             <span class="w-2 h-2 rounded-full shrink-0" :style="{ background: FACTION[n.faction].color }"></span>
             <span class="text-[#e8dcc8] truncate">{{ n.name }}</span>
-            <span v-if="n.code" class="font-mono text-[9px] text-[#b8860b] shrink-0">{{ n.code }}</span>
+            <span v-if="n.code" class="font-mono text-[9px] text-[#8c4a2f] shrink-0">{{ n.code }}</span>
             <button
-              class="ml-auto w-6 h-6 grid place-items-center rounded border border-[#2a2520] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] transition-colors shrink-0"
+              class="ml-auto w-6 h-6 grid place-items-center rounded border border-[#2a2520] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] transition-colors shrink-0"
               :aria-label="`查看 ${n.name} 详情`"
               :title="`查看 ${n.name} 详情`"
               @click.stop="openPanel(n.id)"
@@ -683,7 +683,7 @@ onBeforeUnmount(() => {
         <aside ref="panelEl" class="pointer-events-auto absolute right-0 top-0 bottom-0 w-[92vw] max-w-[420px] bg-[#0e0e0e] border-l border-[#2a2520] overflow-y-auto">
           <div class="relative p-7">
             <button class="absolute top-5 right-5 text-[#8a8275] hover:text-[#e8dcc8]" @click="closePanel"><X :size="18" /></button>
-            <div class="font-mono text-[10px] tracking-[0.3em] text-[#9d2235]">KITE FILE / {{ selected.id.toUpperCase() }}</div>
+            <div class="font-mono text-[10px] tracking-[0.3em] text-[#b91c1c]">KITE FILE / {{ selected.id.toUpperCase() }}</div>
             <div class="mt-5 h-44 overflow-hidden border border-[#2a2520]">
               <NameBadge :name="selected.name" :faction="selected.faction" :code="selected.code" :sub="selected.identity" size="lg" />
             </div>
@@ -710,16 +710,16 @@ onBeforeUnmount(() => {
 
             <!-- 关系网络洞察 -->
             <div v-if="insight" class="mt-6 border border-[#2a2520] bg-[#0b0b0b] p-4">
-              <div class="font-mono text-[10px] tracking-[0.3em] text-[#b8860b]">关系网络 · INSIGHT</div>
+              <div class="font-mono text-[10px] tracking-[0.3em] text-[#8c4a2f]">关系网络 · INSIGHT</div>
               <div class="mt-3 space-y-2.5 text-[12px] leading-5">
                 <div v-if="insight.toKite" class="text-[#8a8275]">
                   至「风筝」最短链路：
-                  <span class="text-[#b8860b]">{{ insight.toKite.ids.map((x) => g.charMap[x]?.name || x).join(' → ') }}</span>
+                  <span class="text-[#8c4a2f]">{{ insight.toKite.ids.map((x) => g.charMap[x]?.name || x).join(' → ') }}</span>
                   <span class="text-[#555048]">（{{ insight.toKite.hops }} 跳）</span>
                 </div>
                 <div v-if="insight.toShadow" class="text-[#8a8275]">
                   至「影子」最短链路：
-                  <span class="text-[#d8a0a8]">{{ insight.toShadow.ids.map((x) => g.charMap[x]?.name || x).join(' → ') }}</span>
+                  <span class="text-[#a8443a]">{{ insight.toShadow.ids.map((x) => g.charMap[x]?.name || x).join(' → ') }}</span>
                   <span class="text-[#555048]">（{{ insight.toShadow.hops }} 跳）</span>
                 </div>
                 <div v-if="insight.common.length" class="text-[#8a8275]">
@@ -734,7 +734,7 @@ onBeforeUnmount(() => {
               </div>
             </div>
             <router-link :to="`/characters?q=${selected.id}`"
-              class="mt-6 flex items-center gap-2 justify-center border border-[#9d2235] py-2.5 text-[12px] tracking-[0.25em] text-[#e8dcc8] hover:bg-[#9d2235]/15 transition-colors group">
+              class="mt-6 flex items-center gap-2 justify-center border border-[#b91c1c] py-2.5 text-[12px] tracking-[0.25em] text-[#e8dcc8] hover:bg-[#b91c1c]/15 transition-colors group">
               查看完整档案 <ArrowRight :size="14" class="group-hover:translate-x-1 transition-transform" />
             </router-link>
           </div>

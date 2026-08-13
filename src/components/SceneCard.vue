@@ -25,7 +25,7 @@ defineProps({
     <div class="relative p-5 md:p-6 pl-7 md:pl-8">
       <!-- 大号集数（主题映射色，无 on-media） -->
       <div class="flex items-baseline justify-between">
-        <div class="serif-title text-5xl md:text-6xl leading-none text-[#9d2235]/85">{{ String(scene.episode).padStart(2, '0') }}</div>
+        <div class="serif-title text-5xl md:text-6xl leading-none text-[#b91c1c]/85">{{ String(scene.episode).padStart(2, '0') }}</div>
         <div class="flex items-center gap-2">
           <div class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">SCENE-{{ scene.id.toUpperCase() }}</div>
           <FavoriteButton type="scene" :id="scene.id" />

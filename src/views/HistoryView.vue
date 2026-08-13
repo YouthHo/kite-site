@@ -57,7 +57,7 @@ onBeforeUnmount(() => crossTween?.kill())
         v-for="cat in history"
         :key="cat.id"
         class="px-5 py-2.5 border text-[13px] tracking-[0.2em] transition-all duration-300"
-        :class="activeTab === cat.id ? 'border-[#9d2235] bg-[#9d2235]/10 text-[#e8dcc8] shadow-[0_0_16px_rgba(157,34,53,0.2)]' : 'border-[#2a2520] text-[#8a8275] hover:border-[#555048]'"
+        :class="activeTab === cat.id ? 'border-[#b91c1c] bg-[#b91c1c]/10 text-[#e8dcc8] shadow-[0_0_16px_rgba(157,34,53,0.2)]' : 'border-[#2a2520] text-[#8a8275] hover:border-[#555048]'"
         @click="switchTab(cat.id)"
       >
         {{ cat.name }}

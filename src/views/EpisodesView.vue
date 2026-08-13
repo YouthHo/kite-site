@@ -90,10 +90,10 @@ onBeforeUnmount(() => gsap.killTweensOf('.ep-tag'))
         <article class="paper-bg relative border border-[#2a2520] p-6 md:p-10">
           <div class="absolute top-0 left-0 right-0 h-[5px] bg-[repeating-linear-gradient(135deg,rgba(157,34,53,0.45)_0_10px,transparent_10px_20px)]"></div>
           <div class="flex items-center justify-between flex-wrap gap-2">
-            <div class="font-mono text-[11px] tracking-[0.3em] text-[#9d2235]">EPISODE {{ String(current.id).padStart(2, '0') }} · {{ current.era }}</div>
+            <div class="font-mono text-[11px] tracking-[0.3em] text-[#b91c1c]">EPISODE {{ String(current.id).padStart(2, '0') }} · {{ current.era }}</div>
             <button
               class="flex items-center gap-1.5 text-[11px] tracking-[0.15em] px-3 py-1.5 border transition-colors"
-              :class="appState.isWatched(current.id) ? 'border-[#b8860b] text-[#b8860b]' : 'border-[#2a2520] text-[#555048] hover:border-[#9d2235] hover:text-[#e8dcc8]'"
+              :class="appState.isWatched(current.id) ? 'border-[#8c4a2f] text-[#8c4a2f]' : 'border-[#2a2520] text-[#555048] hover:border-[#b91c1c] hover:text-[#e8dcc8]'"
               @click="appState.toggleWatch(current.id)"
             >
               <Check :size="12" />
@@ -116,7 +116,7 @@ onBeforeUnmount(() => gsap.killTweensOf('.ep-tag'))
 
           <!-- 关键事件标签 -->
           <div class="mt-6 flex flex-wrap gap-2">
-            <span v-for="ev in current.events" :key="ev" class="ep-tag px-3 py-1 text-[11px] tracking-[0.1em] border border-[#9d2235]/70 text-[#d8a0a8] bg-[#9d2235]/8">{{ ev }}</span>
+            <span v-for="ev in current.events" :key="ev" class="ep-tag px-3 py-1 text-[11px] tracking-[0.1em] border border-[#b91c1c]/70 text-[#a8443a] bg-[#b91c1c]/8">{{ ev }}</span>
           </div>
 
           <!-- 出场人物 -->

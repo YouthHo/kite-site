@@ -27,18 +27,18 @@ async function copy() {
   <article class="quote-card relative border border-[#2a2520] bg-[#0f0e0c] p-5 hover:-translate-y-1 hover:shadow-[0_14px_34px_rgba(0,0,0,0.55)] transition-all duration-300 group">
     <!-- 电报角标 -->
     <span class="absolute top-2 left-3 font-mono text-[9px] tracking-[0.3em] text-[#555048]">MSG-{{ String(quote.episode).padStart(2, '0') }}</span>
-    <span class="absolute top-2 right-3 w-2 h-2 rounded-full border border-[#9d2235] opacity-60"></span>
+    <span class="absolute top-2 right-3 w-2 h-2 rounded-full border border-[#b91c1c] opacity-60"></span>
     <blockquote class="serif-title !font-medium text-[14px] leading-8 text-[#e8dcc8] mt-4 pr-2">
       “{{ quote.text }}”
     </blockquote>
     <footer class="mt-4 flex items-center justify-between gap-3 flex-nowrap">
-      <span class="text-[11px] tracking-[0.15em] text-[#b8860b] whitespace-nowrap truncate">—— {{ quote.speaker }}</span>
+      <span class="text-[11px] tracking-[0.15em] text-[#8c4a2f] whitespace-nowrap truncate">—— {{ quote.speaker }}</span>
       <button
         class="opacity-0 group-hover:opacity-100 transition-opacity text-[#8a8275] hover:text-[#e8dcc8]"
         :aria-label="copied ? '已复制' : '复制台词'"
         @click="copy"
       >
-        <Check v-if="copied" :size="14" class="qcheck text-[#b8860b]" />
+        <Check v-if="copied" :size="14" class="qcheck text-[#8c4a2f]" />
         <Copy v-else :size="14" />
       </button>
     </footer>

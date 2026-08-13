@@ -81,10 +81,10 @@ function toggleDrawer() {
       </nav>
 
       <div class="flex items-center gap-2">
-        <router-link to="/library" class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] border border-transparent transition-colors" aria-label="收藏夹" title="收藏夹"><Star :size="16" /></router-link>
+        <router-link to="/library" class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] border border-transparent transition-colors" aria-label="收藏夹" title="收藏夹"><Star :size="16" /></router-link>
         <!-- 语言切换：中 / EN -->
         <button
-          class="h-9 px-2 grid place-items-center text-[11px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] border border-transparent transition-colors font-mono"
+          class="h-9 px-2 grid place-items-center text-[11px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] border border-transparent transition-colors font-mono"
           :aria-label="locale === 'zh' ? 'Switch to English' : '切换中文'"
           :title="locale === 'zh' ? 'EN' : '中'"
           @click="toggleLang"
@@ -93,7 +93,7 @@ function toggleDrawer() {
         </button>
         <!-- 主题切换：深色胶片 / 浅色档案纸 -->
         <button
-          class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] border border-transparent transition-colors"
+          class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] border border-transparent transition-colors"
           :aria-label="theme === 'dark' ? '切换到浅色主题' : '切换到深色主题'"
           :title="theme === 'dark' ? '浅色主题' : '深色主题'"
           @click="toggleTheme"
@@ -102,7 +102,7 @@ function toggleDrawer() {
           <Moon v-else :size="16" />
         </button>
         <button
-          class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] border border-transparent transition-colors"
+          class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] border border-transparent transition-colors"
           aria-label="全局搜索"
           @click="searchOpen = true"
         >

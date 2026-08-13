@@ -43,7 +43,7 @@ void libraryState
 <template>
   <div class="page-wrap">
     <div class="mb-8 flex items-center gap-4">
-      <Star :size="22" class="text-[#b8860b]" />
+      <Star :size="22" class="text-[#8c4a2f]" />
       <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]">收藏夹</h2>
       <span class="file-label">{{ total }} 条档案</span>
     </div>
@@ -54,7 +54,7 @@ void libraryState
       <div class="empty-title serif-title text-xl text-[#e8dcc8]">档案柜还是空的</div>
       <p class="empty-desc">
         在人物、剧集、名场面与台词卡片上点击星标，即可把感兴趣的档案收藏到这里。按
-        <span class="font-mono text-[#b8860b]">Cmd/Ctrl + K</span> 可快速探索全站。
+        <span class="font-mono text-[#8c4a2f]">Cmd/Ctrl + K</span> 可快速探索全站。
       </p>
     </div>
 
@@ -69,7 +69,7 @@ void libraryState
         >
           <div class="flex items-baseline justify-between gap-3">
             <span class="title-sans text-[15px] text-[#e8dcc8] truncate">{{ f.item.title || f.item.name }}</span>
-            <BookmarkX :size="13" class="shrink-0 text-[#555048] group-hover:text-[#9d2235]" />
+            <BookmarkX :size="13" class="shrink-0 text-[#555048] group-hover:text-[#b91c1c]" />
           </div>
           <div class="mt-2 text-[11px] leading-5 text-[#8a8275] line-clamp-2">{{ SUB(f.item) }}</div>
         </button>

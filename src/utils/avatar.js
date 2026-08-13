@@ -1,10 +1,10 @@
 // 头像工具：真实照片缺失时生成阵营色字母头像（SVG data URI）
 const FACTION_COLOR = {
-  junton: '#9d2235',
-  zhongtong: '#7d3b52',
-  underground: '#1e4a52',
+  junton: '#b91c1c',
+  zhongtong: '#8c4a2f',
+  underground: '#2f4a4f',
   gongan: '#3d3d3d',
-  civilian: '#8b7355',
+  civilian: '#8a7355',
 }
 
 export function avatarUri(id, name, faction, size = 240) {

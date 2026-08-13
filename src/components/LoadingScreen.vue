@@ -65,7 +65,7 @@ onBeforeUnmount(() => tweens.forEach((t) => t.kill()))
 <template>
   <div class="loading-screen fixed inset-0 z-[100] bg-[#080808] flex flex-col items-center justify-center">
     <ArtLoader :text="'正在解密档案'" :size="150" />
-    <div ref="dot" class="hidden w-4 h-4 rounded-full bg-[#9d2235] shadow-[0_0_30px_rgba(157,34,53,0.9)]"></div>
+    <div ref="dot" class="hidden w-4 h-4 rounded-full bg-[#b91c1c] shadow-[0_0_30px_rgba(157,34,53,0.9)]"></div>
     <div class="mt-6 font-mono text-[13px] tracking-[0.35em] text-[#8a8275] h-6">
       <span ref="text"></span>
     </div>

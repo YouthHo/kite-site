@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { onMounted, onBeforeUnmount, ref } from 'vue'
 import gsap from 'gsap'
 import ScanLine from '@/components/ScanLine.vue'
@@ -102,19 +102,19 @@ function randomExplore() {
         </div>
       </div>
       <div class="hero-goldline gold-line w-[280px] md:w-[420px] mt-6 origin-center"></div>
-      <p class="hero-sub mt-6 text-[13px] tracking-[0.4em] text-[#d9a441] on-media" style="text-shadow: 0 0 18px rgba(184,134,11,0.35);">信仰至上 · 半生潜伏</p>
+      <p class="hero-sub mt-6 text-[13px] tracking-[0.4em] text-[#a85a38] on-media" style="text-shadow: 0 0 18px rgba(184,134,11,0.35);">信仰至上 · 半生潜伏</p>
       <p class="hero-sub mt-3 text-[11px] tracking-[0.3em] text-[#8a8275] on-media">THE KITE · 2017 · 柳云龙 导演作品</p>
 
       <!-- O · 双主 CTA：随机潜入 + 进入档案 -->
       <div class="hero-sub hero-ctas mt-8 flex flex-wrap items-center justify-center gap-4">
         <router-link
           to="/graph"
-          class="px-6 py-2.5 border border-[#9d2235] text-[#e8dcc8] text-[12px] tracking-[0.3em] on-media bg-[#9d2235]/10 hover:bg-[#9d2235]/25 transition-colors m-focus-ring"
+          class="px-6 py-2.5 border border-[#b91c1c] text-[#e8dcc8] text-[12px] tracking-[0.3em] on-media bg-[#b91c1c]/10 hover:bg-[#b91c1c]/25 transition-colors m-focus-ring"
         >
           进入档案 →
         </router-link>
         <button
-          class="px-6 py-2.5 border border-[#2a2520] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] text-[12px] tracking-[0.3em] transition-colors on-media m-focus-ring"
+          class="px-6 py-2.5 border border-[#2a2520] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] text-[12px] tracking-[0.3em] transition-colors on-media m-focus-ring"
           @click="randomExplore"
         >
           随机潜入
@@ -127,12 +127,12 @@ function randomExplore() {
           v-for="(c, i) in cards"
           :key="c.to"
           :to="c.to"
-          class="group block border-t border-[#2a2520] pt-5 relative transition-colors duration-300 hover:border-[#9d2235]"
+          class="group block border-t border-[#2a2520] pt-5 relative transition-colors duration-300 hover:border-[#b91c1c]"
         >
-          <div class="text-[11px] tracking-[0.3em] text-[#8a8275] on-media group-hover:text-[#9d2235] transition-colors duration-200">{{ String(i + 1).padStart(2, '0') }}</div>
+          <div class="text-[11px] tracking-[0.3em] text-[#8a8275] on-media group-hover:text-[#b91c1c] transition-colors duration-200">{{ String(i + 1).padStart(2, '0') }}</div>
           <div class="title-sans text-[17px] mt-3 text-[#e8dcc8] on-media group-hover:text-[#f0e6d2] transition-colors duration-200">{{ c.title }}</div>
           <div class="mt-1.5 text-[12px] leading-5 text-[#a89f8e] on-media">{{ c.desc }}</div>
-          <span class="absolute right-0 top-5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-[#9d2235] text-[15px]">→</span>
+          <span class="absolute right-0 top-5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-[#b91c1c] text-[15px]">→</span>
         </router-link>
       </div>
     </div>

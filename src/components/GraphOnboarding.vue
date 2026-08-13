@@ -75,23 +75,23 @@ defineExpose({ reopen })
     <div class="absolute inset-0 bg-black/60" @click="next"></div>
     <div
       v-if="targetBox"
-      class="absolute border-2 border-[#b8860b] shadow-[0_0_0_9999px_rgba(0,0,0,0.6)] rounded pointer-events-none transition-all duration-300"
+      class="absolute border-2 border-[#8c4a2f] shadow-[0_0_0_9999px_rgba(0,0,0,0.6)] rounded pointer-events-none transition-all duration-300"
       :style="{ left: targetBox.left - 4 + 'px', top: targetBox.top - 4 + 'px', width: targetBox.width + 8 + 'px', height: targetBox.height + 8 + 'px' }"
     ></div>
     <!-- 说明卡 -->
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-[460px] bg-[#0e0e0e] border border-[#b8860b]/60 p-5">
-      <div class="font-mono text-[9px] tracking-[0.35em] text-[#b8860b]">GUIDE {{ idx + 1 }}/{{ steps.length }}</div>
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-[460px] bg-[#0e0e0e] border border-[#8c4a2f]/60 p-5">
+      <div class="font-mono text-[9px] tracking-[0.35em] text-[#8c4a2f]">GUIDE {{ idx + 1 }}/{{ steps.length }}</div>
       <div class="serif-title text-xl mt-2 text-[#e8dcc8]">{{ step.title }}</div>
       <p class="mt-2 text-[13px] leading-6 text-[#8a8275]">{{ step.text }}</p>
       <div class="mt-4 flex items-center justify-between">
         <label class="flex items-center gap-2 text-[11px] text-[#555048] cursor-pointer select-none">
-          <input v-model="neverAgain" type="checkbox" class="accent-[#9d2235]" />
+          <input v-model="neverAgain" type="checkbox" class="accent-[#b91c1c]" />
           不再显示
         </label>
         <div class="flex items-center gap-2">
           <button v-if="idx > 0" class="text-[11px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8]" @click="prev">‹ 上一步</button>
           <button class="text-[11px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8]" @click="dismiss">跳过</button>
-          <button class="px-3 py-1.5 border border-[#b8860b] text-[#b8860b] text-[11px] tracking-[0.2em] hover:bg-[#b8860b]/15 transition-colors" @click="next">
+          <button class="px-3 py-1.5 border border-[#8c4a2f] text-[#8c4a2f] text-[11px] tracking-[0.2em] hover:bg-[#8c4a2f]/15 transition-colors" @click="next">
             {{ idx >= steps.length - 1 ? '开始探索' : '下一步' }}
           </button>
         </div>

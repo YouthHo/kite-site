@@ -13,9 +13,9 @@ let panelTween = null
 
 // 多彩档案配色（无真实照片时的名字卡，按索引轮换）
 const PALETTE = [
-  { from: '#9d2235', to: '#5c141f' }, // 暗红
-  { from: '#1e4a52', to: '#123036' }, // 暗青
-  { from: '#7d3b52', to: '#4a2233' }, // 紫红
+  { from: '#b91c1c', to: '#6e1010' }, // 暗红
+  { from: '#2f4a4f', to: '#123036' }, // 暗青
+  { from: '#8c4a2f', to: '#4a2233' }, // 紫红
   { from: '#8b5a2b', to: '#5c3a1a' }, // 赭棕
   { from: '#3f6d5a', to: '#27463a' }, // 苔绿
   { from: '#5a4a7a', to: '#382c50' }, // 靛紫
@@ -76,7 +76,7 @@ onBeforeUnmount(() => panelTween?.kill())
         <!-- 底部信息区（所有卡片一致） -->
         <div class="p-5 relative">
           <h3 class="serif-title text-[17px] text-[#e8dcc8]">{{ a.name }}</h3>
-          <p class="mt-1 text-[12px] tracking-[0.15em] text-[#b8860b]">饰 {{ a.role }}</p>
+          <p class="mt-1 text-[12px] tracking-[0.15em] text-[#8c4a2f]">饰 {{ a.role }}</p>
           <p class="mt-1.5 text-[10px] tracking-[0.1em] text-[#555048] leading-4">{{ a.roleNote }}</p>
         </div>
       </article>
@@ -94,9 +94,9 @@ onBeforeUnmount(() => panelTween?.kill())
                 <img :src="detail.image" :alt="detail.name" class="w-full object-cover border border-[#2a2520] k-img" />
               </div>
               <div class="min-w-0">
-                <div class="font-mono text-[10px] tracking-[0.35em] text-[#9d2235]">CAST FILE</div>
+                <div class="font-mono text-[10px] tracking-[0.35em] text-[#b91c1c]">CAST FILE</div>
                 <h3 class="serif-title text-4xl mt-2 text-[#e8dcc8]">{{ detail.name }}</h3>
-                <p class="mt-2 text-[15px] tracking-[0.2em] text-[#b8860b]">饰 · {{ detail.role }}</p>
+                <p class="mt-2 text-[15px] tracking-[0.2em] text-[#8c4a2f]">饰 · {{ detail.role }}</p>
                 <p class="mt-4 text-[13px] leading-7 text-[#8a8275]">{{ detail.bio }}</p>
                 <p v-if="roleInfo(detail)" class="mt-3 text-[12px] leading-6 text-[#555048]">
                   角色注：{{ roleInfo(detail).brief }}

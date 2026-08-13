@@ -29,7 +29,7 @@ const factionClass = computed(() => `f-${props.character.faction}`)
   <button
     v-if="compact"
     class="w-full text-left flex items-center gap-3 px-3 py-2.5 border-l-2 transition-all duration-300 group min-w-0"
-    :class="active ? 'border-[#9d2235] bg-[#161616]' : 'border-transparent hover:bg-[#141414]'"
+    :class="active ? 'border-[#b91c1c] bg-[#161616]' : 'border-transparent hover:bg-[#141414]'"
     @click="emit('select', character)"
   >
     <NameBadge :name="character.name" :faction="character.faction" size="sm" />
@@ -46,7 +46,7 @@ const factionClass = computed(() => `f-${props.character.faction}`)
     <div class="relative mx-auto w-14 h-14 transition-all duration-300 group-hover:scale-110">
       <NameBadge :name="character.name" :faction="character.faction" size="md" />
     </div>
-    <p v-if="rel" class="mt-1.5 text-[10px] leading-4 text-[#b8860b] group-hover:text-[#e8dcc8] transition-colors">{{ rel }}</p>
+    <p v-if="rel" class="mt-1.5 text-[10px] leading-4 text-[#8c4a2f] group-hover:text-[#e8dcc8] transition-colors">{{ rel }}</p>
     <p v-else class="mt-1.5 text-[11px] text-[#8a8275] group-hover:text-[#e8dcc8] transition-colors truncate">{{ character.name }}</p>
   </div>
 </template>

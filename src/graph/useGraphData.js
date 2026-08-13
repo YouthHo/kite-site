@@ -10,12 +10,12 @@ import { theme } from '@/store/app'
  */
 
 export const TYPE_META = {
-  enemy: { label: '敌对', color: '#9d2235', dash: true },
-  superior: { label: '上下级', color: '#1e4a52', dash: false },
-  family: { label: '亲情', color: '#b8860b', dash: false },
+  enemy: { label: '敌对', color: '#b91c1c', dash: true },
+  superior: { label: '上下级', color: '#2f4a4f', dash: false },
+  family: { label: '亲情', color: '#8c4a2f', dash: false },
   love: { label: '爱情', color: '#c96f7f', dash: false },
-  comrade: { label: '同志', color: '#2f8f7f', dash: false },
-  partner: { label: '接头', color: '#8b7355', dash: false },
+  comrade: { label: '同志', color: '#3a5a52', dash: false },
+  partner: { label: '接头', color: '#8a7355', dash: false },
 }
 export const TYPE_ORDER = Object.keys(TYPE_META)
 export const FACTION_ORDER = ['junton', 'zhongtong', 'underground', 'gongan', 'civilian']

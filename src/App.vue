@@ -81,7 +81,7 @@ onBeforeUnmount(() => {
   <div
     ref="progress"
     class="fixed top-0 left-0 right-0 h-[2px] z-[90] origin-left opacity-0"
-    style="background: linear-gradient(90deg, transparent, #9d2235 30%, #b8860b 70%, transparent)"
+    style="background: linear-gradient(90deg, transparent, #b91c1c 30%, #8c4a2f 70%, transparent)"
   ></div>
 
   <NavBar />

@@ -13,7 +13,7 @@ defineEmits(['close'])
     <div class="absolute inset-0 bg-black/60" @click="$emit('close')"></div>
     <div class="relative w-full max-w-[520px] max-h-[86%] overflow-y-auto bg-[#0e0e0e] border border-[#2a2520] p-6">
       <button class="absolute top-4 right-4 text-[#8a8275] hover:text-[#e8dcc8]" aria-label="关闭帮助" @click="$emit('close')"><X :size="18" /></button>
-      <div class="font-mono text-[10px] tracking-[0.3em] text-[#b8860b]">GRAPH MANUAL</div>
+      <div class="font-mono text-[10px] tracking-[0.3em] text-[#8c4a2f]">GRAPH MANUAL</div>
       <h3 class="serif-title text-2xl mt-2 text-[#e8dcc8]">图谱操作手册</h3>
 
       <div class="mt-5 font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">基本操作</div>
@@ -29,14 +29,14 @@ defineEmits(['close'])
 
       <div class="mt-5 font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">三种模式</div>
       <ul class="mt-2 space-y-1.5 text-[12px] leading-6 text-[#8a8275]">
-        <li><span class="text-[#b8860b]">档案巡览</span> —— 10 幕引导，沿图谱揭示「风筝」与「影子」的双轴秘密</li>
-        <li><span class="text-[#d8a0a8]">解密模式</span> —— 节点被遮蔽为「机密」，逐一点击揭开；全部解开触发揭示</li>
-        <li><span class="text-[#b8860b]">路径模式</span> —— 依次点选起点与终点，高亮两人间最短关系链</li>
+        <li><span class="text-[#8c4a2f]">档案巡览</span> —— 10 幕引导，沿图谱揭示「风筝」与「影子」的双轴秘密</li>
+        <li><span class="text-[#a8443a]">解密模式</span> —— 节点被遮蔽为「机密」，逐一点击揭开；全部解开触发揭示</li>
+        <li><span class="text-[#8c4a2f]">路径模式</span> —— 依次点选起点与终点，高亮两人间最短关系链</li>
       </ul>
 
       <div class="mt-5 font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">图例语义</div>
       <ul class="mt-2 space-y-1.5 text-[12px] leading-6 text-[#8a8275]">
-        <li class="flex items-center gap-2"><span class="w-3 h-3 rounded-full border-2 border-[#b8860b] inline-block"></span> 金色双环印章 = 关键轴「风筝」</li>
+        <li class="flex items-center gap-2"><span class="w-3 h-3 rounded-full border-2 border-[#8c4a2f] inline-block"></span> 金色双环印章 = 关键轴「风筝」</li>
         <li class="flex items-center gap-2"><span class="w-3 h-3 rounded-full border-2 border-[#d8475c] inline-block"></span> 血红双环印章 = 关键轴「影子」</li>
         <li>· 节点越大 = 剧情权重越高（中心性驱动，非出场长短）</li>
         <li>· 虚线 = 敌对关系 · 点线 = 秘密关系（解密模式中隐藏）</li>

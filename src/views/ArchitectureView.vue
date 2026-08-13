@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
                   <div class="title-sans text-[13px] leading-5 text-[#e8dcc8]">{{ node.name }}</div>
                   <div class="mt-0.5 font-mono text-[9px] tracking-[0.1em] text-[#8a8275]">{{ node.role }}</div>
                 </div>
-                <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-[#080808]" :style="{ background: node.level === 0 ? '#b8860b' : currentOrg.color }"></span>
+                <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-[#080808]" :style="{ background: node.level === 0 ? '#8c4a2f' : currentOrg.color }"></span>
               </div>
               <!-- 下级水平连接线 -->
               <div v-if="level.some((n) => n.parent === node.id)" class="absolute -bottom-8 left-[10%] right-[10%] h-px" :style="{ background: currentOrg.color + '44' }"></div>
@@ -156,7 +156,7 @@ onBeforeUnmount(() => {
           <router-link
             v-if="modal.c"
             :to="`/characters?q=${modal.c.id}`"
-            class="mt-5 block text-center border border-[#9d2235] py-2 text-[12px] tracking-[0.25em] text-[#e8dcc8] hover:bg-[#9d2235]/15 transition-colors"
+            class="mt-5 block text-center border border-[#b91c1c] py-2 text-[12px] tracking-[0.25em] text-[#e8dcc8] hover:bg-[#b91c1c]/15 transition-colors"
           >
             查看完整档案
           </router-link>

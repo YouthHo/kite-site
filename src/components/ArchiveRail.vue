@@ -64,7 +64,7 @@ defineExpose({ toggle, open })
   <Teleport to="body">
     <!-- 触发按钮（右侧边缘常驻） -->
     <button
-      class="fixed right-0 top-1/2 -translate-y-1/2 z-[70] px-1.5 py-3 border border-r-0 border-[#2a2520] bg-[#0e0e0e]/90 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#9d2235] transition-colors on-media"
+      class="fixed right-0 top-1/2 -translate-y-1/2 z-[70] px-1.5 py-3 border border-r-0 border-[#2a2520] bg-[#0e0e0e]/90 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] transition-colors on-media"
       style="writing-mode: vertical-rl; letter-spacing: 0.3em; font-size: 10px"
       :aria-label="open ? '关闭档案索引' : '打开档案索引'"
       @click="toggle"
@@ -77,7 +77,7 @@ defineExpose({ toggle, open })
       <div class="absolute inset-0 bg-black/60" @click="toggle"></div>
       <aside ref="panel" class="absolute right-0 top-0 bottom-0 w-[300px] max-w-[86vw] bg-[#0e0e0e] border-l border-[#2a2520] p-6 overflow-y-auto">
         <div class="flex items-center justify-between mb-6">
-          <div class="font-mono text-[10px] tracking-[0.35em] text-[#b8860b]">ARCHIVE INDEX</div>
+          <div class="font-mono text-[10px] tracking-[0.35em] text-[#8c4a2f]">ARCHIVE INDEX</div>
           <button class="text-[#8a8275] hover:text-[#e8dcc8]" aria-label="关闭档案索引" @click="toggle"><X :size="18" /></button>
         </div>
 
@@ -85,10 +85,10 @@ defineExpose({ toggle, open })
           <button
             v-for="s in SECTIONS"
             :key="s.key"
-            class="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] border-l-2 border-transparent hover:border-[#9d2235] transition-colors text-left"
+            class="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] border-l-2 border-transparent hover:border-[#b91c1c] transition-colors text-left"
             @click="go(s.to)"
           >
-            <component :is="s.icon" :size="15" class="shrink-0 text-[#9d2235]" />
+            <component :is="s.icon" :size="15" class="shrink-0 text-[#b91c1c]" />
             <span class="flex-1">{{ s.label }}</span>
             <span v-if="s.count" class="font-mono text-[9px] text-[#555048]">{{ s.count }}</span>
           </button>
@@ -96,7 +96,7 @@ defineExpose({ toggle, open })
 
         <div class="mt-6 pt-4 border-t border-[#2a2520]">
           <div class="font-mono text-[9px] tracking-[0.3em] text-[#555048]">收藏 · {{ favCount }}</div>
-          <p class="mt-2 text-[11px] leading-5 text-[#8a8275]">按 <span class="text-[#b8860b]">Cmd/Ctrl+K</span> 打开命令面板，或点击内容卡片上的星标收藏档案。</p>
+          <p class="mt-2 text-[11px] leading-5 text-[#8a8275]">按 <span class="text-[#8c4a2f]">Cmd/Ctrl+K</span> 打开命令面板，或点击内容卡片上的星标收藏档案。</p>
         </div>
       </aside>
     </div>

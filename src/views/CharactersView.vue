@@ -19,11 +19,11 @@ const detailEl = ref(null)
 const collapsedGroups = ref(new Set())
 
 const GROUPS = [
-  { id: 'underground', label: '中共地下战线', color: '#1e4a52' },
-  { id: 'junton', label: '军统 / 保密局', color: '#9d2235' },
-  { id: 'zhongtong', label: '中统 / 党通局', color: '#7d3b52' },
+  { id: 'underground', label: '中共地下战线', color: '#2f4a4f' },
+  { id: 'junton', label: '军统 / 保密局', color: '#b91c1c' },
+  { id: 'zhongtong', label: '中统 / 党通局', color: '#8c4a2f' },
   { id: 'gongan', label: '公安 / 新中国', color: '#3d3d3d' },
-  { id: 'civilian', label: '平民百姓', color: '#8b7355' },
+  { id: 'civilian', label: '平民百姓', color: '#8a7355' },
 ]
 const grouped = computed(() =>
   GROUPS.map((g) => ({ ...g, items: characters.filter((c) => c.faction === g.id) })).filter((g) => g.items.length)
@@ -139,7 +139,7 @@ watch(() => route.query.q, (q) => {
           </div>
           <div class="flex flex-wrap items-end justify-between gap-3 mt-6">
             <div>
-              <div class="font-mono text-[10px] tracking-[0.35em] text-[#9d2235]">KITE FILE / {{ selected.id.toUpperCase() }}</div>
+              <div class="font-mono text-[10px] tracking-[0.35em] text-[#b91c1c]">KITE FILE / {{ selected.id.toUpperCase() }}</div>
               <h3 class="serif-title text-4xl md:text-5xl mt-2 text-[#e8dcc8]">{{ selected.name }}</h3>
               <div class="gold-line w-32 mt-3"></div>
             </div>
@@ -173,23 +173,23 @@ watch(() => route.query.q, (q) => {
           <!-- 剧情履历 -->
           <div class="para-indent mt-8">
             <div class="file-label mb-4">剧情履历</div>
-            <p v-for="(p, i) in selected.bio" :key="i" class="mb-4 first-letter:text-2xl first-letter:font-serif first-letter:text-[#b8860b]">{{ p }}</p>
+            <p v-for="(p, i) in selected.bio" :key="i" class="mb-4 first-letter:text-2xl first-letter:font-serif first-letter:text-[#8c4a2f]">{{ p }}</p>
           </div>
 
           <!-- 结局（防剧透保护） -->
           <div class="mt-8">
-            <div class="file-label !border-[#9d2235] !text-[#9d2235] mb-4">最终结局</div>
+            <div class="file-label !border-[#b91c1c] !text-[#b91c1c] mb-4">最终结局</div>
             <SpoilerGuard :threshold="46" label="结局档案">
-              <p class="text-[13px] leading-7 text-[#e8dcc8] border-l-2 border-[#9d2235] pl-4 py-2 bg-[#9d2235]/5">{{ selected.fate }}</p>
+              <p class="text-[13px] leading-7 text-[#e8dcc8] border-l-2 border-[#b91c1c] pl-4 py-2 bg-[#b91c1c]/5">{{ selected.fate }}</p>
             </SpoilerGuard>
           </div>
 
           <!-- 经典台词 -->
           <div v-if="charQuotes.length" class="mt-8">
             <div class="file-label mb-4">剧中台词</div>
-            <blockquote v-for="q in charQuotes" :key="q.id" class="border-l-2 border-[#9d2235] pl-4 py-2 mb-3 serif-title !font-medium text-[14px] leading-8 text-[#e8dcc8]">
+            <blockquote v-for="q in charQuotes" :key="q.id" class="border-l-2 border-[#b91c1c] pl-4 py-2 mb-3 serif-title !font-medium text-[14px] leading-8 text-[#e8dcc8]">
               “{{ q.text }}”
-              <span class="block mt-1 text-[11px] tracking-[0.2em] text-[#b8860b]">—— 第 {{ q.episode }} 集</span>
+              <span class="block mt-1 text-[11px] tracking-[0.2em] text-[#8c4a2f]">—— 第 {{ q.episode }} 集</span>
             </blockquote>
           </div>
 
@@ -209,7 +209,7 @@ watch(() => route.query.q, (q) => {
                 v-for="ep in epTags"
                 :key="ep"
                 :to="`/episodes?ep=${ep}`"
-                class="px-2.5 py-1 font-mono text-[11px] border border-[#2a2520] text-[#8a8275] hover:border-[#9d2235] hover:text-[#e8dcc8] hover:-translate-y-0.5 transition-all"
+                class="px-2.5 py-1 font-mono text-[11px] border border-[#2a2520] text-[#8a8275] hover:border-[#b91c1c] hover:text-[#e8dcc8] hover:-translate-y-0.5 transition-all"
               >
                 第{{ ep }}集
               </router-link>

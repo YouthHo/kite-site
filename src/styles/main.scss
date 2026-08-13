@@ -13,36 +13,47 @@
    ============================================================ */
 
 :root {
-  /* 设计令牌：动效节奏统一 */
+  /* ============ 3.0 设计令牌「朱砂入墨 · 新东方谍影」 ============ */
+  /* 动效节奏 */
   --dur-fast: 150ms;
   --dur-base: 250ms;
   --dur-slow: 400ms;
+  --dur-ink: 700ms; /* 墨晕节奏 */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
-  --bg: #080808;
-  --card: #121212;
-  --card2: #161616;
-  --hoverc: #1a1a1a;
-  --blood: #9d2235;
-  --teal: #1e4a52;
-  --paper: #e8dcc8;
+  /* 墨夜基底（冷青墨） */
+  --bg: #0d0d0f;
+  --card: #15151a;
+  --card2: #1c1c22;
+  --hoverc: #202027;
+  /* 朱砂印泥（主强调，弃金） */
+  --vermilion: #b91c1c;
+  --vermilion-soft: rgba(185, 28, 28, 0.72);
+  --vermilion-deep: #8f1616;
+  --blood: var(--vermilion);
+  /* 赭石（次要点缀，取代旧 gold 的主强调地位） */
+  --gold: #8c4a2f;
+  --gold-highlight: #a85a38;
+  /* 松烟墨与宣纸 */
+  --ink-stone: #3a3a3c;
+  --teal: #2f4a4f;
+  --paper: #ece3d2;
   --ink: #8a8275;
   --dim: #555048;
-  --line: #2a2520;
-  --gold: #b8860b;
-  --gold-highlight: #d9a441; /* 高光金：悬停/强调文字 */
+  --line: #26262c;
+  /* 阵营色 = 墨色浓淡 + 朱砂明度（弃五色俗艳） */
+  --junton: #b3342c;
+  --zhongtong: #8c4a2f;
+  --underground: #2f4a4f;
+  --gongan: #4a4a4e;
+  --civilian: #8a7355;
+  --node-bg: #0e0e0e;
   --radius-sm: 3px;
   --radius-md: 6px;
   --radius-lg: 10px;
   --shadow-1: 0 2px 10px rgba(0, 0, 0, 0.35);
   --shadow-2: 0 10px 30px rgba(0, 0, 0, 0.45);
   --shadow-3: 0 18px 44px rgba(0, 0, 0, 0.6);
-  --junton: #9d2235;
-  --zhongtong: #7d3b52;
-  --underground: #1e4a52;
-  --gongan: #3d3d3d;
-  --civilian: #8b7355;
-  --node-bg: #0e0e0e;
 }
 
 html {
@@ -73,12 +84,12 @@ body {
   border-left: 1px solid var(--line);
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #7a1a29, #5c141f);
+  background: linear-gradient(180deg, #8f1616, #6e1010);
   border-radius: 0;
   border: 2px solid #0c0c0c;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #9d2235;
+  background: #b91c1c;
 }
 
 /* ---------- 宋体标题基础（仅用于 ≥20px 的展示级标题） ---------- */

@@ -96,12 +96,12 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKey))
           <li v-for="(r, i) in results" :key="r.id || r.type + r.title" role="option" :aria-selected="i === idx">
             <button
               class="w-full text-left flex items-center gap-3 px-4 py-2.5 text-[13px] transition-colors"
-              :class="i === idx ? 'bg-[#161616] text-[#e8dcc8] border-l-2 border-[#9d2235]' : 'text-[#8a8275] border-l-2 border-transparent'"
+              :class="i === idx ? 'bg-[#161616] text-[#e8dcc8] border-l-2 border-[#b91c1c]' : 'text-[#8a8275] border-l-2 border-transparent'"
               @mouseenter="idx = i"
               @click="run(r)"
             >
-              <span v-if="r.icon" class="shrink-0 text-[#b8860b]"><component :is="r.icon" :size="14" /></span>
-              <span v-else class="shrink-0 font-mono text-[9px] tracking-[0.2em] text-[#9d2235] w-10">{{ r.type }}</span>
+              <span v-if="r.icon" class="shrink-0 text-[#8c4a2f]"><component :is="r.icon" :size="14" /></span>
+              <span v-else class="shrink-0 font-mono text-[9px] tracking-[0.2em] text-[#b91c1c] w-10">{{ r.type }}</span>
               <span class="flex-1 min-w-0 truncate">{{ r.title }}</span>
               <span v-if="r.sub" class="hidden md:inline text-[10px] text-[#555048] truncate max-w-[180px]">{{ r.sub }}</span>
               <CornerDownLeft v-if="i === idx" :size="12" class="shrink-0 text-[#555048]" />
