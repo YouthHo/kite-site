@@ -43,7 +43,11 @@ const INTRO_W = 560
 const HEADER_W = 200
 const NODE_W = 380
 
-const nodes = computed(() => timeline.map((n) => ({ ...n, section: sectionOf(n.date) })))
+// F3 双轴对照：剧情线（朱砂）/ 史实线（墨青）可独立筛选
+const axis = ref('all') // all | plot | history
+const nodes = computed(() =>
+  timeline.filter((n) => axis.value === 'all' || n.type === axis.value).map((n) => ({ ...n, section: sectionOf(n.date) }))
+)
 const decorated = computed(() => {
   const out = []
   let lastSec = 0
@@ -192,6 +196,12 @@ onBeforeUnmount(() => {
           <span class="file-label hidden md:inline-block" data-enter>1927—1980 · 史诗长卷</span>
         </div>
         <p class="font-mono text-[10px] md:text-[11px] tracking-[0.25em] text-[#a89f8e]" data-enter>上下滚动 → 横向展开 · 剧情上行 · 历史下行</p>
+        <!-- F3 双轴对照筛选：全部 / 剧情线 / 史实线 -->
+        <div class="flex gap-2 mt-3" data-enter>
+          <button class="px-3 py-1 border font-mono text-[10px] tracking-[0.15em] transition-colors m-focus-ring" :class="axis === 'all' ? 'border-[#b91c1c] text-[#ece3d2] bg-[#b91c1c]/15' : 'border-[#2a2520] text-[#a89f8e] hover:border-[#b91c1c]'" @click="axis = 'all'">全部</button>
+          <button class="px-3 py-1 border font-mono text-[10px] tracking-[0.15em] transition-colors m-focus-ring" :class="axis === 'plot' ? 'border-[#b91c1c] text-[#ece3d2] bg-[#b91c1c]/15' : 'border-[#2a2520] text-[#a89f8e] hover:border-[#b91c1c]'" @click="axis = 'plot'">剧情线</button>
+          <button class="px-3 py-1 border font-mono text-[10px] tracking-[0.15em] transition-colors m-focus-ring" :class="axis === 'history' ? 'border-[#2f4a4f] text-[#ece3d2] bg-[#2f4a4f]/25' : 'border-[#2a2520] text-[#a89f8e] hover:border-[#2f4a4f]'" @click="axis = 'history'">史实线</button>
+        </div>
       </div>
     </div>
 

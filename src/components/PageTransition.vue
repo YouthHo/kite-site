@@ -59,7 +59,7 @@ function runTransition() {
   }
 }
 
-watch(() => route.fullPath, runTransition, { immediate: true })
+watch(() => route.path, runTransition, { immediate: true })
 
 onBeforeUnmount(() => tl?.kill())
 </script>

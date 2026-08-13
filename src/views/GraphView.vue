@@ -695,7 +695,9 @@ onBeforeUnmount(() => {
               <span v-if="selected.actor" class="badge-faction f-civilian">{{ selected.actor }}</span>
             </div>
             <p ref="briefEl" class="mt-5 text-[13px] leading-7 text-[#a89f8e]"></p>
-            <p class="mt-3 text-[12px] leading-6 text-[#8f897c]">出场：第 {{ selected.episodes[0] }}—{{ selected.episodes[1] }} 集</p>
+            <p class="mt-3 text-[12px] leading-6 text-[#8f897c]">出场：第 {{ selected.episodes[0] }}—{{ selected.episodes[1] }} 集
+              <router-link :to="`/episodes?ep=${selected.episodes[0]}`" class="ml-2 text-[#e05a50] hover:text-[#ece3d2] transition-colors">进入剧集 →</router-link>
+            </p>
 
             <!-- I.3 私人备注（仅本机 localStorage） -->
             <div class="mt-6">
