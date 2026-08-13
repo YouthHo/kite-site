@@ -1,0 +1,8 @@
+{
+  "id": "thread-universe",
+  "name": "一线宇宙 · 朱砂入墨",
+  "direction": "东方长卷 · 留白史诗（方向甲）",
+  "defaultTheme": "dark",
+  "requiresTokens": ["base", "faction", "typography", "spacing", "motion", "surface", "semantic", "breakpoints", "touch"],
+  "assets": ["kite-thread", "faction-emblems", "chapter-dividers", "portrait-seals"]
+}

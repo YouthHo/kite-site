@@ -5,8 +5,14 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/views/UniverseView.vue'),
     meta: { title: '风筝 · 信仰至上 半生潜伏', desc: '首页' },
+  },
+  {
+    path: '/universe',
+    name: 'universe',
+    component: () => import('@/views/UniverseView.vue'),
+    meta: { title: '风筝 · 一线宇宙', desc: '宇宙入口' },
   },
   {
     path: '/graph',

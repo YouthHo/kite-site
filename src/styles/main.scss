@@ -1,4 +1,5 @@
 @use './fonts';
+@use '../skins/thread-universe/tokens' as skin-tu; // 皮肤注册表（新皮肤在此追加）
 @use './tokens';
 @use './type';
 @use './motion';

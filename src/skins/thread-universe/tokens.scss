@@ -1,0 +1,70 @@
+/* ============================================================
+   皮肤「一线宇宙 · 朱砂入墨」（thread-universe）
+   方向甲「东方长卷 · 留白史诗」：宣纸底 / 墨色晕染 / 朱砂唯一高饱和
+   皮肤令牌：通过 [data-skin='thread-universe'] 覆盖全局 :root
+   昼（宣纸美术馆）/ 夜（墨夜长卷）双极
+   ============================================================ */
+
+:root[data-skin='thread-universe'] {
+  --paper: #f4ecdc;
+  --paper-2: #faf6ec;
+  --night: #14110d;
+  --bg: #f4ecdc;
+  --card: #faf6ec;
+  --card2: #f1e7d2;
+  --hoverc: #ece0c8;
+  --vermilion: #c0392b;
+  --vermilion-deep: #9e2b20;
+  --vermilion-soft: #d9544a;
+  --blood: var(--vermilion);
+  --ink: #2b2620;
+  --ink-2: #6b6358;
+  --line: #ddd2bd;
+  --dim: #6b6358;
+  --junton: #b3342c;
+  --zhongtong: #8c4a2f;
+  --underground: #2f4a4f;
+  --gongan: #4a4a4e;
+  --civilian: #8a7355;
+  --surface-1: var(--card);
+  --surface-2: var(--card2);
+  --surface-3: #e9ddc4;
+  --elev-1: 0 2px 10px rgba(43, 38, 32, 0.1);
+  --elev-2: 0 10px 30px rgba(43, 38, 32, 0.12);
+  --elev-3: 0 18px 44px rgba(43, 38, 32, 0.16);
+  --ease-ink: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-draw: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out: var(--ease-ink);
+  --ease-inout: var(--ease-draw);
+  --dur-ink: 700ms;
+  --fs-display: clamp(3rem, 10vw, 7rem);
+  --sp-section: 120px;
+}
+
+[data-skin='thread-universe'][data-theme='dark'] {
+  --bg: #14110d;
+  --card: #1e1a14;
+  --card2: #262019;
+  --hoverc: #2c251c;
+  --paper: #e8dfca;
+  --ink: #e8dfca;
+  --ink-2: #a89f8e;
+  --line: #2e2820;
+  --dim: #8f897c;
+  --surface-1: var(--card);
+  --surface-2: var(--card2);
+  --surface-3: #332b21;
+  --elev-1: 0 2px 10px rgba(0, 0, 0, 0.4);
+  --elev-2: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --elev-3: 0 18px 44px rgba(0, 0, 0, 0.65);
+  --vermilion: #d9544a;
+  --vermilion-soft: #e05a50;
+  --vermilion-deep: #b3342c;
+  --blood: var(--vermilion);
+}
+
+[data-skin='thread-universe'] .thread-line {
+  stroke: var(--vermilion);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
