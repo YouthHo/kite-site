@@ -1,0 +1,69 @@
+/* ============================================================
+   演示皮肤二「暗房显影 · 负片重生」（demo-contrast）
+   P6 皮肤替换验证：证明只换皮肤层、核心零改动即可脱胎换骨
+   视觉：高对比黑白负片 + 单一化学红强调，显影/定影气质
+   ============================================================ */
+
+:root[data-skin='demo-contrast'] {
+  /* 负片基底 */
+  --negative: #0a0a0a;
+  --develop: #1a1a1a;
+  --silver: #e8e8e8;
+  --bg: #0a0a0a;
+  --card: #141414;
+  --card2: #1a1a1a;
+  --hoverc: #202020;
+  --paper: #e8e8e8;
+  --ink: #cfcfcf;
+  --ink-2: #9a9a9a;
+  --line: #2e2e2e;
+  --dim: #8a8a8a;
+  /* 化学红（唯一彩色） */
+  --chem-red: #e23b2e;
+  --vermilion: #e23b2e;
+  --vermilion-deep: #b02a20;
+  --vermilion-soft: #ff5a4a;
+  --blood: #e23b2e;
+  /* 阵营：灰度 + 化学红明度 */
+  --junton: #e23b2e;
+  --zhongtong: #8a8a8a;
+  --underground: #cfcfcf;
+  --gongan: #5a5a5a;
+  --civilian: #9a9a9a;
+  --surface-1: var(--card);
+  --surface-2: var(--card2);
+  --surface-3: #262626;
+  --elev-1: 0 2px 10px rgba(0, 0, 0, 0.5);
+  --elev-2: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --elev-3: 0 18px 44px rgba(0, 0, 0, 0.7);
+  --ease-ink: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-draw: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out: var(--ease-ink);
+  --ease-inout: var(--ease-draw);
+  --dur-ink: 700ms;
+  --fs-display: clamp(3rem, 10vw, 7rem);
+  --sp-section: 120px;
+}
+
+/* 昼极：显影前的空白负片（银白纸） */
+[data-skin='demo-contrast'][data-theme='light'] {
+  --bg: #f2f2f2;
+  --card: #ffffff;
+  --card2: #f5f5f5;
+  --hoverc: #ececec;
+  --paper: #111111;
+  --ink: #111111;
+  --ink-2: #555555;
+  --line: #d0d0d0;
+  --dim: #666666;
+  --surface-1: var(--card);
+  --surface-2: var(--card2);
+  --surface-3: #e0e0e0;
+  --elev-1: 0 2px 10px rgba(0, 0, 0, 0.08);
+  --elev-2: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --elev-3: 0 18px 44px rgba(0, 0, 0, 0.14);
+  --vermilion: #e23b2e;
+  --vermilion-soft: #ff5a4a;
+  --vermilion-deep: #b02a20;
+  --blood: #e23b2e;
+}

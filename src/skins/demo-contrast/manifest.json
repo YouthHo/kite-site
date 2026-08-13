@@ -1,0 +1,8 @@
+{
+  "id": "demo-contrast",
+  "name": "暗房显影（演示皮肤二）",
+  "direction": "方向乙 · 负片重生",
+  "defaultTheme": "dark",
+  "requiresTokens": ["base", "faction", "typography", "spacing", "motion", "surface", "semantic", "breakpoints", "touch"],
+  "assets": []
+}

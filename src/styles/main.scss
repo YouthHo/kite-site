@@ -1,5 +1,6 @@
 @use './fonts';
 @use '../skins/thread-universe/tokens' as skin-tu; // 皮肤注册表（新皮肤在此追加）
+@use '../skins/demo-contrast/tokens' as skin-dc; // 演示皮肤二（P6 替换验证）
 @use './tokens';
 @use './type';
 @use './motion';

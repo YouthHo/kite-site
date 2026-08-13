@@ -34,6 +34,22 @@ function toggleLang() {
   setLocale(locale.value === 'zh' ? 'en' : 'zh')
   props.universe.state.lang = locale.value
 }
+
+const skinId = ref('')
+try {
+  skinId.value = localStorage.getItem('kite-skin') || 'thread-universe'
+} catch (e) {
+  skinId.value = 'thread-universe'
+}
+const SKINS = ['thread-universe', 'demo-contrast']
+function toggleSkin() {
+  const i = SKINS.indexOf(skinId.value)
+  skinId.value = SKINS[(i + 1) % SKINS.length]
+  try {
+    localStorage.setItem('kite-skin', skinId.value)
+  } catch (e) { /* ignore */ }
+  document.documentElement.setAttribute('data-skin', skinId.value)
+}
 function goLibrary() {
   router.push('/library')
 }
@@ -61,6 +77,7 @@ function goLibrary() {
           <button class="w-8 h-8 grid place-items-center text-[#a89f8e] hover:text-[#ece3d2] hover:border-[#b91c1c] border border-transparent transition-colors m-focus-ring" aria-label="线索检索 (Cmd+K)" title="线索检索" @click="router.push('/')"><Search :size="14" /></button>
           <button class="w-8 h-8 grid place-items-center text-[#a89f8e] hover:text-[#ece3d2] hover:border-[#b91c1c] border border-transparent transition-colors m-focus-ring" aria-label="收藏的线索" title="收藏的线索" @click="goLibrary"><Star :size="14" /></button>
           <button class="w-8 h-8 grid place-items-center text-[#a89f8e] hover:text-[#ece3d2] hover:border-[#b91c1c] border border-transparent transition-colors m-focus-ring" :aria-label="locale === 'zh' ? 'English' : '中文'" title="语言" @click="toggleLang"><Languages :size="14" /><span class="sr-only">{{ locale }}</span></button>
+          <button class="w-8 h-8 grid place-items-center text-[#a89f8e] hover:text-[#ece3d2] hover:border-[#b91c1c] border border-transparent transition-colors m-focus-ring" :aria-label="`皮肤：${skinId === 'thread-universe' ? '一线宇宙' : '暗房显影'}`" :title="`皮肤：${skinId === 'thread-universe' ? '一线宇宙' : '暗房显影'}`" @click="toggleSkin"><Palette :size="14" /></button>
           <button class="w-8 h-8 grid place-items-center text-[#a89f8e] hover:text-[#ece3d2] hover:border-[#b91c1c] border border-transparent transition-colors m-focus-ring" :aria-label="theme === 'dark' ? '昼' : '夜'" title="主题" @click="toggleTheme"><Sun v-if="theme === 'dark'" :size="14" /><Moon v-else :size="14" /></button>
         </div>
       </div>
