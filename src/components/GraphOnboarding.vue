@@ -82,15 +82,15 @@ defineExpose({ reopen })
     <div class="absolute bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-[460px] bg-[#0e0e0e] border border-[#8c4a2f]/60 p-5">
       <div class="font-mono text-[9px] tracking-[0.35em] text-[#8c4a2f]">GUIDE {{ idx + 1 }}/{{ steps.length }}</div>
       <div class="serif-title text-xl mt-2 text-[#e8dcc8]">{{ step.title }}</div>
-      <p class="mt-2 text-[13px] leading-6 text-[#8a8275]">{{ step.text }}</p>
+      <p class="mt-2 text-[13px] leading-6 text-[#a89f8e]">{{ step.text }}</p>
       <div class="mt-4 flex items-center justify-between">
-        <label class="flex items-center gap-2 text-[11px] text-[#555048] cursor-pointer select-none">
+        <label class="flex items-center gap-2 text-[11px] text-[#8f897c] cursor-pointer select-none">
           <input v-model="neverAgain" type="checkbox" class="accent-[#b91c1c]" />
           不再显示
         </label>
         <div class="flex items-center gap-2">
-          <button v-if="idx > 0" class="text-[11px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8]" @click="prev">‹ 上一步</button>
-          <button class="text-[11px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8]" @click="dismiss">跳过</button>
+          <button v-if="idx > 0" class="text-[11px] tracking-[0.15em] text-[#a89f8e] hover:text-[#e8dcc8]" @click="prev">‹ 上一步</button>
+          <button class="text-[11px] tracking-[0.15em] text-[#a89f8e] hover:text-[#e8dcc8]" @click="dismiss">跳过</button>
           <button class="px-3 py-1.5 border border-[#8c4a2f] text-[#8c4a2f] text-[11px] tracking-[0.2em] hover:bg-[#8c4a2f]/15 transition-colors" @click="next">
             {{ idx >= steps.length - 1 ? '开始探索' : '下一步' }}
           </button>

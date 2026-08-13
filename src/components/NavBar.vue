@@ -70,21 +70,21 @@ function toggleDrawer() {
       <!-- Logo -->
       <router-link to="/" class="flex items-center gap-3 group">
         <span class="serif-title text-xl md:text-2xl tracking-[0.35em] text-[#e8dcc8] group-hover:text-[#f0e6d2] transition-colors">风 筝</span>
-        <span class="hidden md:inline font-mono text-[10px] tracking-[0.3em] text-[#8a8275] border border-[#2a2520] px-2 py-0.5">THE KITE · 2017</span>
+        <span class="hidden md:inline font-mono text-[10px] tracking-[0.3em] text-[#a89f8e] border border-[#2a2520] px-2 py-0.5">THE KITE · 2017</span>
       </router-link>
 
       <!-- 桌面导航 -->
-      <nav class="hidden lg:flex items-center gap-8 text-[14px] tracking-[0.12em] text-[#8a8275]">
+      <nav class="hidden lg:flex items-center gap-8 text-[14px] tracking-[0.12em] text-[#a89f8e]">
         <router-link v-for="l in links" :key="l.to" :to="l.to" class="nav-link hover:text-[#e8dcc8] transition-colors">
           {{ l.label }}
         </router-link>
       </nav>
 
       <div class="flex items-center gap-2">
-        <router-link to="/library" class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] border border-transparent transition-colors" aria-label="收藏夹" title="收藏夹"><Star :size="16" /></router-link>
+        <router-link to="/library" class="w-9 h-9 grid place-items-center text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] border border-transparent transition-colors" aria-label="收藏夹" title="收藏夹"><Star :size="16" /></router-link>
         <!-- 语言切换：中 / EN -->
         <button
-          class="h-9 px-2 grid place-items-center text-[11px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] border border-transparent transition-colors font-mono"
+          class="h-9 px-2 grid place-items-center text-[11px] tracking-[0.15em] text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] border border-transparent transition-colors font-mono"
           :aria-label="locale === 'zh' ? 'Switch to English' : '切换中文'"
           :title="locale === 'zh' ? 'EN' : '中'"
           @click="toggleLang"
@@ -93,7 +93,7 @@ function toggleDrawer() {
         </button>
         <!-- 主题切换：深色胶片 / 浅色档案纸 -->
         <button
-          class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] border border-transparent transition-colors"
+          class="w-9 h-9 grid place-items-center text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] border border-transparent transition-colors"
           :aria-label="theme === 'dark' ? '切换到浅色主题' : '切换到深色主题'"
           :title="theme === 'dark' ? '浅色主题' : '深色主题'"
           @click="toggleTheme"
@@ -102,7 +102,7 @@ function toggleDrawer() {
           <Moon v-else :size="16" />
         </button>
         <button
-          class="w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] border border-transparent transition-colors"
+          class="w-9 h-9 grid place-items-center text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] border border-transparent transition-colors"
           aria-label="全局搜索"
           @click="searchOpen = true"
         >
@@ -110,7 +110,7 @@ function toggleDrawer() {
         </button>
         <!-- 移动端汉堡 -->
         <button
-          class="lg:hidden w-9 h-9 grid place-items-center text-[#8a8275] hover:text-[#e8dcc8]"
+          class="lg:hidden w-9 h-9 grid place-items-center text-[#a89f8e] hover:text-[#e8dcc8]"
           aria-label="菜单"
           @click="toggleDrawer"
         >
@@ -130,7 +130,7 @@ function toggleDrawer() {
             v-for="l in links"
             :key="l.to"
             :to="l.to"
-            class="py-2.5 text-[14px] tracking-[0.15em] text-[#8a8275] hover:text-[#e8dcc8] flex items-center gap-3"
+            class="py-2.5 text-[14px] tracking-[0.15em] text-[#a89f8e] hover:text-[#e8dcc8] flex items-center gap-3"
             @click="toggleDrawer"
           >
             <FileText v-if="l.to==='/characters'" :size="15" />
@@ -145,7 +145,7 @@ function toggleDrawer() {
             {{ l.label }}
           </router-link>
         </div>
-        <div class="mt-10 font-mono text-[10px] tracking-[0.35em] text-[#555048]">KITE FILES · 1946—1988</div>
+        <div class="mt-10 font-mono text-[10px] tracking-[0.35em] text-[#8f897c]">KITE FILES · 1946—1988</div>
       </aside>
     </div>
   </transition>

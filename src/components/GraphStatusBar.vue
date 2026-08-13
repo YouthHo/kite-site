@@ -22,7 +22,7 @@ const MODE_LABEL = computed(() => ({
   tour: t('graph.modeTour'),
 }))
 const MODE_CLS = {
-  browse: 'border-[#8a8275]',
+  browse: 'border-[#a89f8e]',
   decrypt: 'border-[#a8443a]',
   path: 'border-[#8c4a2f]',
   tour: 'border-[#8c4a2f]',
@@ -32,7 +32,7 @@ const MODE_CLS = {
 <template>
   <div class="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.12em] text-[#e8dcc8] bg-[#0e0e0e]/90 border border-[#2a2520] px-3 py-1.5 pointer-events-none on-media overflow-hidden">
     <span class="flex items-center gap-1.5 shrink-0">
-      <span class="w-1.5 h-1.5 rounded-full" :class="mode === 'browse' ? 'bg-[#8a8275]' : mode === 'decrypt' ? 'bg-[#b91c1c]' : 'bg-[#8c4a2f]'"></span>
+      <span class="w-1.5 h-1.5 rounded-full" :class="mode === 'browse' ? 'bg-[#a89f8e]' : mode === 'decrypt' ? 'bg-[#b91c1c]' : 'bg-[#8c4a2f]'"></span>
       MODE
       <span class="border px-1.5 py-0.5" :class="MODE_CLS[mode]">{{ MODE_LABEL[mode] }}</span>
     </span>

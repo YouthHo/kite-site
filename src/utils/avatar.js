@@ -8,7 +8,7 @@ const FACTION_COLOR = {
 }
 
 export function avatarUri(id, name, faction, size = 240) {
-  const color = FACTION_COLOR[faction] || '#555048'
+  const color = FACTION_COLOR[faction] || '#8f897c'
   const ch = (name || '?').slice(0, 2)
   const svg =
     `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +

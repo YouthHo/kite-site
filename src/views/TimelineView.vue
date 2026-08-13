@@ -163,9 +163,9 @@ function initMiniChart() {
     backgroundColor: 'transparent',
     grid: { left: 40, right: 16, top: 30, bottom: 30 },
     tooltip: { trigger: 'axis', backgroundColor: light ? '#fff' : '#121212', borderColor: light ? '#d6cfc1' : '#2a2520', textStyle: { color: light ? '#2f2b23' : '#e8dcc8' } },
-    legend: { data: ['剧情节点', '真实历史'], textStyle: { color: light ? '#6e675a' : '#8a8275' }, top: 0 },
-    xAxis: { type: 'category', data: SECTIONS.map((s) => s.label + ' ' + s.sub), axisLine: { lineStyle: { color: light ? '#c9b795' : '#2a2520' } }, axisLabel: { color: light ? '#6e675a' : '#8a8275', interval: 0, rotate: 0, fontSize: 10 } },
-    yAxis: { type: 'value', splitLine: { lineStyle: { color: light ? 'rgba(150,120,70,0.2)' : 'rgba(42,37,32,0.6)' } }, axisLabel: { color: light ? '#7a7366' : '#555048' } },
+    legend: { data: ['剧情节点', '真实历史'], textStyle: { color: light ? '#6e675a' : '#a89f8e' }, top: 0 },
+    xAxis: { type: 'category', data: SECTIONS.map((s) => s.label + ' ' + s.sub), axisLine: { lineStyle: { color: light ? '#c9b795' : '#2a2520' } }, axisLabel: { color: light ? '#6e675a' : '#a89f8e', interval: 0, rotate: 0, fontSize: 10 } },
+    yAxis: { type: 'value', splitLine: { lineStyle: { color: light ? 'rgba(150,120,70,0.2)' : 'rgba(42,37,32,0.6)' } }, axisLabel: { color: light ? '#7a7366' : '#8f897c' } },
     series: [
       { name: '剧情节点', type: 'bar', data: SECTIONS.map((s) => nodes.value.filter((n) => n.section === s.id && n.type === 'plot').length), itemStyle: { color: '#b91c1c' }, barWidth: 18 },
       { name: '真实历史', type: 'bar', data: SECTIONS.map((s) => nodes.value.filter((n) => n.section === s.id && n.type === 'history').length), itemStyle: { color: '#8c4a2f' }, barWidth: 18 },
@@ -191,12 +191,12 @@ onBeforeUnmount(() => {
           <h2 class="serif-title text-3xl md:text-4xl text-[#e8dcc8]" data-enter>全剧时间线</h2>
           <span class="file-label hidden md:inline-block" data-enter>1927—1980 · 史诗长卷</span>
         </div>
-        <p class="font-mono text-[10px] md:text-[11px] tracking-[0.25em] text-[#8a8275]" data-enter>上下滚动 → 横向展开 · 剧情上行 · 历史下行</p>
+        <p class="font-mono text-[10px] md:text-[11px] tracking-[0.25em] text-[#a89f8e]" data-enter>上下滚动 → 横向展开 · 剧情上行 · 历史下行</p>
       </div>
     </div>
 
     <!-- 桌面端：居中主线 + 钉住横向滚动 -->
-    <div ref="pinRef" class="relative hidden md:block h-[85vh] overflow-x-auto overflow-y-hidden border-y border-[#2a2520] bg-[#0a0a0a]">
+    <div ref="pinRef" tabindex="0" aria-label="全剧时间线（可横向滚动）" class="relative hidden md:block h-[85vh] overflow-x-auto overflow-y-hidden border-y border-[#2a2520] bg-[#0a0a0a] m-focus-ring">
       <div ref="trackRef" class="timeline-track absolute top-0 left-0 h-full flex will-change-transform" :style="{ width: layout.trackWidth + 'px' }">
         <!-- 分区色带（绝对定位，覆盖各自区域） -->
         <div
@@ -213,9 +213,9 @@ onBeforeUnmount(() => {
         <div class="relative z-10 h-full flex flex-col items-center justify-center text-center shrink-0" :style="{ width: INTRO_W + 'px' }">
           <div class="serif-title text-6xl text-[#e8dcc8]/90" style="letter-spacing: 0.2em;">KITE</div>
           <div class="gold-line w-40 mt-5"></div>
-          <div class="mt-4 font-mono text-[11px] tracking-[0.45em] text-[#8a8275]">1927 — 1980</div>
-          <div class="mt-10 font-mono text-[10px] tracking-[0.3em] text-[#555048]">↓ 向下滚动 · 横向展开</div>
-          <div class="mt-6 flex gap-5 font-mono text-[10px] tracking-[0.2em] text-[#8a8275]">
+          <div class="mt-4 font-mono text-[11px] tracking-[0.45em] text-[#a89f8e]">1927 — 1980</div>
+          <div class="mt-10 font-mono text-[10px] tracking-[0.3em] text-[#8f897c]">↓ 向下滚动 · 横向展开</div>
+          <div class="mt-6 flex gap-5 font-mono text-[10px] tracking-[0.2em] text-[#a89f8e]">
             <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#b91c1c]"></span>剧情 · 上行</span>
             <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#8c4a2f]"></span>真实历史 · 下行</span>
           </div>
@@ -228,7 +228,7 @@ onBeforeUnmount(() => {
               <div class="serif-title text-3xl tracking-[0.5em] text-[#e8dcc8]/70" style="writing-mode: vertical-rl;">
                 {{ SECTIONS[it.section - 1].label }}
               </div>
-              <div class="mt-4 font-mono text-[10px] tracking-[0.3em] text-[#8a8275]/70">{{ SECTIONS[it.section - 1].sub }}</div>
+              <div class="mt-4 font-mono text-[10px] tracking-[0.3em] text-[#a89f8e]/70">{{ SECTIONS[it.section - 1].sub }}</div>
             </div>
           </div>
           <div v-else :data-node="i" class="relative z-10 h-full shrink-0" :style="{ width: it.width + 'px' }">
@@ -252,14 +252,14 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- 当前时期指示 -->
-      <div class="absolute top-4 right-5 z-20 font-mono text-[10px] tracking-[0.35em] text-[#8a8275] on-media bg-black/50 px-3 py-1.5 border border-[#2a2520]">
+      <div class="absolute top-4 right-5 z-20 font-mono text-[10px] tracking-[0.35em] text-[#a89f8e] on-media bg-black/50 px-3 py-1.5 border border-[#2a2520]">
         ERA {{ activeEra }} · {{ SECTIONS[activeEra - 1].label }}
       </div>
 
       <!-- 章节大字幕（随滚动淡入淡出） -->
       <transition name="era-fade">
         <div :key="activeEra" class="absolute inset-0 z-10 grid place-items-center pointer-events-none">
-          <div class="serif-title text-7xl tracking-[0.35em] text-[#e8dcc8]/20 select-none">{{ SECTIONS[activeEra - 1].label }}</div>
+          <div class="serif-title text-7xl tracking-[0.35em] text-[#ece3d2]/60 select-none" aria-hidden="true">{{ SECTIONS[activeEra - 1].label }}</div>
         </div>
       </transition>
 
@@ -275,7 +275,7 @@ onBeforeUnmount(() => {
       <div v-for="(it, i) in layout.items" :key="i">
         <div v-if="it.type === 'header'" class="m-node relative mb-5">
           <div class="serif-title text-xl tracking-[0.3em] text-[#e8dcc8]">{{ SECTIONS[it.section - 1].label }}</div>
-          <div class="font-mono text-[10px] tracking-[0.25em] text-[#8a8275]">{{ SECTIONS[it.section - 1].sub }}</div>
+          <div class="font-mono text-[10px] tracking-[0.25em] text-[#a89f8e]">{{ SECTIONS[it.section - 1].sub }}</div>
         </div>
         <div v-else class="m-node relative mb-6">
           <span class="absolute -left-[23px] top-2 w-3 h-3 rounded-full border-2 border-[#080808]" :style="{ background: it.node.type === 'history' ? '#8c4a2f' : '#b91c1c' }"></span>

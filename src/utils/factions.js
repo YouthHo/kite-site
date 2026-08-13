@@ -7,5 +7,5 @@ export const FACTION = {
   civilian: { label: '平民', color: '#8a7355' },
 }
 
-export const factionColor = (f) => FACTION[f]?.color || '#555048'
+export const factionColor = (f) => FACTION[f]?.color || '#8f897c'
 export const factionLabel = (f) => FACTION[f]?.label || f || '—'

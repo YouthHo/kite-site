@@ -64,7 +64,7 @@ defineExpose({ toggle, open })
   <Teleport to="body">
     <!-- 触发按钮（右侧边缘常驻） -->
     <button
-      class="fixed right-0 top-1/2 -translate-y-1/2 z-[70] px-1.5 py-3 border border-r-0 border-[#2a2520] bg-[#0e0e0e]/90 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] transition-colors on-media"
+      class="fixed right-0 top-1/2 -translate-y-1/2 z-[70] px-1.5 py-3 border border-r-0 border-[#2a2520] bg-[#0e0e0e]/90 text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] transition-colors on-media"
       style="writing-mode: vertical-rl; letter-spacing: 0.3em; font-size: 10px"
       :aria-label="open ? '关闭档案索引' : '打开档案索引'"
       @click="toggle"
@@ -78,25 +78,25 @@ defineExpose({ toggle, open })
       <aside ref="panel" class="absolute right-0 top-0 bottom-0 w-[300px] max-w-[86vw] bg-[#0e0e0e] border-l border-[#2a2520] p-6 overflow-y-auto">
         <div class="flex items-center justify-between mb-6">
           <div class="font-mono text-[10px] tracking-[0.35em] text-[#8c4a2f]">ARCHIVE INDEX</div>
-          <button class="text-[#8a8275] hover:text-[#e8dcc8]" aria-label="关闭档案索引" @click="toggle"><X :size="18" /></button>
+          <button class="text-[#a89f8e] hover:text-[#e8dcc8]" aria-label="关闭档案索引" @click="toggle"><X :size="18" /></button>
         </div>
 
         <nav class="space-y-1" aria-label="档案索引">
           <button
             v-for="s in SECTIONS"
             :key="s.key"
-            class="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8] hover:bg-[#161616] border-l-2 border-transparent hover:border-[#b91c1c] transition-colors text-left"
+            class="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] tracking-[0.1em] text-[#a89f8e] hover:text-[#e8dcc8] hover:bg-[#161616] border-l-2 border-transparent hover:border-[#b91c1c] transition-colors text-left"
             @click="go(s.to)"
           >
             <component :is="s.icon" :size="15" class="shrink-0 text-[#b91c1c]" />
             <span class="flex-1">{{ s.label }}</span>
-            <span v-if="s.count" class="font-mono text-[9px] text-[#555048]">{{ s.count }}</span>
+            <span v-if="s.count" class="font-mono text-[9px] text-[#8f897c]">{{ s.count }}</span>
           </button>
         </nav>
 
         <div class="mt-6 pt-4 border-t border-[#2a2520]">
-          <div class="font-mono text-[9px] tracking-[0.3em] text-[#555048]">收藏 · {{ favCount }}</div>
-          <p class="mt-2 text-[11px] leading-5 text-[#8a8275]">按 <span class="text-[#8c4a2f]">Cmd/Ctrl+K</span> 打开命令面板，或点击内容卡片上的星标收藏档案。</p>
+          <div class="font-mono text-[9px] tracking-[0.3em] text-[#8f897c]">收藏 · {{ favCount }}</div>
+          <p class="mt-2 text-[11px] leading-5 text-[#a89f8e]">按 <span class="text-[#8c4a2f]">Cmd/Ctrl+K</span> 打开命令面板，或点击内容卡片上的星标收藏档案。</p>
         </div>
       </aside>
     </div>

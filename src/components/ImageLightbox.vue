@@ -45,13 +45,13 @@ onBeforeUnmount(() => tween?.kill())
   <Teleport to="body">
     <div class="fixed inset-0 z-[96]">
       <div class="lightbox-mask absolute inset-0 bg-black/85 backdrop-blur-lg" @click="close"></div>
-      <button class="absolute top-5 right-5 z-10 text-[#8a8275] hover:text-[#e8dcc8]" @click="close"><X :size="22" /></button>
-      <button v-if="list.length > 1" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 text-[#8a8275] hover:text-[#e8dcc8]" @click="prev"><ChevronLeft :size="26" /></button>
-      <button v-if="list.length > 1" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 text-[#8a8275] hover:text-[#e8dcc8]" @click="next"><ChevronRight :size="26" /></button>
+      <button class="absolute top-5 right-5 z-10 text-[#a89f8e] hover:text-[#e8dcc8]" @click="close"><X :size="22" /></button>
+      <button v-if="list.length > 1" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 text-[#a89f8e] hover:text-[#e8dcc8]" @click="prev"><ChevronLeft :size="26" /></button>
+      <button v-if="list.length > 1" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 text-[#a89f8e] hover:text-[#e8dcc8]" @click="next"><ChevronRight :size="26" /></button>
       <div class="absolute inset-0 grid place-items-center p-8">
         <figure class="max-w-4xl w-full">
           <img ref="img" :src="src" :alt="alt" class="w-full max-h-[78vh] object-contain border border-[#2a2520] shadow-2xl" />
-          <figcaption class="mt-3 text-center font-mono text-[11px] tracking-[0.3em] text-[#8a8275] on-media">{{ alt }}</figcaption>
+          <figcaption class="mt-3 text-center font-mono text-[11px] tracking-[0.3em] text-[#a89f8e] on-media">{{ alt }}</figcaption>
         </figure>
       </div>
     </div>

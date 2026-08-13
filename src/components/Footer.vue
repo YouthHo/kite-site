@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { onMounted } from 'vue'
 import gsap from 'gsap'
 
@@ -16,13 +16,13 @@ onMounted(() => {
       <div class="grid md:grid-cols-3 gap-10">
         <div>
           <div class="serif-title text-xl tracking-[0.3em] text-[#e8dcc8]">风 筝</div>
-          <p class="mt-4 text-[13px] leading-7 text-[#8a8275] max-w-[280px]">
+          <p class="mt-4 text-[13px] leading-7 text-[#a89f8e] max-w-[280px]">
             信仰至上 · 半生潜伏。<br />一个人能有资格为国家牺牲，就是对自身价值的最好证明。
           </p>
         </div>
         <div>
           <div class="file-label mb-5">快速索引</div>
-          <div class="grid grid-cols-2 gap-x-6 gap-y-3 text-[13px] text-[#8a8275]">
+          <div class="grid grid-cols-2 gap-x-6 gap-y-3 text-[13px] text-[#a89f8e]">
             <router-link to="/graph" class="nav-link hover:text-[#e8dcc8]">人物关系图谱</router-link>
             <router-link to="/characters" class="nav-link hover:text-[#e8dcc8]">角色档案库</router-link>
             <router-link to="/episodes" class="nav-link hover:text-[#e8dcc8]">分集剧情</router-link>
@@ -33,13 +33,13 @@ onMounted(() => {
         </div>
         <div>
           <div class="file-label mb-5">关于本站</div>
-          <p class="text-[13px] leading-7 text-[#555048]">
+          <p class="text-[13px] leading-7 text-[#8f897c]">
             内容整理自公开资料，仅供学习交流。<br />
             © {{ year }} Kite Files.
           </p>
         </div>
       </div>
-      <div class="mt-12 pt-6 border-t border-[#1c1815] font-mono text-[10px] tracking-[0.35em] text-[#555048]">
+      <div class="mt-12 pt-6 border-t border-[#1c1815] font-mono text-[10px] tracking-[0.35em] text-[#8f897c]">
         THE KITE · 2017 · 46 EPISODES
       </div>
     </div>

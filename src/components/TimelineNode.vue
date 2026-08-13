@@ -47,10 +47,10 @@ onBeforeUnmount(() => tween?.kill())
   <div :data-tnode="index" class="tnode relative w-[300px] md:w-[360px]" :class="manual ? '' : 'opacity-0'">
     <!-- 节点圆点（由父级在线上点亮，这里只负责卡片） -->
     <div class="k-card p-4 archive-tape">
-      <div class="font-mono text-[10px] tracking-[0.25em] text-[#b91c1c]">{{ node.date }}</div>
+      <div class="font-mono text-[10px] tracking-[0.25em] text-[#e05a50]">{{ node.date }}</div>
       <h4 class="title-sans text-[14px] mt-1 text-[#e8dcc8]">{{ node.title }}</h4>
-      <p class="mt-2 text-[12px] leading-6 text-[#8a8275]">{{ node.desc }}</p>
-      <span v-if="node.type === 'history'" class="inline-block mt-2 font-mono text-[9px] tracking-[0.2em] text-[#8a7355] border border-[#8a7355]/40 px-1.5 py-0.5">真实历史</span>
+      <p class="mt-2 text-[12px] leading-6 text-[#a89f8e]">{{ node.desc }}</p>
+      <span v-if="node.type === 'history'" class="inline-block mt-2 font-mono text-[9px] tracking-[0.2em] text-[#a88b6a] border border-[#8a7355]/40 px-1.5 py-0.5">真实历史</span>
     </div>
   </div>
 </template>

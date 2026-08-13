@@ -525,8 +525,8 @@ onBeforeUnmount(() => {
           <div class="flex items-center justify-between mb-1.5 font-mono text-[9px] tracking-[0.3em] text-[#8c4a2f]">
             <span>DECRYPT FILE · {{ String(tourIdx + 1).padStart(2, '0') }}/{{ TOUR_STEPS.length }}</span>
             <span class="flex gap-3">
-              <button class="pointer-events-auto text-[#8a8275] hover:text-[#e8dcc8]" @click="prevTourStep">‹ 上一幕</button>
-              <button class="pointer-events-auto text-[#8a8275] hover:text-[#e8dcc8]" @click="nextTourStep">下一幕 ›</button>
+              <button class="pointer-events-auto text-[#a89f8e] hover:text-[#e8dcc8]" @click="prevTourStep">‹ 上一幕</button>
+              <button class="pointer-events-auto text-[#a89f8e] hover:text-[#e8dcc8]" @click="nextTourStep">下一幕 ›</button>
             </span>
           </div>
           <p ref="tourEl" class="text-[13px] leading-6 text-[#e8dcc8]">{{ tourText }}</p>
@@ -556,14 +556,14 @@ onBeforeUnmount(() => {
           <div v-if="revealed" class="absolute inset-0 z-20 grid place-items-center pointer-events-none">
             <div class="text-center px-6">
               <div class="serif-title text-4xl md:text-5xl text-[#8c4a2f] tracking-[0.2em]" style="text-shadow: 0 0 40px rgba(184,134,11,0.6);">风筝与影子 · 同一根线</div>
-              <div class="mt-3 font-mono text-[10px] tracking-[0.4em] text-[#8a8275]">ALL FILES DECRYPTED · WHO IS KITE · WHO IS SHADOW</div>
+              <div class="mt-3 font-mono text-[10px] tracking-[0.4em] text-[#a89f8e]">ALL FILES DECRYPTED · WHO IS KITE · WHO IS SHADOW</div>
             </div>
           </div>
         </transition>
 
         <!-- 底部图例：阵营 + 关系类型（类型可点击筛选） -->
         <div class="absolute bottom-3 left-3 z-10 flex flex-col gap-1.5 max-w-[48%]">
-          <div class="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] tracking-[0.15em] text-[#8a8275] pointer-events-none">
+          <div class="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] tracking-[0.15em] text-[#a89f8e] pointer-events-none">
             <span v-for="(v, k) in FACTION" :key="k" class="flex items-center gap-1.5">
               <FactionEmblem :faction="k" :size="13" :style="{ color: v.color }" class="shrink-0" />
               {{ v.label }}
@@ -574,26 +574,26 @@ onBeforeUnmount(() => {
               v-for="(m, k) in TYPE_META"
               :key="k"
               class="flex items-center gap-1.5 transition-colors"
-              :class="g.activeTypes.value.has(k) ? 'text-[#8a8275]' : 'text-[#3a352c]'"
+              :class="g.activeTypes.value.has(k) ? 'text-[#a89f8e]' : 'text-[#3a352c]'"
               @click="toggleType(k)"
             >
               <span class="w-3.5 h-[2px]" :style="{ background: m.color, opacity: g.activeTypes.value.has(k) ? 1 : 0.25 }"></span>
               {{ m.label }}
             </button>
           </div>
-          <div class="font-mono text-[9px] tracking-[0.1em] text-[#555048] pointer-events-none">
+          <div class="font-mono text-[9px] tracking-[0.1em] text-[#8f897c] pointer-events-none">
             {{ t('graph.legendHint') }}
           </div>
         </div>
 
         <!-- 时间轴（深底板+on-media） -->
         <div class="absolute bottom-3 right-3 z-10 flex items-center gap-2.5 bg-[#0e0e0e]/90 border border-[#2a2520] px-3 py-1.5 on-media">
-          <button class="text-[#8a8275] hover:text-[#e8dcc8] transition-colors" :aria-label="g.epPlaying.value ? '暂停演化' : '播放演化'" @click="g.toggleEraPlay()">
+          <button class="text-[#a89f8e] hover:text-[#e8dcc8] transition-colors" :aria-label="g.epPlaying.value ? '暂停演化' : '播放演化'" @click="g.toggleEraPlay()">
             <Pause v-if="g.epPlaying.value" :size="13" />
             <Play v-else :size="13" />
           </button>
           <input type="range" min="1" max="46" step="1" v-model.number="g.ep.value" class="w-28 md:w-40 accent-[#b91c1c]" :aria-label="`剧情集数 ${g.ep.value}`" />
-          <span class="font-mono text-[10px] tracking-[0.15em] text-[#8a8275] w-[70px]">EP {{ String(g.ep.value).padStart(2, '0') }}/46</span>
+          <span class="font-mono text-[10px] tracking-[0.15em] text-[#a89f8e] w-[70px]">EP {{ String(g.ep.value).padStart(2, '0') }}/46</span>
         </div>
 
         <!-- 屏幕阅读器 live region -->
@@ -607,13 +607,13 @@ onBeforeUnmount(() => {
       <!-- 侧边栏：行点击=看档案；勾选=独立复选框 -->
       <aside class="lg:w-[300px] glass border-t lg:border-t-0 lg:border-l border-[#2a2520] p-5 overflow-y-auto shrink-0" aria-label="人物列表（画布的等价文本视图）">
         <div class="relative mb-5">
-          <Search :size="14" class="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8275]" />
+          <Search :size="14" class="absolute left-3 top-1/2 -translate-y-1/2 text-[#a89f8e]" />
           <input v-model="g.keyword.value" class="k-input w-full !pl-9" placeholder="搜索人物 / 代号……（回车跳转）" @keydown.enter="onSearchEnter" />
         </div>
-        <div class="mb-2 font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">阵营筛选</div>
+        <div class="mb-2 font-mono text-[10px] tracking-[0.3em] text-[#a89f8e]">阵营筛选</div>
         <div class="grid grid-cols-2 gap-1.5 mb-6">
           <label v-for="(v, k) in FACTION" :key="k" class="flex items-center gap-2 text-[12px] cursor-pointer select-none"
-            :class="g.activeFactions.value.has(k) ? 'text-[#e8dcc8]' : 'text-[#555048]'">
+            :class="g.activeFactions.value.has(k) ? 'text-[#e8dcc8]' : 'text-[#8f897c]'">
             <span class="w-3.5 h-3.5 border grid place-items-center transition-colors"
               :style="{ borderColor: v.color, background: g.activeFactions.value.has(k) ? v.color : 'transparent' }">
               <span v-if="g.activeFactions.value.has(k)" class="text-[9px] text-[#e8dcc8]">✓</span>
@@ -622,26 +622,26 @@ onBeforeUnmount(() => {
             <input type="checkbox" class="hidden" :checked="g.activeFactions.value.has(k)" @change="toggleFaction(k)" />
           </label>
         </div>
-        <div class="mb-2 mt-5 font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">排序方式</div>
+        <div class="mb-2 mt-5 font-mono text-[10px] tracking-[0.3em] text-[#a89f8e]">排序方式</div>
         <div class="flex gap-1 mb-5">
           <button
             v-for="s in SORTS"
             :key="s.id"
             class="flex-1 text-[11px] py-1.5 border transition-colors"
-            :class="g.sortBy.value === s.id ? 'border-[#b91c1c] text-[#e8dcc8] bg-[#b91c1c]/10' : 'border-[#2a2520] text-[#555048] hover:border-[#b91c1c]/60 hover:text-[#8a8275]'"
+            :class="g.sortBy.value === s.id ? 'border-[#b91c1c] text-[#e8dcc8] bg-[#b91c1c]/10' : 'border-[#2a2520] text-[#8f897c] hover:border-[#b91c1c]/60 hover:text-[#a89f8e]'"
             @click="g.sortBy.value = s.id"
           >
             {{ s.label }}
           </button>
         </div>
         <div class="mb-2 flex items-center justify-between">
-          <span class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">人物索引（{{ g.sortedList.value.length }}）</span>
+          <span class="font-mono text-[10px] tracking-[0.3em] text-[#a89f8e]">人物索引（{{ g.sortedList.value.length }}）</span>
           <div class="flex gap-3">
-            <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectAllPeople">全部</button>
-            <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="selectNonePeople">清空</button>
+            <button class="text-[11px] tracking-[0.1em] text-[#a89f8e] hover:text-[#e8dcc8]" @click="selectAllPeople">全部</button>
+            <button class="text-[11px] tracking-[0.1em] text-[#a89f8e] hover:text-[#e8dcc8]" @click="selectNonePeople">清空</button>
           </div>
         </div>
-        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#555048]">{{ mode === 'path' ? t('graph.listHintPath') : t('graph.listHint') }}</div>
+        <div class="mb-1 font-mono text-[10px] tracking-[0.15em] text-[#8f897c]">{{ mode === 'path' ? t('graph.listHintPath') : t('graph.listHint') }}</div>
         <ul class="space-y-0.5" role="list">
           <li
             v-for="(n, i) in g.sortedList.value"
@@ -664,7 +664,7 @@ onBeforeUnmount(() => {
             <span class="text-[#e8dcc8] truncate">{{ n.name }}</span>
             <span v-if="n.code" class="font-mono text-[9px] text-[#8c4a2f] shrink-0">{{ n.code }}</span>
             <button
-              class="ml-auto w-6 h-6 grid place-items-center rounded border border-[#2a2520] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] transition-colors shrink-0"
+              class="ml-auto w-6 h-6 grid place-items-center rounded border border-[#2a2520] text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] transition-colors shrink-0"
               :aria-label="`查看 ${n.name} 详情`"
               :title="`查看 ${n.name} 详情`"
               @click.stop="openPanel(n.id)"
@@ -682,7 +682,7 @@ onBeforeUnmount(() => {
         <div class="absolute inset-0 bg-black/50 backdrop-blur-[2px] pointer-events-auto" @click="closePanel"></div>
         <aside ref="panelEl" class="pointer-events-auto absolute right-0 top-0 bottom-0 w-[92vw] max-w-[420px] bg-[#0e0e0e] border-l border-[#2a2520] overflow-y-auto">
           <div class="relative p-7">
-            <button class="absolute top-5 right-5 text-[#8a8275] hover:text-[#e8dcc8]" @click="closePanel"><X :size="18" /></button>
+            <button class="absolute top-5 right-5 text-[#a89f8e] hover:text-[#e8dcc8]" @click="closePanel"><X :size="18" /></button>
             <div class="font-mono text-[10px] tracking-[0.3em] text-[#b91c1c]">KITE FILE / {{ selected.id.toUpperCase() }}</div>
             <div class="mt-5 h-44 overflow-hidden border border-[#2a2520]">
               <NameBadge :name="selected.name" :faction="selected.faction" :code="selected.code" :sub="selected.identity" size="lg" />
@@ -694,12 +694,12 @@ onBeforeUnmount(() => {
               <span class="badge-faction" :class="`f-${selected.faction}`">{{ factionLabel(selected.faction) }}</span>
               <span v-if="selected.actor" class="badge-faction f-civilian">{{ selected.actor }}</span>
             </div>
-            <p ref="briefEl" class="mt-5 text-[13px] leading-7 text-[#8a8275]"></p>
-            <p class="mt-3 text-[12px] leading-6 text-[#555048]">出场：第 {{ selected.episodes[0] }}—{{ selected.episodes[1] }} 集</p>
+            <p ref="briefEl" class="mt-5 text-[13px] leading-7 text-[#a89f8e]"></p>
+            <p class="mt-3 text-[12px] leading-6 text-[#8f897c]">出场：第 {{ selected.episodes[0] }}—{{ selected.episodes[1] }} 集</p>
 
             <!-- I.3 私人备注（仅本机 localStorage） -->
             <div class="mt-6">
-              <div class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">私人备注 · 仅本机</div>
+              <div class="font-mono text-[10px] tracking-[0.3em] text-[#a89f8e]">私人备注 · 仅本机</div>
               <textarea
                 v-model="noteText"
                 class="k-input w-full mt-2 h-20 text-[12px] leading-5"
@@ -712,20 +712,20 @@ onBeforeUnmount(() => {
             <div v-if="insight" class="mt-6 border border-[#2a2520] bg-[#0b0b0b] p-4">
               <div class="font-mono text-[10px] tracking-[0.3em] text-[#8c4a2f]">关系网络 · INSIGHT</div>
               <div class="mt-3 space-y-2.5 text-[12px] leading-5">
-                <div v-if="insight.toKite" class="text-[#8a8275]">
+                <div v-if="insight.toKite" class="text-[#a89f8e]">
                   至「风筝」最短链路：
                   <span class="text-[#8c4a2f]">{{ insight.toKite.ids.map((x) => g.charMap[x]?.name || x).join(' → ') }}</span>
-                  <span class="text-[#555048]">（{{ insight.toKite.hops }} 跳）</span>
+                  <span class="text-[#8f897c]">（{{ insight.toKite.hops }} 跳）</span>
                 </div>
-                <div v-if="insight.toShadow" class="text-[#8a8275]">
+                <div v-if="insight.toShadow" class="text-[#a89f8e]">
                   至「影子」最短链路：
                   <span class="text-[#a8443a]">{{ insight.toShadow.ids.map((x) => g.charMap[x]?.name || x).join(' → ') }}</span>
-                  <span class="text-[#555048]">（{{ insight.toShadow.hops }} 跳）</span>
+                  <span class="text-[#8f897c]">（{{ insight.toShadow.hops }} 跳）</span>
                 </div>
-                <div v-if="insight.common.length" class="text-[#8a8275]">
+                <div v-if="insight.common.length" class="text-[#a89f8e]">
                   与风筝的共同联系人：<span class="text-[#e8dcc8]">{{ insight.common.map((x) => g.charMap[x]?.name || x).join('、') }}</span>
                 </div>
-                <div class="text-[#8a8275]">
+                <div class="text-[#a89f8e]">
                   阵营分布：
                   <span v-for="(cnt, f) in insight.spread" :key="f" class="mr-2 inline-flex items-center gap-1">
                     <span class="w-1.5 h-1.5 rounded-full" :style="{ background: FACTION[f].color }"></span>{{ FACTION[f].label }} {{ cnt }}

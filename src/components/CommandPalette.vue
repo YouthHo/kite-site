@@ -81,33 +81,33 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKey))
       <div class="relative w-full max-w-[540px] bg-[#0e0e0e] border border-[#2a2520] shadow-[0_24px_60px_rgba(0,0,0,0.6)]">
         <!-- 输入行 -->
         <div class="flex items-center gap-3 px-4 py-3 border-b border-[#2a2520]">
-          <Search :size="16" class="text-[#8a8275]" />
+          <Search :size="16" class="text-[#a89f8e]" />
           <input
             ref="input"
             v-model="keyword"
-            class="flex-1 bg-transparent outline-none text-[14px] text-[#e8dcc8] placeholder:text-[#555048]"
+            class="flex-1 bg-transparent outline-none text-[14px] text-[#e8dcc8] placeholder:text-[#8f897c]"
             placeholder="搜索人物 / 剧集 / 台词…… 或输入命令"
             @keydown="onKey"
           />
-          <span class="font-mono text-[9px] tracking-[0.2em] text-[#555048]">ESC</span>
+          <span class="font-mono text-[9px] tracking-[0.2em] text-[#8f897c]">ESC</span>
         </div>
         <!-- 结果列表 -->
         <ul class="max-h-[46vh] overflow-y-auto py-2" role="listbox">
           <li v-for="(r, i) in results" :key="r.id || r.type + r.title" role="option" :aria-selected="i === idx">
             <button
               class="w-full text-left flex items-center gap-3 px-4 py-2.5 text-[13px] transition-colors"
-              :class="i === idx ? 'bg-[#161616] text-[#e8dcc8] border-l-2 border-[#b91c1c]' : 'text-[#8a8275] border-l-2 border-transparent'"
+              :class="i === idx ? 'bg-[#161616] text-[#e8dcc8] border-l-2 border-[#b91c1c]' : 'text-[#a89f8e] border-l-2 border-transparent'"
               @mouseenter="idx = i"
               @click="run(r)"
             >
               <span v-if="r.icon" class="shrink-0 text-[#8c4a2f]"><component :is="r.icon" :size="14" /></span>
               <span v-else class="shrink-0 font-mono text-[9px] tracking-[0.2em] text-[#b91c1c] w-10">{{ r.type }}</span>
               <span class="flex-1 min-w-0 truncate">{{ r.title }}</span>
-              <span v-if="r.sub" class="hidden md:inline text-[10px] text-[#555048] truncate max-w-[180px]">{{ r.sub }}</span>
-              <CornerDownLeft v-if="i === idx" :size="12" class="shrink-0 text-[#555048]" />
+              <span v-if="r.sub" class="hidden md:inline text-[10px] text-[#8f897c] truncate max-w-[180px]">{{ r.sub }}</span>
+              <CornerDownLeft v-if="i === idx" :size="12" class="shrink-0 text-[#8f897c]" />
             </button>
           </li>
-          <li v-if="!results.length" class="px-4 py-8 text-center text-[12px] tracking-[0.2em] text-[#555048]">没有匹配的档案</li>
+          <li v-if="!results.length" class="px-4 py-8 text-center text-[12px] tracking-[0.2em] text-[#8f897c]">没有匹配的档案</li>
         </ul>
       </div>
     </div>

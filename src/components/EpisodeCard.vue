@@ -21,7 +21,7 @@ const watched = computed(() => appState.isWatched(props.episode.id))
     :class="
       active
         ? 'border-[#b91c1c] bg-[#1a1415] text-[#e8dcc8] shadow-[0_0_14px_rgba(157,34,53,0.25)]'
-        : 'border-[#2a2520] bg-[#101010] text-[#8a8275] hover:border-[#b91c1c]/70 hover:text-[#e8dcc8]'
+        : 'border-[#2a2520] bg-[#101010] text-[#a89f8e] hover:border-[#b91c1c]/70 hover:text-[#e8dcc8]'
     "
     :title="`第${episode.id}集 ${episode.title}`"
     @click="emit('select', episode)"
@@ -29,7 +29,7 @@ const watched = computed(() => appState.isWatched(props.episode.id))
     <!-- 当前集左侧红条 -->
     <span v-if="active" class="absolute left-0 top-0 bottom-0 w-[3px] bg-[#b91c1c]"></span>
     <template v-if="locked">
-      <Lock :size="12" class="text-[#555048]" />
+      <Lock :size="12" class="text-[#8f897c]" />
     </template>
     <template v-else>
       <Play v-if="watched" :size="11" class="text-[#8c4a2f]" />

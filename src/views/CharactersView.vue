@@ -99,7 +99,7 @@ watch(() => route.query.q, (q) => {
       <div>
         <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>角色档案库</h2>
         <div class="gold-line w-40 mt-3" data-enter></div>
-        <p class="mt-3 text-[12px] tracking-[0.2em] text-[#8a8275]" data-enter>30 份档案 · 按阵营归档 · 结局含剧透保护</p>
+        <p class="mt-3 text-[12px] tracking-[0.2em] text-[#a89f8e]" data-enter>30 份档案 · 按阵营归档 · 结局含剧透保护</p>
       </div>
     </div>
 
@@ -107,19 +107,19 @@ watch(() => route.query.q, (q) => {
       <!-- 左侧人物列表 -->
       <aside class="lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto pr-1 min-w-0">
         <div class="flex items-center justify-between mb-3" data-enter>
-          <span class="font-mono text-[10px] tracking-[0.25em] text-[#555048]">按阵营分组 · 可折叠</span>
+          <span class="font-mono text-[10px] tracking-[0.25em] text-[#8f897c]">按阵营分组 · 可折叠</span>
           <div class="flex gap-3">
-            <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="expandAll">全部展开</button>
-            <button class="text-[11px] tracking-[0.1em] text-[#8a8275] hover:text-[#e8dcc8]" @click="collapseAll">全部收起</button>
+            <button class="text-[11px] tracking-[0.1em] text-[#a89f8e] hover:text-[#e8dcc8]" @click="expandAll">全部展开</button>
+            <button class="text-[11px] tracking-[0.1em] text-[#a89f8e] hover:text-[#e8dcc8]" @click="collapseAll">全部收起</button>
           </div>
         </div>
         <div v-for="g in grouped" :key="g.id" class="mb-4">
           <button class="flex items-center gap-2 mb-1.5 w-full text-left group" data-enter @click="toggleGroup(g.id)">
             <span class="w-6 h-[2px]" :style="{ background: g.color }"></span>
             <span class="text-[12px] tracking-[0.25em]" :style="{ color: g.color }">{{ g.label }}</span>
-            <span class="font-mono text-[10px] text-[#555048]">{{ g.items.length }}</span>
+            <span class="font-mono text-[10px] text-[#8f897c]">{{ g.items.length }}</span>
             <span class="ml-auto transition-transform duration-300" :class="collapsedGroups.has(g.id) ? '-rotate-90' : ''">
-              <ChevronDown :size="14" class="text-[#555048] group-hover:text-[#8a8275]" />
+              <ChevronDown :size="14" class="text-[#8f897c] group-hover:text-[#a89f8e]" />
             </span>
           </button>
           <div v-show="!collapsedGroups.has(g.id)">
@@ -153,20 +153,20 @@ watch(() => route.query.q, (q) => {
           <!-- 基础信息栏：仿档案表格 -->
           <div class="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-3 text-[13px]">
             <div class="flex gap-3 border-b border-[#2a2520] pb-2">
-              <span class="font-mono text-[10px] tracking-[0.2em] text-[#555048] w-16 shrink-0 mt-0.5">扮演者</span>
+              <span class="font-mono text-[10px] tracking-[0.2em] text-[#8f897c] w-16 shrink-0 mt-0.5">扮演者</span>
               <span class="text-[#e8dcc8]">{{ selected.actor || '待考' }}</span>
             </div>
             <div class="flex gap-3 border-b border-[#2a2520] pb-2">
-              <span class="font-mono text-[10px] tracking-[0.2em] text-[#555048] w-16 shrink-0 mt-0.5">身份</span>
+              <span class="font-mono text-[10px] tracking-[0.2em] text-[#8f897c] w-16 shrink-0 mt-0.5">身份</span>
               <span class="text-[#e8dcc8]">{{ selected.identity }}</span>
             </div>
             <div class="flex gap-3 border-b border-[#2a2520] pb-2">
-              <span class="font-mono text-[10px] tracking-[0.2em] text-[#555048] w-16 shrink-0 mt-0.5">别名</span>
-              <span class="text-[#8a8275]">{{ selected.aliases?.join(' / ') || '—' }}</span>
+              <span class="font-mono text-[10px] tracking-[0.2em] text-[#8f897c] w-16 shrink-0 mt-0.5">别名</span>
+              <span class="text-[#a89f8e]">{{ selected.aliases?.join(' / ') || '—' }}</span>
             </div>
             <div class="flex gap-3 border-b border-[#2a2520] pb-2">
-              <span class="font-mono text-[10px] tracking-[0.2em] text-[#555048] w-16 shrink-0 mt-0.5">出场</span>
-              <span class="text-[#8a8275]">第 {{ selected.episodes[0] }}—{{ selected.episodes[1] }} 集</span>
+              <span class="font-mono text-[10px] tracking-[0.2em] text-[#8f897c] w-16 shrink-0 mt-0.5">出场</span>
+              <span class="text-[#a89f8e]">第 {{ selected.episodes[0] }}—{{ selected.episodes[1] }} 集</span>
             </div>
           </div>
 
@@ -209,7 +209,7 @@ watch(() => route.query.q, (q) => {
                 v-for="ep in epTags"
                 :key="ep"
                 :to="`/episodes?ep=${ep}`"
-                class="px-2.5 py-1 font-mono text-[11px] border border-[#2a2520] text-[#8a8275] hover:border-[#b91c1c] hover:text-[#e8dcc8] hover:-translate-y-0.5 transition-all"
+                class="px-2.5 py-1 font-mono text-[11px] border border-[#2a2520] text-[#a89f8e] hover:border-[#b91c1c] hover:text-[#e8dcc8] hover:-translate-y-0.5 transition-all"
               >
                 第{{ ep }}集
               </router-link>

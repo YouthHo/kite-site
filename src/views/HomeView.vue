@@ -110,7 +110,7 @@ function randomExplore() {
       </div>
       <div class="hero-goldline gold-line w-[280px] md:w-[420px] mt-6 origin-center"></div>
       <p class="hero-sub mt-6 text-[13px] tracking-[0.4em] text-[#a85a38] on-media" style="text-shadow: 0 0 18px rgba(184,134,11,0.35);">信仰至上 · 半生潜伏</p>
-      <p class="hero-sub mt-3 text-[11px] tracking-[0.3em] text-[#8a8275] on-media">THE KITE · 2017 · 柳云龙 导演作品</p>
+      <p class="hero-sub mt-3 text-[11px] tracking-[0.3em] text-[#a89f8e] on-media">THE KITE · 2017 · 柳云龙 导演作品</p>
 
       <!-- O · 双主 CTA：随机潜入 + 进入档案 -->
       <div class="hero-sub hero-ctas mt-8 flex flex-wrap items-center justify-center gap-4">
@@ -121,7 +121,7 @@ function randomExplore() {
           进入档案 →
         </router-link>
         <button
-          class="px-6 py-2.5 border border-[#2a2520] text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] text-[12px] tracking-[0.3em] transition-colors on-media m-focus-ring"
+          class="px-6 py-2.5 border border-[#2a2520] text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] text-[12px] tracking-[0.3em] transition-colors on-media m-focus-ring"
           @click="randomExplore"
         >
           随机潜入
@@ -136,7 +136,7 @@ function randomExplore() {
           :to="c.to"
           class="group block border-t border-[#2a2520] pt-5 relative transition-colors duration-300 hover:border-[#b91c1c]"
         >
-          <div class="text-[11px] tracking-[0.3em] text-[#8a8275] on-media group-hover:text-[#b91c1c] transition-colors duration-200">{{ String(i + 1).padStart(2, '0') }}</div>
+          <div class="text-[11px] tracking-[0.3em] text-[#a89f8e] on-media group-hover:text-[#b91c1c] transition-colors duration-200">{{ String(i + 1).padStart(2, '0') }}</div>
           <div class="title-sans text-[17px] mt-3 text-[#e8dcc8] on-media group-hover:text-[#f0e6d2] transition-colors duration-200">{{ c.title }}</div>
           <div class="mt-1.5 text-[12px] leading-5 text-[#a89f8e] on-media">{{ c.desc }}</div>
           <span class="absolute right-0 top-5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-[#b91c1c] text-[15px]">→</span>

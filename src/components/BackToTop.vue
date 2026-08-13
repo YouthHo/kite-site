@@ -33,7 +33,7 @@ onBeforeUnmount(() => tween?.kill())
 <template>
   <button
     v-show="show"
-    class="k-backtop fixed bottom-6 right-5 md:right-8 z-[75] w-11 h-11 rounded-full border border-[#2a2520] bg-[#0e0e0e]/85 backdrop-blur grid place-items-center text-[#8a8275] opacity-0 hover:text-[#e8dcc8] hover:border-[#b91c1c] hover:shadow-[0_0_24px_rgba(157,34,53,0.4)] transition-colors"
+    class="k-backtop fixed bottom-6 right-5 md:right-8 z-[75] w-11 h-11 rounded-full border border-[#2a2520] bg-[#0e0e0e]/85 backdrop-blur grid place-items-center text-[#a89f8e] opacity-0 hover:text-[#e8dcc8] hover:border-[#b91c1c] hover:shadow-[0_0_24px_rgba(157,34,53,0.4)] transition-colors"
     aria-label="返回顶部"
     @click="toTop"
   >

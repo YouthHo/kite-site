@@ -50,7 +50,7 @@ void libraryState
     <DecoDivider variant="telegraph" class="mb-8" />
 
     <div v-if="!total" class="k-empty">
-      <div class="empty-seal font-mono text-[42px] tracking-[0.35em] text-[#8a8275]">密 档</div>
+      <div class="empty-seal font-mono text-[42px] tracking-[0.35em] text-[#a89f8e]">密 档</div>
       <div class="empty-title serif-title text-xl text-[#e8dcc8]">档案柜还是空的</div>
       <p class="empty-desc">
         在人物、剧集、名场面与台词卡片上点击星标，即可把感兴趣的档案收藏到这里。按
@@ -69,9 +69,9 @@ void libraryState
         >
           <div class="flex items-baseline justify-between gap-3">
             <span class="title-sans text-[15px] text-[#e8dcc8] truncate">{{ f.item.title || f.item.name }}</span>
-            <BookmarkX :size="13" class="shrink-0 text-[#555048] group-hover:text-[#b91c1c]" />
+            <BookmarkX :size="13" class="shrink-0 text-[#8f897c] group-hover:text-[#b91c1c]" />
           </div>
-          <div class="mt-2 text-[11px] leading-5 text-[#8a8275] line-clamp-2">{{ SUB(f.item) }}</div>
+          <div class="mt-2 text-[11px] leading-5 text-[#a89f8e] line-clamp-2">{{ SUB(f.item) }}</div>
         </button>
       </div>
     </section>

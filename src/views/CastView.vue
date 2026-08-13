@@ -47,7 +47,7 @@ onBeforeUnmount(() => panelTween?.kill())
       <div>
         <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>演员阵容</h2>
         <div class="gold-line w-40 mt-3" data-enter></div>
-        <p class="mt-3 text-[12px] tracking-[0.2em] text-[#8a8275]" data-enter>16 位主演 · 点击查看详情</p>
+        <p class="mt-3 text-[12px] tracking-[0.2em] text-[#a89f8e]" data-enter>16 位主演 · 点击查看详情</p>
       </div>
     </div>
 
@@ -77,7 +77,7 @@ onBeforeUnmount(() => panelTween?.kill())
         <div class="p-5 relative">
           <h3 class="serif-title text-[17px] text-[#e8dcc8]">{{ a.name }}</h3>
           <p class="mt-1 text-[12px] tracking-[0.15em] text-[#8c4a2f]">饰 {{ a.role }}</p>
-          <p class="mt-1.5 text-[10px] tracking-[0.1em] text-[#555048] leading-4">{{ a.roleNote }}</p>
+          <p class="mt-1.5 text-[10px] tracking-[0.1em] text-[#8f897c] leading-4">{{ a.roleNote }}</p>
         </div>
       </article>
     </div>
@@ -88,7 +88,7 @@ onBeforeUnmount(() => panelTween?.kill())
         <div class="absolute inset-0 bg-black/70 backdrop-blur-md" @click="close"></div>
         <section ref="panel" class="absolute bottom-0 left-0 right-0 max-h-[86vh] overflow-y-auto bg-[#0e0e0e] border-t border-[#2a2520]">
           <div class="max-w-5xl mx-auto p-6 md:p-10">
-            <button class="absolute top-5 right-5 text-[#8a8275] hover:text-[#e8dcc8]" @click="close"><X :size="20" /></button>
+            <button class="absolute top-5 right-5 text-[#a89f8e] hover:text-[#e8dcc8]" @click="close"><X :size="20" /></button>
             <div class="grid md:grid-cols-[280px_1fr] gap-8">
               <div>
                 <img :src="detail.image" :alt="detail.name" class="w-full object-cover border border-[#2a2520] k-img" />
@@ -97,8 +97,8 @@ onBeforeUnmount(() => panelTween?.kill())
                 <div class="font-mono text-[10px] tracking-[0.35em] text-[#b91c1c]">CAST FILE</div>
                 <h3 class="serif-title text-4xl mt-2 text-[#e8dcc8]">{{ detail.name }}</h3>
                 <p class="mt-2 text-[15px] tracking-[0.2em] text-[#8c4a2f]">饰 · {{ detail.role }}</p>
-                <p class="mt-4 text-[13px] leading-7 text-[#8a8275]">{{ detail.bio }}</p>
-                <p v-if="roleInfo(detail)" class="mt-3 text-[12px] leading-6 text-[#555048]">
+                <p class="mt-4 text-[13px] leading-7 text-[#a89f8e]">{{ detail.bio }}</p>
+                <p v-if="roleInfo(detail)" class="mt-3 text-[12px] leading-6 text-[#8f897c]">
                   角色注：{{ roleInfo(detail).brief }}
                 </p>
 
@@ -109,12 +109,12 @@ onBeforeUnmount(() => panelTween?.kill())
                     <div class="w-full max-w-[220px] aspect-[3/4] overflow-hidden border border-[#2a2520] relative">
                       <img :src="roleInfo(detail)?.image || detail.image" alt="角色照" class="absolute inset-0 w-full h-full object-cover k-img" />
                     </div>
-                    <p class="mt-2 text-[10px] text-[#555048]">图片为占位，替换为正式剧照</p>
+                    <p class="mt-2 text-[10px] text-[#8f897c]">图片为占位，替换为正式剧照</p>
                   </div>
                   <div>
                     <div class="file-label mb-3">代表作</div>
                     <div class="flex flex-wrap gap-2">
-                      <span v-for="w in detail.works" :key="w" class="px-3 py-1.5 text-[12px] border border-[#2a2520] text-[#8a8275]">{{ w }}</span>
+                      <span v-for="w in detail.works" :key="w" class="px-3 py-1.5 text-[12px] border border-[#2a2520] text-[#a89f8e]">{{ w }}</span>
                     </div>
                   </div>
                 </div>

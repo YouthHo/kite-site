@@ -47,7 +47,7 @@ onBeforeUnmount(() => crossTween?.kill())
       <div>
         <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>历史背景</h2>
         <div class="gold-line w-40 mt-3" data-enter></div>
-        <p class="mt-3 text-[12px] tracking-[0.2em] text-[#8a8275]" data-enter>真实历史档案 · 四类分类 · 点击卡片展开</p>
+        <p class="mt-3 text-[12px] tracking-[0.2em] text-[#a89f8e]" data-enter>真实历史档案 · 四类分类 · 点击卡片展开</p>
       </div>
     </div>
 
@@ -57,14 +57,14 @@ onBeforeUnmount(() => crossTween?.kill())
         v-for="cat in history"
         :key="cat.id"
         class="px-5 py-2.5 border text-[13px] tracking-[0.2em] transition-all duration-300"
-        :class="activeTab === cat.id ? 'border-[#b91c1c] bg-[#b91c1c]/10 text-[#e8dcc8] shadow-[0_0_16px_rgba(157,34,53,0.2)]' : 'border-[#2a2520] text-[#8a8275] hover:border-[#555048]'"
+        :class="activeTab === cat.id ? 'border-[#b91c1c] bg-[#b91c1c]/10 text-[#e8dcc8] shadow-[0_0_16px_rgba(157,34,53,0.2)]' : 'border-[#2a2520] text-[#a89f8e] hover:border-[#8f897c]'"
         @click="switchTab(cat.id)"
       >
         {{ cat.name }}
       </button>
     </div>
 
-    <p class="mb-8 text-[13px] leading-7 text-[#8a8275] max-w-3xl" data-enter>{{ currentCat().desc }}</p>
+    <p class="mb-8 text-[13px] leading-7 text-[#a89f8e] max-w-3xl" data-enter>{{ currentCat().desc }}</p>
 
     <!-- 牛皮纸档案卡（items-start：展开一张卡时，其余卡片不被网格拉高） -->
     <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6 items-start">

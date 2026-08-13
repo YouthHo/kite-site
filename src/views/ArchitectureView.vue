@@ -75,7 +75,7 @@ onBeforeUnmount(() => {
       <div>
         <h2 class="serif-title text-4xl md:text-5xl text-[#e8dcc8]" data-enter>势力架构</h2>
         <div class="gold-line w-40 mt-3" data-enter></div>
-        <p class="mt-3 text-[12px] tracking-[0.2em] text-[#8a8275]" data-enter>三方势力 · 徽章式树形图 · 点击节点查看详情</p>
+        <p class="mt-3 text-[12px] tracking-[0.2em] text-[#a89f8e]" data-enter>三方势力 · 徽章式树形图 · 点击节点查看详情</p>
       </div>
     </div>
 
@@ -85,7 +85,7 @@ onBeforeUnmount(() => {
         v-for="org in architecture"
         :key="org.id"
         class="relative pb-3 text-[14px] tracking-[0.2em] transition-colors"
-        :class="activeTab === org.id ? 'text-[#e8dcc8]' : 'text-[#555048] hover:text-[#8a8275]'"
+        :class="activeTab === org.id ? 'text-[#e8dcc8]' : 'text-[#8f897c] hover:text-[#a89f8e]'"
         @click="switchTab(org.id)"
       >
         {{ org.name }}
@@ -97,7 +97,7 @@ onBeforeUnmount(() => {
       </button>
     </div>
 
-    <p class="mb-8 text-[12px] leading-6 text-[#8a8275]" data-enter>{{ currentOrg.desc }}</p>
+    <p class="mb-8 text-[12px] leading-6 text-[#a89f8e]" data-enter>{{ currentOrg.desc }}</p>
 
     <!-- 树形架构：逐层行 -->
     <div class="overflow-x-auto pt-12 pb-6">
@@ -125,7 +125,7 @@ onBeforeUnmount(() => {
               >
                 <div class="text-center px-2">
                   <div class="title-sans text-[13px] leading-5 text-[#e8dcc8]">{{ node.name }}</div>
-                  <div class="mt-0.5 font-mono text-[9px] tracking-[0.1em] text-[#8a8275]">{{ node.role }}</div>
+                  <div class="mt-0.5 font-mono text-[9px] tracking-[0.1em] text-[#a89f8e]">{{ node.role }}</div>
                 </div>
                 <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-[#080808]" :style="{ background: node.level === 0 ? '#8c4a2f' : currentOrg.color }"></span>
               </div>
@@ -142,17 +142,17 @@ onBeforeUnmount(() => {
       <div v-if="modal" class="fixed inset-0 z-[94] grid place-items-center p-4">
         <div class="arch-mask absolute inset-0 bg-black/75 backdrop-blur-md" @click="closeModal"></div>
         <div ref="modalEl" class="relative w-full max-w-md bg-[#0e0e0e] border border-[#2a2520] p-6 archive-tape">
-          <button class="absolute top-4 right-4 text-[#8a8275] hover:text-[#e8dcc8]" @click="closeModal"><X :size="18" /></button>
+          <button class="absolute top-4 right-4 text-[#a89f8e] hover:text-[#e8dcc8]" @click="closeModal"><X :size="18" /></button>
           <div class="font-mono text-[10px] tracking-[0.3em]" :style="{ color: currentOrg.color }">{{ currentOrg.name }} / 节点档案</div>
           <div class="flex items-center gap-4 mt-4">
             <img v-if="modal.c" :src="modal.c.image" :alt="modal.c.name" class="w-16 h-16 rounded-full object-cover border-2 border-[#2a2520]" />
             <div>
               <h3 class="serif-title text-2xl text-[#e8dcc8]">{{ modal.c?.name || modal.node.name }}</h3>
-              <p class="text-[12px] tracking-[0.15em] text-[#8a8275] mt-1">{{ modal.node.role }}</p>
+              <p class="text-[12px] tracking-[0.15em] text-[#a89f8e] mt-1">{{ modal.node.role }}</p>
             </div>
           </div>
-          <p class="mt-4 text-[13px] leading-7 text-[#8a8275]">{{ modal.c?.brief || modal.node.desc }}</p>
-          <p class="mt-3 text-[12px] leading-6 text-[#555048]">{{ modal.node.desc }}</p>
+          <p class="mt-4 text-[13px] leading-7 text-[#a89f8e]">{{ modal.c?.brief || modal.node.desc }}</p>
+          <p class="mt-3 text-[12px] leading-6 text-[#8f897c]">{{ modal.node.desc }}</p>
           <router-link
             v-if="modal.c"
             :to="`/characters?q=${modal.c.id}`"

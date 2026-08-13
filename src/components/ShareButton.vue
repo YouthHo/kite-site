@@ -55,22 +55,22 @@ onBeforeUnmount(() => tween?.kill())
 <template>
   <div class="relative inline-block">
     <button
-      class="w-10 h-10 grid place-items-center rounded-full border border-[#2a2520] bg-[#0e0e0e]/80 text-[#8a8275] hover:text-[#e8dcc8] hover:border-[#b91c1c] hover:-translate-y-0.5 hover:shadow-[0_0_16px_rgba(157,34,53,0.3)] transition-all duration-300"
+      class="w-10 h-10 grid place-items-center rounded-full border border-[#2a2520] bg-[#0e0e0e]/80 text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] hover:-translate-y-0.5 hover:shadow-[0_0_16px_rgba(157,34,53,0.3)] transition-all duration-300"
       aria-label="分享"
       @click="toggle"
     >
       <Share2 :size="16" />
     </button>
     <div v-if="open" class="share-menu absolute top-full mt-2 z-20 glass p-2 w-44" :class="menuLeft ? 'left-0' : 'right-0'">
-      <button class="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-[#8a8275] hover:bg-[#161616] hover:text-[#e8dcc8]" @click="copyLink">
+      <button class="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-[#a89f8e] hover:bg-[#161616] hover:text-[#e8dcc8]" @click="copyLink">
         <Check v-if="copied" :size="13" class="share-check text-[#8c4a2f]" />
         <Link2 v-else :size="13" />
         {{ copied ? '已复制链接' : '复制链接' }}
       </button>
-      <button class="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-[#8a8275] hover:bg-[#161616] hover:text-[#e8dcc8]" @click="shareTo('weibo')">
+      <button class="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-[#a89f8e] hover:bg-[#161616] hover:text-[#e8dcc8]" @click="shareTo('weibo')">
         <Globe :size="13" /> 分享到微博
       </button>
-      <button class="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-[#8a8275] hover:bg-[#161616] hover:text-[#e8dcc8]" @click="shareTo('douban')">
+      <button class="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-[#a89f8e] hover:bg-[#161616] hover:text-[#e8dcc8]" @click="shareTo('douban')">
         <MessageCircle :size="13" /> 去豆瓣搜剧
       </button>
     </div>

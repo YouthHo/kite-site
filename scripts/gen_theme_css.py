@@ -52,6 +52,7 @@ for k, v in TX_MAP.items():
 lines.append("")
 lines.append("/* 自定义类的浅色覆盖（对比度修正） */")
 lines.append("[data-theme='light'] .file-label { background: rgba(120, 90, 50, 0.07) !important; border-color: #d9c9ab !important; color: #4a4232 !important; }")
+lines.append("[data-theme='light'] .badge-faction { color: #f9f2e3 !important; }")
 lines.append("[data-theme='light'] .telegraph { color: rgba(138, 106, 47, 0.32) !important; }")
 lines.append("")
 lines.append("/* M · 设计系统 2.0：浅色令牌覆盖（表面层级/语义色/文字色） */")

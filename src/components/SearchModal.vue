@@ -70,11 +70,11 @@ onBeforeUnmount(() => openTween?.kill())
             <input
               ref="input"
               v-model="keyword"
-              class="flex-1 bg-transparent outline-none text-[15px] text-[#e8dcc8] placeholder:text-[#555048] tracking-wider"
+              class="flex-1 bg-transparent outline-none text-[15px] text-[#e8dcc8] placeholder:text-[#8f897c] tracking-wider"
               placeholder="搜索人物 / 演员 / 剧集 / 台词 / 名场面……"
               @keydown="onKey"
             />
-            <button class="text-[#8a8275] hover:text-[#e8dcc8]" @click="close"><X :size="18" /></button>
+            <button class="text-[#a89f8e] hover:text-[#e8dcc8]" @click="close"><X :size="18" /></button>
           </div>
           <!-- 分类标签：下划线滑动 -->
           <div class="flex gap-1 mt-4 overflow-x-auto">
@@ -82,7 +82,7 @@ onBeforeUnmount(() => openTween?.kill())
               v-for="t in TABS"
               :key="t.id"
               class="shrink-0 px-3 py-1.5 text-[12px] tracking-[0.15em] border-b-2 transition-colors"
-              :class="tab === t.id ? 'border-[#b91c1c] text-[#e8dcc8]' : 'border-transparent text-[#555048] hover:text-[#8a8275]'"
+              :class="tab === t.id ? 'border-[#b91c1c] text-[#e8dcc8]' : 'border-transparent text-[#8f897c] hover:text-[#a89f8e]'"
               @click="tab = t.id"
             >
               <component :is="t.icon" :size="12" class="inline mr-1" />{{ t.label }}
@@ -90,8 +90,8 @@ onBeforeUnmount(() => openTween?.kill())
           </div>
           <!-- 结果列表 -->
           <div class="mt-3 max-h-[46vh] overflow-y-auto">
-            <p v-if="keyword && !results.length" class="py-8 text-center text-[12px] tracking-[0.2em] text-[#555048]">没有匹配的档案</p>
-            <p v-else-if="!keyword" class="py-8 text-center font-mono text-[11px] tracking-[0.3em] text-[#555048]">输入关键词开始解密……</p>
+            <p v-if="keyword && !results.length" class="py-8 text-center text-[12px] tracking-[0.2em] text-[#8f897c]">没有匹配的档案</p>
+            <p v-else-if="!keyword" class="py-8 text-center font-mono text-[11px] tracking-[0.3em] text-[#8f897c]">输入关键词开始解密……</p>
             <button
               v-for="(r, i) in results"
               :key="r.type + r.title + i"
@@ -101,9 +101,9 @@ onBeforeUnmount(() => openTween?.kill())
               <span class="font-mono text-[10px] text-[#b91c1c] w-14 shrink-0">{{ { character: '人物', actor: '演员', episode: '剧集', quote: '台词', scene: '场面' }[r.type] }}</span>
               <span class="flex-1 min-w-0">
                 <span class="block text-[13px] text-[#e8dcc8] truncate">{{ r.title }}</span>
-                <span class="block text-[11px] text-[#555048] truncate">{{ r.sub }}</span>
+                <span class="block text-[11px] text-[#8f897c] truncate">{{ r.sub }}</span>
               </span>
-              <ArrowRight :size="14" class="text-[#555048]" />
+              <ArrowRight :size="14" class="text-[#8f897c]" />
             </button>
           </div>
         </div>

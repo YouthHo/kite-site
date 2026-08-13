@@ -182,7 +182,7 @@ export class GraphEngine {
     for (const n of nodes) {
       const p = posOf(n.id)
       const r = nodeRadius(n) * ui
-      const color = d.FACTION[n.faction]?.color || '#555048'
+      const color = d.FACTION[n.faction]?.color || '#8f897c'
       body += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r.toFixed(1)}" fill="${color}" stroke="${this.tokens.nodeBorder}" stroke-width="1"/>`
       const fs = Math.max(8, Math.min(r * 0.66, 20))
       body += `<text x="${p.x.toFixed(1)}" y="${(p.y + fs * 0.35).toFixed(1)}" text-anchor="middle" font-family="Noto Sans SC, sans-serif" font-size="${fs.toFixed(1)}" fill="${this.tokens.label}">${n.name}</text>`
@@ -643,7 +643,7 @@ export class GraphEngine {
       if (appearT <= 0) continue
       const r = nodeRadius(n) * ui * appearT // fit 视图下 = 设计像素，缩放等比
       if (r < 1.2) continue // 过小不画
-      const color = d.FACTION[n.faction]?.color || '#555048'
+      const color = d.FACTION[n.faction]?.color || '#8f897c'
       const onPath = pathIds?.has(n.id)
       const isHover = hoverNode === n.id
       const isFocus = focusId === n.id
@@ -700,18 +700,21 @@ export class GraphEngine {
         ctx.arc(p.x, p.y, r * 0.72, 0, Math.PI * 2)
         ctx.fill()
       } else {
-        ctx.shadowColor = color + T.nodeGlow
-        ctx.shadowBlur = 10
+        // 3.0 墨点 + 阵营细环（朱砂明度）：填充墨色渐变，外环用阵营色
+        const ink0 = T.light ? '#e9e1d2' : '#26262c'
+        const ink1 = T.light ? '#d9d0bf' : '#18181c'
+        ctx.shadowColor = 'rgba(0,0,0,0.45)'
+        ctx.shadowBlur = 8
         const g = ctx.createRadialGradient(p.x - r * 0.35, p.y - r * 0.3, r * 0.1, p.x, p.y, r)
-        g.addColorStop(0, lightenHex(color, 0.4))
-        g.addColorStop(1, color)
+        g.addColorStop(0, ink0)
+        g.addColorStop(1, ink1)
         ctx.fillStyle = g
         ctx.beginPath()
         ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
         ctx.fill()
         ctx.shadowBlur = 0
-        ctx.lineWidth = (onPath || isFocus ? 2.2 : 1.1) * ui
-        ctx.strokeStyle = onPath || isFocus ? T.focus : T.nodeBorder
+        ctx.lineWidth = (onPath || isFocus ? 2.4 : 1.1) * ui
+        ctx.strokeStyle = onPath || isFocus ? T.focus : color
         ctx.stroke()
       }
       // C3：悬停时邻居节点正向强调（金色细环），非邻居仍 dim
@@ -750,7 +753,7 @@ export class GraphEngine {
         }
       }
       if (isNb) {
-        ctx.strokeStyle = 'rgba(184,134,11,0.9)'
+        ctx.strokeStyle = 'rgba(185,28,28,0.85)'
         ctx.lineWidth = 1.4 * ui
         ctx.beginPath()
         ctx.arc(p.x, p.y, r + 2.5 * ui, 0, Math.PI * 2)
@@ -812,7 +815,7 @@ export class GraphEngine {
         const rv = nodeRadius(n) * ui
         ctx.save()
         ctx.globalAlpha = a * 0.5
-        ctx.fillStyle = d2.FACTION[n.faction]?.color || '#555048'
+        ctx.fillStyle = d2.FACTION[n.faction]?.color || '#8f897c'
         ctx.beginPath()
         ctx.arc(p.x, p.y, rv, 0, Math.PI * 2)
         ctx.fill()

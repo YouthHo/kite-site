@@ -35,14 +35,14 @@ onBeforeUnmount(() => crossTween?.kill())
       <div class="flex border-b border-[#2a2520]" data-enter>
         <button
           class="whitespace-nowrap px-5 py-2.5 text-[13px] tracking-[0.2em] transition-colors duration-200"
-          :class="tab === 'scenes' ? 'text-[#e8dcc8] bg-[#b91c1c]/10' : 'text-[#555048] hover:text-[#8a8275]'"
+          :class="tab === 'scenes' ? 'text-[#e8dcc8] bg-[#b91c1c]/10' : 'text-[#8f897c] hover:text-[#a89f8e]'"
           @click="switchTab('scenes')"
         >
           名场面
         </button>
         <button
           class="whitespace-nowrap px-5 py-2.5 text-[13px] tracking-[0.2em] transition-colors duration-200"
-          :class="tab === 'quotes' ? 'text-[#e8dcc8] bg-[#b91c1c]/10' : 'text-[#555048] hover:text-[#8a8275]'"
+          :class="tab === 'quotes' ? 'text-[#e8dcc8] bg-[#b91c1c]/10' : 'text-[#8f897c] hover:text-[#a89f8e]'"
           @click="switchTab('quotes')"
         >
           经典台词

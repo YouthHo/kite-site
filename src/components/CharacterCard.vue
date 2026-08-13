@@ -28,17 +28,16 @@ const factionClass = computed(() => `f-${props.character.faction}`)
 <template>
   <button
     v-if="compact"
-    class="w-full text-left flex items-center gap-3 px-3 py-2.5 border-l-2 transition-all duration-300 group min-w-0"
+    class="w-full text-left flex items-center gap-3 px-3 py-2.5 border-l-2 transition-all duration-300 group min-w-0 m-focus-ring"
     :class="active ? 'border-[#b91c1c] bg-[#161616]' : 'border-transparent hover:bg-[#141414]'"
     @click="emit('select', character)"
   >
     <NameBadge :name="character.name" :faction="character.faction" size="sm" />
     <span class="flex-1 min-w-0">
       <span class="block text-[13px] text-[#e8dcc8] truncate">{{ character.name }}</span>
-      <span class="block text-[10px] text-[#555048] font-mono tracking-wider truncate">{{ character.code ? '代号 · ' + character.code : character.identity }}</span>
+      <span class="block text-[10px] text-[#8f897c] font-mono tracking-wider truncate">{{ character.code ? '代号 · ' + character.code : character.identity }}</span>
     </span>
     <span class="badge-faction shrink-0" :class="factionClass">{{ FACTION_LABEL[character.faction] }}</span>
-    <FavoriteButton type="character" :id="character.id" class="shrink-0" />
   </button>
 
   <!-- 图谱/关联人物头像卡：头像内是名字，下方文字为关系 -->
@@ -47,6 +46,6 @@ const factionClass = computed(() => `f-${props.character.faction}`)
       <NameBadge :name="character.name" :faction="character.faction" size="md" />
     </div>
     <p v-if="rel" class="mt-1.5 text-[10px] leading-4 text-[#8c4a2f] group-hover:text-[#e8dcc8] transition-colors">{{ rel }}</p>
-    <p v-else class="mt-1.5 text-[11px] text-[#8a8275] group-hover:text-[#e8dcc8] transition-colors truncate">{{ character.name }}</p>
+    <p v-else class="mt-1.5 text-[11px] text-[#a89f8e] group-hover:text-[#e8dcc8] transition-colors truncate">{{ character.name }}</p>
   </div>
 </template>

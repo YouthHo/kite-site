@@ -27,7 +27,7 @@ defineProps({
       <div class="flex items-baseline justify-between">
         <div class="serif-title text-5xl md:text-6xl leading-none text-[#b91c1c]/85">{{ String(scene.episode).padStart(2, '0') }}</div>
         <div class="flex items-center gap-2">
-          <div class="font-mono text-[10px] tracking-[0.3em] text-[#8a8275]">SCENE-{{ scene.id.toUpperCase() }}</div>
+          <div class="font-mono text-[10px] tracking-[0.3em] text-[#a89f8e]">SCENE-{{ scene.id.toUpperCase() }}</div>
           <FavoriteButton type="scene" :id="scene.id" />
         </div>
       </div>

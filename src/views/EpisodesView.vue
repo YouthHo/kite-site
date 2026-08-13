@@ -80,7 +80,7 @@ onBeforeUnmount(() => gsap.killTweensOf('.ep-tag'))
             @select="selectEp"
           />
         </div>
-        <p class="mt-3 font-mono text-[10px] leading-5 tracking-[0.15em] text-[#555048]">
+        <p class="mt-3 font-mono text-[10px] leading-5 tracking-[0.15em] text-[#8f897c]">
           前 {{ lockThreshold }} 集免费解锁；第 {{ lockThreshold + 1 }} 集起需在右上角“观剧进度”中标记已看（或标记全部）。
         </p>
       </aside>
@@ -93,7 +93,7 @@ onBeforeUnmount(() => gsap.killTweensOf('.ep-tag'))
             <div class="font-mono text-[11px] tracking-[0.3em] text-[#b91c1c]">EPISODE {{ String(current.id).padStart(2, '0') }} · {{ current.era }}</div>
             <button
               class="flex items-center gap-1.5 text-[11px] tracking-[0.15em] px-3 py-1.5 border transition-colors"
-              :class="appState.isWatched(current.id) ? 'border-[#8c4a2f] text-[#8c4a2f]' : 'border-[#2a2520] text-[#555048] hover:border-[#b91c1c] hover:text-[#e8dcc8]'"
+              :class="appState.isWatched(current.id) ? 'border-[#8c4a2f] text-[#8c4a2f]' : 'border-[#2a2520] text-[#8f897c] hover:border-[#b91c1c] hover:text-[#e8dcc8]'"
               @click="appState.toggleWatch(current.id)"
             >
               <Check :size="12" />
@@ -130,18 +130,18 @@ onBeforeUnmount(() => gsap.killTweensOf('.ep-tag'))
                 class="group flex flex-col items-center w-14"
               >
                 <NameBadge :name="castMap[id]?.name || id" :faction="castMap[id]?.faction || 'civilian'" size="sm" />
-                <span class="mt-1 text-[10px] text-[#8a8275] group-hover:text-[#e8dcc8] truncate w-full text-center">{{ castMap[id]?.name }}</span>
+                <span class="mt-1 text-[10px] text-[#a89f8e] group-hover:text-[#e8dcc8] truncate w-full text-center">{{ castMap[id]?.name }}</span>
               </router-link>
             </div>
           </div>
 
           <!-- 上下集悬浮按钮 -->
           <div class="mt-8 flex justify-between items-center">
-            <button v-if="current.id > 1" @click="prev" class="flex items-center gap-2 text-[12px] tracking-[0.2em] text-[#8a8275] hover:text-[#e8dcc8] hover:-translate-x-1 transition-all">
+            <button v-if="current.id > 1" @click="prev" class="flex items-center gap-2 text-[12px] tracking-[0.2em] text-[#a89f8e] hover:text-[#e8dcc8] hover:-translate-x-1 transition-all">
               <ChevronLeft :size="16" /> 上一集
             </button>
             <span v-else></span>
-            <button v-if="current.id < 46" @click="next" class="flex items-center gap-2 text-[12px] tracking-[0.2em] text-[#8a8275] hover:text-[#e8dcc8] hover:translate-x-1 transition-all">
+            <button v-if="current.id < 46" @click="next" class="flex items-center gap-2 text-[12px] tracking-[0.2em] text-[#a89f8e] hover:text-[#e8dcc8] hover:translate-x-1 transition-all">
               下一集 <ChevronRight :size="16" />
             </button>
           </div>
