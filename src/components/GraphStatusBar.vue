@@ -30,7 +30,7 @@ const MODE_CLS = {
 </script>
 
 <template>
-  <div class="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.12em] text-[#e8dcc8] bg-[#0e0e0e]/90 border border-[#2a2520] px-3 py-1.5 pointer-events-none on-media overflow-hidden">
+  <div class="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.12em] text-[#e8dcc8] bg-[var(--axis-bg-glass)] border border-[#2a2520] px-3 py-1.5 pointer-events-none on-media overflow-hidden">
     <span class="flex items-center gap-1.5 shrink-0">
       <span class="w-1.5 h-1.5 rounded-full" :class="mode === 'browse' ? 'bg-[#a89f8e]' : mode === 'decrypt' ? 'bg-[#b91c1c]' : 'bg-[#8c4a2f]'"></span>
       MODE

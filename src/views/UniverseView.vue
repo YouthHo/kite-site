@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute } from 'vue-router'
 import gsap from 'gsap'
 import GraphView from '@/views/GraphView.vue'
 import LensView from '@/views/LensView.vue'
@@ -20,7 +21,13 @@ const revealed = ref(false)
 const threadEl = ref(null)
 let tweens = []
 
+const route = useRoute()
+
 onMounted(() => {
+  // 深链还原：透镜（组件挂载时导航必已完成，兜底 App 层时序）
+  if (route.query.lens && props.universe.state.currentLens === 'relation') {
+    props.universe.setLens(String(route.query.lens))
+  }
   if (prefersReduced) {
     revealed.value = true
     return

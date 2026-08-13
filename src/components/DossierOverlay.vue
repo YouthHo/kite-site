@@ -45,7 +45,7 @@ function close() {
 
 <template>
   <div class="fixed inset-0 z-[85]">
-    <div class="absolute inset-0 bg-black/60" @click="close"></div>
+    <div class="absolute inset-0 bg-[var(--axis-bg-glass)]" @click="close"></div>
     <aside
       class="absolute right-0 top-0 bottom-0 w-[92vw] max-w-[420px] bg-[var(--dossier-bg)] border-l border-[var(--dossier-border)] overflow-y-auto"
       role="dialog"

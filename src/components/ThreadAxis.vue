@@ -129,7 +129,9 @@ function goLibrary() {
         <span class="font-mono text-[9px] tracking-[0.2em] text-[var(--axis-text-dim)] shrink-0 w-10">{{ universe.state.eraViewport[0] }}</span>
         <div ref="trackRef" class="relative flex-1 h-6 min-w-[200px] cursor-ew-resize m-focus-ring" tabindex="0" role="slider" :aria-valuenow="universe.state.eraViewport[0]" aria-valuemin="1927" aria-valuemax="1980" aria-label="年代视窗（可拖拽/滚轮/方向键）" @pointerdown="onTrackDown" @pointermove="onTrackMove" @pointerup="onTrackUp" @pointerleave="onTrackUp" @wheel.prevent="onTrackWheel" @keydown="onTrackKey">
           <!-- 朱砂刻度 -->
-          <div class="absolute inset-x-0 top-1/2 h-px bg-[#2a2520]"></div>
+          <div class="absolute inset-x-0 top-1/2 h-px bg-[var(--axis-line)]"></div>
+          <!-- 视窗高亮区：当前年代范围（朱砂淡染） -->
+          <div class="absolute top-1/2 -translate-y-1/2 h-3.5 rounded-sm bg-[var(--axis-accent)]/15 border border-[var(--axis-accent)]/40" :style="{ left: ((universe.state.eraViewport[0] - 1927) / 53 * 100) + '%', width: ((universe.state.eraViewport[1] - universe.state.eraViewport[0]) / 53 * 100) + '%' }"></div>
           <button
             v-for="y in YEARS"
             :key="y"
@@ -141,6 +143,7 @@ function goLibrary() {
           ></button>
         </div>
         <span class="font-mono text-[9px] tracking-[0.2em] text-[var(--axis-text-dim)] shrink-0 w-10">{{ universe.state.eraViewport[1] }}</span>
+        <span class="hidden md:inline font-mono text-[9px] tracking-[0.15em] text-[var(--axis-text-dim)] shrink-0 ml-2">拖动 / 滚轮 / ←→ 穿越年代</span>
       </div>
     </div>
   </div>

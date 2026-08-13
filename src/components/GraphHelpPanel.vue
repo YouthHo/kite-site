@@ -10,7 +10,7 @@ defineEmits(['close'])
 
 <template>
   <div class="absolute inset-0 z-[75] flex items-center justify-center p-4" role="dialog" aria-label="操作帮助与图例说明">
-    <div class="absolute inset-0 bg-black/60" @click="$emit('close')"></div>
+    <div class="absolute inset-0 bg-[var(--axis-bg-glass)]" @click="$emit('close')"></div>
     <div class="relative w-full max-w-[520px] max-h-[86%] overflow-y-auto bg-[#0e0e0e] border border-[#2a2520] p-6">
       <button class="absolute top-4 right-4 text-[#a89f8e] hover:text-[#e8dcc8]" aria-label="关闭帮助" @click="$emit('close')"><X :size="18" /></button>
       <div class="font-mono text-[10px] tracking-[0.3em] text-[#8c4a2f]">GRAPH MANUAL</div>

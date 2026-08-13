@@ -5,6 +5,8 @@ import characters from '@/data/characters.json'
 import timeline from '@/data/timeline.json'
 import scenes from '@/data/scenes.json'
 import history from '@/data/history.json'
+import episodes from '@/data/episodes.json'
+import quotes from '@/data/quotes.json'
 import { FACTION, factionLabel } from '@/utils/factions'
 import SceneCard from '@/components/SceneCard.vue'
 import DecoDivider from '@/components/DecoDivider.vue'
@@ -118,6 +120,34 @@ const factionGroups = computed(() => {
           </div>
           <p class="mt-2 text-[12px] leading-6 text-[#a89f8e]">{{ h.desc }}</p>
         </article>
+      </div>
+    </div>
+
+    <!-- 剧集透镜 -->
+    <div v-else-if="universe.state.currentLens === 'episode'">
+      <h2 class="serif-title text-3xl md:text-4xl text-[#ece3d2] mb-2">剧集 · {{ episodes.length }}</h2>
+      <DecoDivider variant="telegraph" class="mb-6" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <button v-for="e in episodes" :key="e.id" class="k-card p-4 text-left m-focus-ring" @click="openDossier ? openDossier('episode', String(e.id)) : null">
+          <div class="flex items-baseline gap-3">
+            <span class="font-mono text-[11px] text-[#e05a50]">EP{{ String(e.id).padStart(2, '0') }}</span>
+            <span class="flex-1 text-[14px] text-[#ece3d2] truncate">{{ e.title }}</span>
+            <span class="font-mono text-[10px] text-[#8f897c]">{{ e.era }}</span>
+          </div>
+          <p class="mt-1.5 text-[11px] leading-5 text-[#a89f8e] line-clamp-2">{{ e.summary }}</p>
+        </button>
+      </div>
+    </div>
+
+    <!-- 台词透镜 -->
+    <div v-else-if="universe.state.currentLens === 'quote'">
+      <h2 class="serif-title text-3xl md:text-4xl text-[#ece3d2] mb-2">台词 · {{ quotes.length }}</h2>
+      <DecoDivider variant="telegraph" class="mb-6" />
+      <div class="space-y-3">
+        <button v-for="q in quotes" :key="q.id" class="w-full text-left k-card p-4 m-focus-ring" @click="openDossier ? openDossier('quote', String(q.id)) : null">
+          <p class="text-[14px] leading-7 text-[#ece3d2]">「{{ q.text }}」</p>
+          <div class="mt-2 font-mono text-[10px] tracking-[0.2em] text-[#a89f8e]">{{ q.speaker }} · 第{{ q.episode }}集</div>
+        </button>
       </div>
     </div>
 

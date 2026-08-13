@@ -64,7 +64,7 @@ defineExpose({ toggle, open })
   <Teleport to="body">
     <!-- 触发按钮（右侧边缘常驻） -->
     <button
-      class="fixed right-0 top-1/2 -translate-y-1/2 z-[70] px-1.5 py-3 border border-r-0 border-[#2a2520] bg-[#0e0e0e]/90 text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] transition-colors on-media"
+      class="fixed right-0 top-1/2 -translate-y-1/2 z-[70] px-1.5 py-3 border border-r-0 border-[#2a2520] bg-[var(--axis-bg-glass)] text-[#a89f8e] hover:text-[#e8dcc8] hover:border-[#b91c1c] transition-colors on-media"
       style="writing-mode: vertical-rl; letter-spacing: 0.3em; font-size: 10px"
       :aria-label="open ? '关闭档案索引' : '打开档案索引'"
       @click="toggle"
@@ -74,7 +74,7 @@ defineExpose({ toggle, open })
 
     <!-- 遮罩 + 面板 -->
     <div v-if="open" class="fixed inset-0 z-[85]">
-      <div class="absolute inset-0 bg-black/60" @click="toggle"></div>
+      <div class="absolute inset-0 bg-[var(--axis-bg-glass)]" @click="toggle"></div>
       <aside ref="panel" class="absolute right-0 top-0 bottom-0 w-[300px] max-w-[86vw] bg-[#0e0e0e] border-l border-[#2a2520] p-6 overflow-y-auto">
         <div class="flex items-center justify-between mb-6">
           <div class="font-mono text-[10px] tracking-[0.35em] text-[#8c4a2f]">ARCHIVE INDEX</div>

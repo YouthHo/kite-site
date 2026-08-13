@@ -140,6 +140,39 @@ export class GraphEngine {
   }
 
   /* ================= 公开控制 ================= */
+
+  /** 防重叠展开：对初始手绘坐标做轻量斥力迭代（仅推开重叠节点，保留整体构图） */
+  expandLayout(minDist = 9) {
+    const d = this.getData()
+    const ns = d.nodes
+    const pos = {}
+    for (const n of ns) pos[n.id] = { x: n.x, y: n.y }
+    for (let iter = 0; iter < 24; iter++) {
+      let moved = false
+      for (let i = 0; i < ns.length; i++) {
+        for (let j = i + 1; j < ns.length; j++) {
+          const a = pos[ns[i].id]
+          const b = pos[ns[j].id]
+          let dx = a.x - b.x
+          let dy = a.y - b.y
+          const dist = Math.hypot(dx, dy) || 0.01
+          if (dist < minDist) {
+            const push = (minDist - dist) / 2
+            dx /= dist
+            dy /= dist
+            a.x += dx * push
+            a.y += dy * push
+            b.x -= dx * push
+            b.y -= dy * push
+            moved = true
+          }
+        }
+      }
+      if (!moved) break
+    }
+    for (const n of ns) this.nodePos.set(n.id, pos[n.id])
+  }
+
   exportPNG() {
     // 导出当前画布为 PNG（2x DPR 高清）
     const out = document.createElement('canvas')
@@ -224,7 +257,7 @@ export class GraphEngine {
 
   fit() {
     // 数据坐标 0-100 居中于画布：cam=(50,50) 即数据 50 映射到画布中心
-    const s = Math.min((this._w * 0.84) / 100, (this._h * 0.84) / 100)
+    const s = Math.min((this._w * 0.94) / 100, (this._h * 0.94) / 100) // 布局撑开：默认视图占更大画布
     this.fitScale = s
     this._tweenCam({ x: 50, y: 50, scale: s }, 450)
   }
@@ -753,16 +786,26 @@ export class GraphEngine {
         }
       }
       if (isNb) {
-        ctx.strokeStyle = 'rgba(185,28,28,0.85)'
-        ctx.lineWidth = 1.4 * ui
+        // 邻居全高亮：朱砂粗环 + 光晕（明确"谁与中心关联"）
+        ctx.strokeStyle = 'rgba(224,90,80,0.95)'
+        ctx.lineWidth = 2.4 * ui
+        ctx.shadowColor = 'rgba(224,90,80,0.8)'
+        ctx.shadowBlur = 12
         ctx.beginPath()
-        ctx.arc(p.x, p.y, r + 2.5 * ui, 0, Math.PI * 2)
+        ctx.arc(p.x, p.y, r + 3 * ui, 0, Math.PI * 2)
+        ctx.stroke()
+        ctx.shadowBlur = 0
+        // 内圈微光
+        ctx.strokeStyle = 'rgba(255,220,200,0.5)'
+        ctx.lineWidth = 1 * ui
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, r + 5 * ui, 0, Math.PI * 2)
         ctx.stroke()
       }
       ctx.restore()
     }
 
-    // ---- C4：悬停邻边关系文字沿曲线切线嵌入线中（贴线不漂移；线够长才画） ----
+    // ---- C4v2：关系文字沿整条线嵌线（字距拉伸适配线长；药丸底覆盖线 = 线在文字处自然断开） ----
     if (hoverNode && !this.reduced) {
       const p = posOf(hoverNode)
       const neighbors = links.filter((l) => l.source === hoverNode || l.target === hoverNode)
@@ -773,32 +816,42 @@ export class GraphEngine {
         if (!op) continue
         const len = Math.hypot(op.x - p.x, op.y - p.y)
         const text = l.label
-        const tw = ctx.measureText(text).width
-        // 线足够长才画（屏幕像素 > 文字宽 + 余量），避免短边文字重叠
-        if (len < tw + 30 * ui) continue
-        // 曲线中点（含悬链垂坠）
+        // 目标总宽：线长的 68%（上限 220px 防过度拉伸），至少容纳文本
+        const baseW = ctx.measureText(text).width
+        const targetW = Math.min(Math.max(len * 0.68, baseW + 10 * ui), 230)
+        // 线足够长才画
+        if (len < baseW + 20 * ui) continue
         const sag = Math.min(26, len * 0.12) * ui
         const midX = (p.x + op.x) / 2
         const midY = (p.y + op.y) / 2 + sag
-        // 切线方向：quadratic 在 t=0.5 的切线恒为端点向量方向
         const ang = Math.atan2(op.y - p.y, op.x - p.x)
         ctx.save()
         ctx.translate(midX, midY)
         ctx.rotate(ang)
+        // 药丸底（覆盖线 = 断开）
         const padX = 6 * ui
-        const padY = 3 * ui
-        const lh = 14 * ui
+        const padY = 3.5 * ui
+        const lh = 15 * ui
         ctx.fillStyle = T.labelBg
         ctx.strokeStyle = T.labelBorder
         ctx.lineWidth = 1
         ctx.beginPath()
-        ctx.roundRect(-tw / 2 - padX, -lh / 2 - padY, tw + padX * 2, lh + padY * 2, 8 * ui)
+        ctx.roundRect(-targetW / 2 - padX, -lh / 2 - padY, targetW + padX * 2, lh + padY * 2, 9 * ui)
         ctx.fill()
         ctx.stroke()
+        // 逐字绘制：字距拉伸使文字总宽 = targetW
         ctx.fillStyle = T.labelDim
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
-        ctx.fillText(text, 0, 0)
+        const chars = [...text]
+        const charWs = chars.map((ch) => ctx.measureText(ch).width)
+        const sumW = charWs.reduce((a, b) => a + b, 0)
+        const gap = (targetW - sumW) / Math.max(1, chars.length - 1)
+        let x = -targetW / 2
+        chars.forEach((ch, i) => {
+          ctx.fillText(ch, x + charWs[i] / 2, 0)
+          x += charWs[i] + gap
+        })
         ctx.restore()
       }
     }

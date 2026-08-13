@@ -62,7 +62,7 @@ onBeforeUnmount(() => openTween?.kill())
 <template>
   <Teleport to="body">
     <div v-if="searchOpen" class="fixed inset-0 z-[95]">
-      <div class="search-mask absolute inset-0 bg-black/80 backdrop-blur-md" @click="close"></div>
+      <div class="search-mask absolute inset-0 bg-[var(--axis-bg-glass)] backdrop-blur-md" @click="close"></div>
       <div ref="panel" class="search-panel relative max-w-2xl mx-auto mt-[12vh] mx-4 px-2">
         <div class="glass p-5 md:p-7">
           <div class="flex items-center gap-3 border-b border-[#2a2520] pb-4">

@@ -6,13 +6,15 @@ import { useRoute, useRouter } from 'vue-router'
  * lens / focus / era / faction / viewpoint / collection / theme / lang
  * 变更即写 URL query（可分享、可回溯、刷新可还原）
  */
-export const LENSES = ['relation', 'time', 'faction', 'scene', 'history']
+export const LENSES = ['relation', 'time', 'faction', 'scene', 'history', 'episode', 'quote']
 export const LENS_LABEL = {
   relation: '关系',
   time: '时空',
   faction: '阵营',
   scene: '名场',
   history: '史料',
+  episode: '剧集',
+  quote: '台词',
 }
 export const VIEWPOINTS = [
   { id: 'all', label: '全景' },

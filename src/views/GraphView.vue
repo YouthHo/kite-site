@@ -445,6 +445,7 @@ onMounted(async () => {
   })
   engine.setTheme(theme.value === 'light')
   engine.setHoverHighlight(hoverHighlight.value)
+  engine.expandLayout() // 布局撑开：防重叠展开后 fit
   engine.fit()
   engine.start()
   restoreFromUrl()
@@ -548,7 +549,7 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- 路径模式：显式双步提示 + 取消（深底板+on-media） -->
-        <div v-if="mode === 'path'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#8c4a2f] bg-[#0e0e0e]/90 text-[#8c4a2f] whitespace-nowrap on-media">
+        <div v-if="mode === 'path'" class="absolute top-12 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3 font-mono text-[10px] tracking-[0.15em] px-3 py-1.5 border border-[#8c4a2f] bg-[var(--axis-bg-glass)] text-[#8c4a2f] whitespace-nowrap on-media">
           <template v-if="!pathStart">{{ t('graph.pathStep1') }}</template>
           <template v-else-if="!pathResult">{{ t('graph.pathStep2', { name: g.charMap[pathStart]?.name }) }}</template>
           <template v-else>
@@ -571,19 +572,19 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- 解密模式：进入态提示（深底板+on-media） -->
-        <div v-if="mode === 'decrypt'" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#a8443a] bg-[#0e0e0e]/90 border border-[#b91c1c]/50 px-3 py-1.5 pointer-events-none on-media">
+        <div v-if="mode === 'decrypt'" class="absolute top-12 left-3 z-10 font-mono text-[10px] tracking-[0.15em] text-[#a8443a] bg-[var(--axis-bg-glass)] border border-[#b91c1c]/50 px-3 py-1.5 pointer-events-none on-media">
           {{ t('graph.decryptHint', { n: decryptCount, total: g.nodes.length, found: secretFound, total2: secretTotal }) }}
         </div>
 
         <!-- 悬停信息条（静态简洁，深底板+on-media 双主题可读） -->
-        <div v-if="hoverNodeId" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.2em] text-[#e8dcc8] bg-[#0e0e0e]/90 border border-[#2a2520] px-4 py-1.5 whitespace-nowrap max-w-[90%] overflow-hidden text-ellipsis pointer-events-none on-media">
+        <div v-if="hoverNodeId" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] tracking-[0.2em] text-[#e8dcc8] bg-[var(--axis-bg-glass)] border border-[#2a2520] px-4 py-1.5 whitespace-nowrap max-w-[90%] overflow-hidden text-ellipsis pointer-events-none on-media">
           <span ref="hoverEl">{{ hoverSummary }}</span>
         </div>
 
         <!-- 隔离退出按钮（可见的退出通道，深底板+on-media） -->
         <button
           v-if="focusClickId && mode === 'browse'"
-          class="absolute bottom-12 right-3 z-10 font-mono text-[10px] tracking-[0.15em] border border-[#8c4a2f] text-[#8c4a2f] bg-[#0e0e0e]/90 px-2.5 py-1 hover:bg-[#8c4a2f]/15 transition-colors on-media"
+          class="absolute bottom-12 right-3 z-10 font-mono text-[10px] tracking-[0.15em] border border-[#8c4a2f] text-[#8c4a2f] bg-[var(--axis-bg-glass)] px-2.5 py-1 hover:bg-[#8c4a2f]/15 transition-colors on-media"
           @click="clearFocus"
         >
           退出隔离
@@ -625,7 +626,7 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- 时间轴（深底板+on-media） -->
-        <div class="absolute bottom-3 right-3 z-10 flex items-center gap-2.5 bg-[#0e0e0e]/90 border border-[#2a2520] px-3 py-1.5 on-media">
+        <div class="absolute bottom-3 right-3 z-10 flex items-center gap-2.5 bg-[var(--axis-bg-glass)] border border-[#2a2520] px-3 py-1.5 on-media">
           <button class="text-[#a89f8e] hover:text-[#e8dcc8] transition-colors" :aria-label="g.epPlaying.value ? '暂停演化' : '播放演化'" @click="g.toggleEraPlay()">
             <Pause v-if="g.epPlaying.value" :size="13" />
             <Play v-else :size="13" />

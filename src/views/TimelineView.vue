@@ -188,7 +188,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="page-wrap !pt-16 !max-w-none !px-0">
     <!-- 固定标题栏：滚动时保持可见 -->
-    <div class="sticky top-16 z-40 bg-[#080808]/95 backdrop-blur-md border-b border-[#1c1815]">
+    <div class="sticky top-16 z-40 bg-[#14110d]/95 backdrop-blur-md border-b border-[#1c1815]">
       <div class="px-5 md:px-8 pr-16 md:pr-20 py-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
         <div class="flex items-center gap-4">
           <SealStamp :text="'全剧\n时间'" />

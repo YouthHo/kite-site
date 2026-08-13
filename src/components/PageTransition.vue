@@ -70,7 +70,7 @@ onBeforeUnmount(() => tl?.kill())
       <slot />
     </div>
     <!-- 揭幕层（红线/暗幕） -->
-    <div ref="veil" class="pt-veil pointer-events-none fixed inset-0 z-[55] bg-[#080808]" style="opacity: 0"></div>
+    <div ref="veil" class="pt-veil pointer-events-none fixed inset-0 z-[55] bg-[#14110d]" style="opacity: 0"></div>
     <div
       ref="line"
       class="pt-line pointer-events-none fixed left-0 right-0 z-[56] h-[3px]"

@@ -72,7 +72,7 @@ defineExpose({ reopen })
 <template>
   <div v-if="visible" class="fixed inset-0 z-[80]" role="dialog" aria-label="图谱操作引导">
     <!-- 半透明遮罩（目标区域高亮挖空） -->
-    <div class="absolute inset-0 bg-black/60" @click="next"></div>
+    <div class="absolute inset-0 bg-[var(--axis-bg-glass)]" @click="next"></div>
     <div
       v-if="targetBox"
       class="absolute border-2 border-[#8c4a2f] shadow-[0_0_0_9999px_rgba(0,0,0,0.6)] rounded pointer-events-none transition-all duration-300"

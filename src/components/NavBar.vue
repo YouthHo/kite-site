@@ -65,7 +65,7 @@ function toggleDrawer() {
 </script>
 
 <template>
-  <header class="k-nav fixed top-0 left-0 right-0 z-[80] bg-[#080808]/60 backdrop-blur-md">
+  <header class="k-nav fixed top-0 left-0 right-0 z-[80] bg-[#14110d]/60 backdrop-blur-md">
     <div class="max-w-[1400px] mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
       <!-- Logo -->
       <router-link to="/" class="flex items-center gap-3 group">

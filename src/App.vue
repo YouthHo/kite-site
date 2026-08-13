@@ -18,6 +18,7 @@ import PaperGrain from '@/components/PaperGrain.vue'
 const route = useRoute()
 const loading = ref(true)
 const universe = createUniverseState()
+universe.restoreFromUrl() // 深链还原：setup 立即执行
 
 onMounted(() => {
   universe.restoreFromUrl()

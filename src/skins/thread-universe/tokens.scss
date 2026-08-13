@@ -87,8 +87,8 @@
   --dossier-accent: var(--vermilion);
 }
 [data-skin='thread-universe'][data-theme='light'] {
-  --axis-bg: #f4ecdc;
-  --axis-bg-glass: rgba(244, 236, 220, 0.94);
+  --axis-bg: #14110d; /* 覆盖层深底 */
+  --axis-bg-glass: rgba(20, 17, 13, 0.92); /* 覆盖层保持深底（on-media 浅字双主题可读） */
   --axis-line: #ddd2bd;
   --axis-text: #6b6358;
   --axis-text-strong: #2b2620;
